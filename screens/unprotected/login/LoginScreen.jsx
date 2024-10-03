@@ -6,7 +6,7 @@ const LoginScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <Image
-        source={require('../../assets/niyoghub_logo_1.png')}
+        source={require('../../../assets/niyoghub_logo_1.png')}
         style={styles.logo}
         resizeMode="contain"
       />

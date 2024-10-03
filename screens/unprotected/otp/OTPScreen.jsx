@@ -45,7 +45,7 @@ const OTPScreen = ({ navigation }) => {
         </TouchableOpacity>
 
         <Image
-          source={require('../../assets/niyoghub_banner_1.png')}
+          source={require('../../../assets/niyoghub_banner_1.png')}
           style={styles.headerImage}
         />
 

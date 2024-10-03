@@ -2,13 +2,13 @@ import { StyleSheet } from "react-native";
 import React, { useEffect, useState } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import LoginScreen from "./screens/unprotected/LoginScreen";
-import RegistrationScreen from "./screens/unprotected/RegistrationScreen";
-import SplashScreen from "./screens/unprotected/SplashScreen";
-import OTPScreen from "./screens/unprotected/OTPScreen";
 import DrawerLayout from "./layouts/DrawerLayout";
-import OnboardingScreen from "./screens/unprotected/OnboardingScreen";
 import NotificationsScreen from "./screens/protected/notifications/NotificationsScreen";
+import OnboardingScreen from "./screens/unprotected/onboarding/OnboardingScreen";
+import SplashScreen from "./screens/unprotected/splashscreen/SplashScreen";
+import LoginScreen from "./screens/unprotected/login/LoginScreen";
+import OTPScreen from "./screens/unprotected/otp/OTPScreen";
+import RegistrationScreen from "./screens/unprotected/registration/RegistrationScreen";
 
 const Stack = createNativeStackNavigator();
 
