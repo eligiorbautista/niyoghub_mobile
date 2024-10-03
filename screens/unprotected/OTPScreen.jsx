@@ -224,6 +224,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 10,
+    marginTop: 15,
   },
   modalButtonText: {
     color: 'white',
