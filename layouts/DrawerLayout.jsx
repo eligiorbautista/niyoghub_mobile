@@ -113,27 +113,27 @@ const DrawerLayout = () => {
       <Drawer.Screen
         name="HomeTabs"
         component={TabsLayout}
-        options={{ title: "Home", headerTitle : "" }}
+        options={{ title: "Home", headerTitle: "", drawerItemStyle: { display: 'none' } }}
       />
       <Drawer.Screen
         name="Profile"
         component={ProfileScreen}
-        options={{ title: "Profile" }}
+        options={{ title: "Profile", headerShown: false }}
       />
       <Drawer.Screen
         name="Feedback"
         component={FeedbackScreen}
-        options={{ title: "Feedback" }}
+        options={{ title: "Feedback", headerShown: false }}
       />
       <Drawer.Screen
         name="FAQ"
         component={FAQScreen}
-        options={{ title: "FAQ" }}
+        options={{ title: "FAQ", headerShown: false }}
       />
       <Drawer.Screen
         name="About"
         component={AboutScreen}
-        options={{ title: "About" }}
+        options={{ title: "About", headerShown: false }}
       />
     </Drawer.Navigator>
   );

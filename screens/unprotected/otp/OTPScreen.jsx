@@ -1,6 +1,7 @@
 import React, { useRef, useState } from 'react';
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, Image, KeyboardAvoidingView, Platform, Modal } from 'react-native';
+import { StyleSheet, Text, View, TextInput, TouchableOpacity, Image, KeyboardAvoidingView, Platform } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import OTPModal from '../../../components/otp/OTPModal';
 
 const OTPScreen = ({ navigation }) => {
   const [otp, setOtp] = useState(Array(6).fill(''));
@@ -27,11 +28,11 @@ const OTPScreen = ({ navigation }) => {
   };
 
   const handleInfoDialog = () => {
-    setIsModalVisible(true); // Show the modal
+    setIsModalVisible(true);
   };
 
   const closeModal = () => {
-    setIsModalVisible(false); // Hide the modal
+    setIsModalVisible(false);
   };
 
   return (
@@ -91,27 +92,8 @@ const OTPScreen = ({ navigation }) => {
         <Text style={styles.verifyButtonText}>Verify</Text>
       </TouchableOpacity>
 
-      {/* modal */}
-      <Modal
-        animationType="fade"
-        transparent={true}
-        visible={isModalVisible}
-        onRequestClose={closeModal}
-      >
-        <View style={styles.modalContainer}>
-          <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>What is an OTP?</Text>
-            <Text style={styles.modalText}>
-              An OTP (One-Time Password) is a temporary code sent to your email or phone. It is used
-              to verify your identity when logging in or completing a transaction. Each OTP can only
-              be used once and usually expires after a short period of time.
-            </Text>
-            <TouchableOpacity style={styles.modalButton} onPress={closeModal}>
-              <Text style={styles.modalButtonText}>Got it!</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </Modal>
+      {/* Modal component */}
+      <OTPModal isVisible={isModalVisible} onClose={closeModal} />
     </KeyboardAvoidingView>
   );
 };
@@ -193,41 +175,6 @@ const styles = StyleSheet.create({
   verifyButtonText: {
     color: '#FFF',
     fontSize: 14,
-    fontWeight: 'bold',
-  },
-  // Modal styles
-  modalContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-  },
-  modalContent: {
-    width: '80%',
-    backgroundColor: 'white',
-    borderRadius: 10,
-    padding: 20,
-    alignItems: 'center',
-  },
-  modalTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginBottom: 10,
-  },
-  modalText: {
-    fontSize: 16,
-    textAlign: 'center',
-    marginBottom: 20,
-  },
-  modalButton: {
-    backgroundColor: '#537F19',
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 10,
-    marginTop: 15,
-  },
-  modalButtonText: {
-    color: 'white',
     fontWeight: 'bold',
   },
 });
