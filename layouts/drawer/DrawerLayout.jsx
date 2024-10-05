@@ -6,12 +6,12 @@ import {
   DrawerItemList,
 } from "@react-navigation/drawer";
 import { Ionicons } from "@expo/vector-icons";
-import TabsLayout from "./(tabs)/TabsLayout";
+import TabsLayout from "./tabs/TabsLayout";
 import { useNavigation } from "@react-navigation/native";
-import ProfileScreen from "../screens/protected/profile/ProfileScreen";
-import FeedbackScreen from "../screens/protected/feedback/FeedbackScreen";
-import FAQScreen from "../screens/protected/faq/FAQScreen";
-import AboutScreen from "../screens/protected/about/AboutScreen";
+import ProfileScreen from "../../screens/protected/profile/ProfileScreen";
+import FeedbackScreen from "../../screens/protected/feedback/FeedbackScreen";
+import FAQScreen from "../../screens/protected/faq/FAQScreen";
+import AboutScreen from "../../screens/protected/about/AboutScreen";
 
 
 const Drawer = createDrawerNavigator();
@@ -23,7 +23,7 @@ const CustomDrawerContent = (props) => {
     <DrawerContentScrollView {...props}>
       <View style={styles.logoContainer}>
         <Image
-          source={require("../assets/niyoghub_banner_1.png")}
+          source={require("../../assets/niyoghub_banner_1.png")}
           style={styles.logo}
           resizeMode="contain"
         />

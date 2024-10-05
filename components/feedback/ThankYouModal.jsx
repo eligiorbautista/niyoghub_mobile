@@ -4,7 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 
 const ThankYouModal = ({ visible, onClose }) => {
   return (
-    <Modal visible={visible} animationType="slide" transparent={true}>
+    <Modal visible={visible} animationType="fade" transparent={true}>
       <View style={styles.modalOverlay}>
         <View style={styles.modalContainer}>
           <Ionicons name="checkmark-circle" size={80} color="#537F19" style={styles.icon} />

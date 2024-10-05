@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import DrawerLayout from "./layouts/DrawerLayout";
+import DrawerLayout from "./layouts/drawer/DrawerLayout";
 import NotificationsScreen from "./screens/protected/notifications/NotificationsScreen";
 import OnboardingScreen from "./screens/unprotected/onboarding/OnboardingScreen";
 import SplashScreen from "./screens/unprotected/splashscreen/SplashScreen";

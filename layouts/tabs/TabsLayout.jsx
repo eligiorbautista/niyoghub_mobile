@@ -2,11 +2,11 @@ import { StyleSheet } from 'react-native';
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons } from '@expo/vector-icons';
-import HomeScreen from '../../screens/protected/home/HomeScreen';
-import IdentificationScreen from '../../screens/protected/identification/IdentificationScreen';
-import SoilMapScreen from '../../screens/protected/map/SoilMapScreen';
-import ChatScreen from '../../screens/protected/chat/ChatScreen';
-import SettingsScreen from '../../screens/protected/settings/SettingsScreen';
+import HomeScreen from '../../../screens/protected/home/HomeScreen';
+import IdentificationScreen from '../../../screens/protected/identification/IdentificationScreen';
+import SoilMapScreen from '../../../screens/protected/map/SoilMapScreen';
+import ChatScreen from '../../../screens/protected/chat/ChatScreen';
+import SettingsScreen from '../../../screens/protected/settings/SettingsScreen';
 
 const Tab = createBottomTabNavigator();
 
