@@ -26,12 +26,12 @@ const LoginScreen = ({ navigation }) => {
       />
 
       <View style={styles.actionRow}>
-        <TouchableOpacity onPress={() => navigation.navigate('OTP')}>
+        <TouchableOpacity onPress={() => navigation.navigate('ResetPasswordOTP')}>
           <Text style={styles.link}>Forgot password?</Text>
         </TouchableOpacity>
       </View>
 
-      <TouchableOpacity style={styles.signInButton} onPress={() => navigation.navigate('Layout')}>
+      <TouchableOpacity style={styles.signInButton} onPress={() => navigation.navigate('TwoFactorAuthOTP')}>
         <Text style={styles.buttonText}>Sign In</Text>
       </TouchableOpacity>
 

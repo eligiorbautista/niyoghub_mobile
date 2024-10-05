@@ -1,12 +1,34 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { StyleSheet, Text, View, TextInput, TouchableOpacity, Image, KeyboardAvoidingView, Platform } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import OTPModal from '../../../components/otp/OTPModal';
+import TwoFactorAuthOTPModal from '../../../components/otp_2fa/TwoFactorAuthOTPModal';
 
-const OTPScreen = ({ navigation }) => {
+const TwoFactorAuthOTPScreen = ({ navigation }) => {
   const [otp, setOtp] = useState(Array(6).fill(''));
   const [isModalVisible, setIsModalVisible] = useState(false);
   const otpRefs = Array(6).fill().map(() => useRef(null));
+
+  // countdown state
+  const [countdown, setCountdown] = useState(300); // (5 minutes)
+  const [isCountdownActive, setIsCountdownActive] = useState(true);
+
+  useEffect(() => {
+    // countdown timer
+    if (isCountdownActive) {
+      const timerId = setInterval(() => {
+        setCountdown(prev => {
+          if (prev <= 1) {
+            clearInterval(timerId);
+            setIsCountdownActive(false); // end 
+            return 0; // end
+          }
+          return prev - 1;
+        });
+      }, 1000);
+
+      return () => clearInterval(timerId); // clear timer on unmount
+    }
+  }, [isCountdownActive]);
 
   const handleOTPChange = (value, index) => {
     const newOtp = [...otp];
@@ -25,6 +47,7 @@ const OTPScreen = ({ navigation }) => {
   const handleVerifyOTP = () => {
     const enteredOtp = otp.join('');
     console.log(`OTP Entered: ${enteredOtp}`);
+    navigation.navigate('TwoFactorAuthOTP');
   };
 
   const handleInfoDialog = () => {
@@ -33,6 +56,12 @@ const OTPScreen = ({ navigation }) => {
 
   const closeModal = () => {
     setIsModalVisible(false);
+  };
+
+  const handleResendCode = () => {
+    console.log("Resending OTP...");
+    setCountdown(300); // reset
+    setIsCountdownActive(true); // start
   };
 
   return (
@@ -55,9 +84,9 @@ const OTPScreen = ({ navigation }) => {
         </TouchableOpacity>
       </View>
 
-      <Text style={styles.title}>OTP Verification</Text>
+      <Text style={styles.title}>Two-Factor Authentication</Text>
       <Text style={styles.subtitle}>
-        Please enter the One-Time Password (OTP) sent to your email or mobile number.
+        Please enter the One-Time Password (OTP) sent to your registered email to complete the sign-in process.
       </Text>
 
       {/* OTP input boxes */}
@@ -77,28 +106,29 @@ const OTPScreen = ({ navigation }) => {
 
       <View style={styles.resendContainer}>
         <Text>Didn't get the code? </Text>
-        <TouchableOpacity>
-          <Text style={styles.resendText}>Resend Code</Text>
+        <TouchableOpacity onPress={handleResendCode} disabled={isCountdownActive}>
+          <Text style={styles.resendText}>
+            {isCountdownActive ? `Resend code in ${countdown}s` : 'Resend Code'}
+          </Text>
         </TouchableOpacity>
       </View>
       <View style={styles.signInRow}>
-        <Text style={styles.link}>Already have an account? </Text>
+        <Text style={styles.link}>Already have access? </Text>
         <TouchableOpacity onPress={() => navigation.navigate('Login')}>
           <Text style={styles.signInText}>Sign In</Text>
         </TouchableOpacity>
       </View>
 
       <TouchableOpacity style={styles.verifyButton} onPress={handleVerifyOTP}>
-        <Text style={styles.verifyButtonText}>Verify</Text>
+        <Text style={styles.verifyButtonText}>Verify OTP</Text>
       </TouchableOpacity>
 
-      {/* Modal component */}
-      <OTPModal isVisible={isModalVisible} onClose={closeModal} />
+      <TwoFactorAuthOTPModal isVisible={isModalVisible} onClose={closeModal} />
     </KeyboardAvoidingView>
   );
 };
 
-export default OTPScreen;
+export default TwoFactorAuthOTPScreen;
 
 const styles = StyleSheet.create({
   container: {

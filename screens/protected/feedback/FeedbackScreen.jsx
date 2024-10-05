@@ -12,18 +12,43 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
 } from 'react-native';
-import { AirbnbRating } from 'react-native-ratings';
 import { Ionicons } from '@expo/vector-icons';
+import ThankYouModal from '../../../components/feedback/ThankYouModal';  
+import FeedbackInfoModal from '../../../components/feedback/FeedbackInfoModal';  
+
+const StarRating = ({ maxStars = 5, rating, onRatingChange }) => {
+  return (
+    <View style={{ flexDirection: 'row', marginBottom: 20 }}>
+      {Array(maxStars)
+        .fill(0)
+        .map((_, index) => (
+          <TouchableOpacity key={index} onPress={() => onRatingChange(index + 1)}>
+            <Ionicons
+              name={index < rating ? 'star' : 'star-outline'}
+              size={35}
+              color={index < rating ? '#537F19' : '#CCC'}
+              style={{ marginRight: 10 }}
+            />
+          </TouchableOpacity>
+        ))}
+    </View>
+  );
+};
 
 const FeedbackScreen = ({ navigation }) => {
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState('');
+  const [isModalVisible, setModalVisible] = useState(false); // Modal visibility state
+  const [isInfoModalVisible, setInfoModalVisible] = useState(false); // Info modal visibility state
 
   const handleSendFeedback = () => {
-    Alert.alert('Thank you for your feedback!', `Rating: ${rating}, Comment: ${comment}`);
-    // Reset fields
+    setModalVisible(true); // Show the modal when feedback is submitted
     setRating(0);
     setComment('');
+  };
+
+  const closeModal = () => {
+    setModalVisible(false); // Close the modal when the close button is pressed
   };
 
   return (
@@ -41,7 +66,8 @@ const FeedbackScreen = ({ navigation }) => {
               style={styles.headerImage}
             />
 
-            <TouchableOpacity>
+            {/* Info icon to show the FeedbackInfoModal */}
+            <TouchableOpacity onPress={() => setInfoModalVisible(true)}>
               <Ionicons name="information-circle-outline" size={24} color="black" />
             </TouchableOpacity>
           </View>
@@ -56,13 +82,7 @@ const FeedbackScreen = ({ navigation }) => {
 
         <View style={styles.content}>
           <View style={styles.ratingContainer}>
-            <AirbnbRating
-              count={5}
-              defaultRating={rating}
-              size={35}
-              onFinishRating={setRating}
-              showRating={false}
-            />
+            <StarRating rating={rating} onRatingChange={setRating} />
           </View>
 
           <TextInput
@@ -82,6 +102,12 @@ const FeedbackScreen = ({ navigation }) => {
             <Text style={styles.submitButtonText}>Submit</Text>
           </TouchableOpacity>
         </View>
+
+        {/* Feedback Modal */}
+        <ThankYouModal visible={isModalVisible} onClose={closeModal} />
+
+        {/* Feedback Info Modal */}
+        <FeedbackInfoModal isVisible={isInfoModalVisible} onClose={() => setInfoModalVisible(false)} />
       </KeyboardAvoidingView>
     </TouchableWithoutFeedback>
   );
