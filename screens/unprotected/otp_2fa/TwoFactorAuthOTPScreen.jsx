@@ -45,9 +45,9 @@ const TwoFactorAuthOTPScreen = ({ navigation }) => {
   };
 
   const handleVerifyOTP = () => {
+    navigation.navigate('Layout');
     const enteredOtp = otp.join('');
     console.log(`OTP Entered: ${enteredOtp}`);
-    navigation.navigate('TwoFactorAuthOTP');
   };
 
   const handleInfoDialog = () => {
