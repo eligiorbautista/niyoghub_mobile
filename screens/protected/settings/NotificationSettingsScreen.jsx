@@ -3,10 +3,10 @@ import { View, Text, StyleSheet, TouchableOpacity, Switch, ScrollView } from 're
 import { Ionicons } from "@expo/vector-icons";
 
 const NotificationSettingsScreen = ({ navigation }) => {
-  const [isAnnouncementsEnabled, setIsAnnouncementsEnabled] = useState(false);
-  const [isEventsEnabled, setIsEventsEnabled] = useState(false);
-  const [isNewsProgramsEnabled, setIsNewsProgramsEnabled] = useState(false);
-  const [isChatMessagesEnabled, setIsChatMessagesEnabled] = useState(false);
+  const [isAnnouncementsEnabled, setIsAnnouncementsEnabled] = useState(true);
+  const [isEventsEnabled, setIsEventsEnabled] = useState(true);
+  const [isNewsProgramsEnabled, setIsNewsProgramsEnabled] = useState(true);
+  const [isChatMessagesEnabled, setIsChatMessagesEnabled] = useState(true);
 
   const toggleAnnouncements = () => setIsAnnouncementsEnabled(previousState => !previousState);
   const toggleEvents = () => setIsEventsEnabled(previousState => !previousState);

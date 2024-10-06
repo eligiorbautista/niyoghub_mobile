@@ -6,14 +6,14 @@ import NotificationsScreen from "./screens/protected/notifications/Notifications
 import OnboardingScreen from "./screens/unprotected/onboarding/OnboardingScreen";
 import SplashScreen from "./screens/unprotected/splashscreen/SplashScreen";
 import LoginScreen from "./screens/unprotected/login/LoginScreen";
-import RegistrationScreen from "./screens/unprotected/registration/RegistrationScreen"; 
+import RegistrationScreen from "./screens/unprotected/registration/RegistrationScreen";
 import SettingsScreen from "./screens/protected/settings/SettingsScreen";
 import AccountSettingsScreen from "./screens/protected/settings/AccountSettingsScreen";
 import ProfileSettingsScreen from "./screens/protected/settings/ProfileSettingsScreen";
 import NotificationSettingsScreen from "./screens/protected/settings/NotificationSettingsScreen";
 import ResetPasswordOTPScreen from "./screens/unprotected/otp_reset_password/ResetPasswordOTPScreen";
 import TwoFactorAuthOTPScreen from "./screens/unprotected/otp_2fa/TwoFactorAuthOTPScreen";
- 
+
 const Stack = createNativeStackNavigator();
 
 const App = () => {

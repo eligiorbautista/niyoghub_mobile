@@ -1,22 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Image, Alert } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import { Ionicons } from "@expo/vector-icons";
-import * as ImagePicker from 'expo-image-picker';
 import ASDisplayModal from '../../../components/modals/AccountSettingsModal';
 
 const AccountSettingsScreen = ({ navigation }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [currentInfo, setCurrentInfo] = useState({ type: '', value: '' });
-  const [image, setImage] = useState(null); 
-
-  useEffect(() => {
-    (async () => {
-      const { status } = await ImagePicker.requestCameraPermissionsAsync();
-      if (status !== 'granted') {
-        Alert.alert('Camera permission is required to change the profile picture');
-      }
-    })();
-  }, []);
 
   const handleChangePress = (infoType, currentValue) => {
     setCurrentInfo({ type: infoType, value: currentValue });
@@ -29,22 +18,7 @@ const AccountSettingsScreen = ({ navigation }) => {
 
   const handleModalSubmit = (newValue) => {
     setCurrentInfo(prev => ({ ...prev, value: newValue }));
-    console.log(`Updated ${currentInfo.type}: ${newValue}`);
     setModalVisible(false);
-  };
-
-  const pickImage = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-    });
-
-    if (!result.canceled) {
-      setImage(result.assets[0].uri);
-      console.log(`Updated profile picture: ${result.assets[0].uri}`); // Log the updated profile picture
-    }
   };
 
   return (
@@ -62,23 +36,7 @@ const AccountSettingsScreen = ({ navigation }) => {
         <Text style={styles.settingsTitle}>Account Settings</Text>
         <Text style={styles.sectionTitle1}>USER PREFERENCES</Text>
 
-        {/* Profile image */}
-        <View style={styles.profileSection}>
-          <View style={styles.imageContainer}>
-            <View style={styles.profilePictureContainer}>
-              <Image
-                source={image ? { uri: image } : require('../../../assets/farmer.png')}
-                style={styles.profileImage}
-              />
-              <TouchableOpacity style={styles.editIconContainer} onPress={pickImage}>
-                <Ionicons name="pencil" size={20} color="green" />
-                <Text style={styles.label2}>Update Profile Picture</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </View>
-
-        {/* Other user info sections */}
+        {/* User Info sections */}
         <View style={styles.infoContainer}>
           <Text style={styles.label}>
             Full Name {'\n'}
@@ -129,13 +87,6 @@ const AccountSettingsScreen = ({ navigation }) => {
           </TouchableOpacity>
         </View>
 
-        <View style={styles.infoContainer}>
-          <Text style={styles.label}>
-            Role {'\n'}
-            <Text style={styles.value}>User</Text>
-          </Text>
-        </View>
-
         <View style={styles.separator} />
 
         <View style={styles.infoContainer}>
@@ -163,20 +114,10 @@ const styles = StyleSheet.create({
     height: '100%',
     flex: 1,
   },
-  headerContainer: {
-    flexDirection: 'row',    
-    alignItems: 'center',     
-    justifyContent: 'space-between', 
-    paddingHorizontal: 20,    
-    paddingVertical: 15,     
-    position: 'relative',
-    backgroundColor: 'gray',
-  },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    textAlign: 'center',
     paddingVertical: 8,
     paddingHorizontal: 20,
     backgroundColor: '#F0F0F0',
@@ -185,19 +126,13 @@ const styles = StyleSheet.create({
     marginTop: 35,
   },
   titleContainer: {
-    flex: 1,          
-    alignItems: 'center', 
-    paddingVertical: 5,   
+    flex: 1,
+    alignItems: 'center',
+    paddingVertical: 5,
   },
   headerTitle: {
     fontSize: 20,
     fontWeight: 'bold',
-    padding: 8,
-  },
-  back: {
-    fontSize: 18,
-    color: 'green',
-    marginBottom: 20,
   },
   accountContent: {
     paddingHorizontal: 20,
@@ -206,12 +141,13 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     marginTop: 30,
+    marginBottom: 10,
   },
   sectionTitle1: {
     fontSize: 12,
     marginBottom: 20,
+    color: '#555',
   },
-
   infoContainer: {
     marginBottom: 16,
     flexDirection: 'row',
@@ -221,51 +157,31 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 16,
     fontWeight: 'bold',
+    flex: 1,
+    flexWrap: 'wrap',
+    fontWeight: '600',
   },
   value: {
-    fontSize: 14,
+    fontSize: 12,
     color: '#555',
     marginBottom: 5,
+    flexWrap: 'wrap',
+    fontWeight : '400'
   },
   changeButton: {
     color: '#6FA542',
     borderWidth: 1,
-    borderColor: '#6FA542', 
-    borderRadius: 10, 
-    paddingVertical: 1, 
-    paddingHorizontal: 20,
-    textAlign: 'center', 
+    borderColor: '#6FA542',
+    borderRadius: 25,
+    paddingVertical: 3,
+    paddingHorizontal: 10,
+    textAlign: 'center',
+    fontSize: 14,
   },
   separator: {
     height: 1,
     backgroundColor: '#ccc',
     marginVertical: 20,
-  },
-  profilePictureContainer: {
-    position: 'relative',
-    alignItems: 'center',
-    marginBottom: 20,
-  },
-  profileImage: {
-      width: 120,
-      height: 120,
-      borderRadius: 60,
-      borderWidth: 2,
-      borderColor: '#ccc',
-  },
-  editIconContainer: {
-      // position: 'absolute',
-      bottom: 5,
-      right: 5, 
-      flexDirection: 'row',
-      borderRadius: 15,
-      padding: 5,
-      marginVertical: 10,
-  },
-  label2: {
-      fontSize: 16,
-      color: '#333',
-      textAlign: 'center', 
   },
 });
 

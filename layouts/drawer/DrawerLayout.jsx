@@ -12,6 +12,7 @@ import ProfileScreen from "../../screens/protected/profile/ProfileScreen";
 import FeedbackScreen from "../../screens/protected/feedback/FeedbackScreen";
 import FAQScreen from "../../screens/protected/faq/FAQScreen";
 import AboutScreen from "../../screens/protected/about/AboutScreen";
+import LoginScreen from "../../screens/unprotected/login/LoginScreen";
 
 
 const Drawer = createDrawerNavigator();
@@ -115,6 +116,13 @@ const DrawerLayout = () => {
         component={TabsLayout}
         options={{ title: "Home", headerTitle: "", drawerItemStyle: { display: 'none' } }}
       />
+
+      <Drawer.Screen
+        name="Login"
+        component={LoginScreen}
+        options={{ title: "Login", headerTitle: "", drawerItemStyle: { display: 'none' } }}
+      />
+
       <Drawer.Screen
         name="Profile"
         component={ProfileScreen}

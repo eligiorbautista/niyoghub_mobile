@@ -51,27 +51,27 @@ const AboutScreen = ({ navigation }) => {
         <View style={styles.teamRow}>
           <View style={styles.teamMember}>
             <Image
-              source={{ uri: 'https://www.ui-avatars.com/api/?name=Leonna+Nashtasija+Almendras&background=random' }}
+              source={{ uri: 'https://www.ui-avatars.com/api/?name=Leonna+Almendras&background=random' }}
               style={styles.avatar}
               resizeMode="cover"
             />
-            <Text style={styles.teamName}>Leonna Nashtasija Almendras</Text>
+            <Text style={styles.teamName}>Leonna Almendras</Text>
           </View>
           <View style={styles.teamMember}>
             <Image
-              source={{ uri: 'https://www.ui-avatars.com/api/?name=Eligio+Bautista+III&background=random' }}
+              source={{ uri: 'https://www.ui-avatars.com/api/?name=Eli+Bautista&background=random' }}
               style={styles.avatar}
               resizeMode="cover"
             />
-            <Text style={styles.teamName}>Eligio Bautista III</Text>
+            <Text style={styles.teamName}>Eli Bautista</Text>
           </View>
           <View style={styles.teamMember}>
             <Image
-              source={{ uri: 'https://www.ui-avatars.com/api/?name=Marianne+Nikki+Bernardo&background=random' }}
+              source={{ uri: 'https://www.ui-avatars.com/api/?name=Marianne+Bernardo&background=random' }}
               style={styles.avatar}
               resizeMode="cover"
             />
-            <Text style={styles.teamName}>Marianne Nikki Bernardo</Text>
+            <Text style={styles.teamName}>Marianne Bernardo</Text>
           </View>
         </View>
       </View>
