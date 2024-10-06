@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View, FlatList, TouchableOpacity, Image } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import NotificationItem from '../../../components/notifications/NotificationItem'
+import NotificationItem from '../../../components/notifications/NotificationItem' 
 
 const fetchNotifications = async () => {
   return [
@@ -22,7 +22,7 @@ const fetchNotifications = async () => {
 };
 
 const NotificationsScreen = ({ navigation }) => {
-  const [notifications, setNotifications] = useState([]);
+  const [notifications, setNotifications] = useState([]); 
 
   useEffect(() => {
     const loadNotifications = async () => {
@@ -44,7 +44,7 @@ const NotificationsScreen = ({ navigation }) => {
           style={styles.headerImage}
         />
 
-        <TouchableOpacity>
+        <TouchableOpacity onPress={()=> navigation.navigate('NotificationSettings')}>
           <Ionicons name="settings-outline" size={24} color="black" />
         </TouchableOpacity>
       </View>
