@@ -6,17 +6,14 @@ import NotificationsScreen from "./screens/protected/notifications/Notifications
 import OnboardingScreen from "./screens/unprotected/onboarding/OnboardingScreen";
 import SplashScreen from "./screens/unprotected/splashscreen/SplashScreen";
 import LoginScreen from "./screens/unprotected/login/LoginScreen";
-import RegistrationScreen from "./screens/unprotected/registration/RegistrationScreen";
-<<<<<<< HEAD
+import RegistrationScreen from "./screens/unprotected/registration/RegistrationScreen"; 
 import SettingsScreen from "./screens/protected/settings/SettingsScreen";
 import AccountSettingsScreen from "./screens/protected/settings/AccountSettingsScreen";
 import ProfileSettingsScreen from "./screens/protected/settings/ProfileSettingsScreen";
 import NotificationSettingsScreen from "./screens/protected/settings/NotificationSettingsScreen";
-=======
 import ResetPasswordOTPScreen from "./screens/unprotected/otp_reset_password/ResetPasswordOTPScreen";
 import TwoFactorAuthOTPScreen from "./screens/unprotected/otp_2fa/TwoFactorAuthOTPScreen";
->>>>>>> 4de1d83540c7008e0e992ad2209ad38aa61df818
-
+ 
 const Stack = createNativeStackNavigator();
 
 const App = () => {
@@ -40,10 +37,6 @@ const App = () => {
         <Stack.Screen name="Login" component={LoginScreen} />
         <Stack.Screen name="TwoFactorAuthOTP" component={TwoFactorAuthOTPScreen} />
         <Stack.Screen name="ResetPasswordOTP" component={ResetPasswordOTPScreen} />
-
-        {/* protected  */}
-        <Stack.Screen name="Layout" component={DrawerLayout} />
-        <Stack.Screen name="Notifications" component={NotificationsScreen} />
 
 
         {/* Settings-related screens */}
