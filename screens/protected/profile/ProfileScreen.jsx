@@ -35,9 +35,7 @@ const ProfileScreen = () => {
             style={styles.headerImage}
           />
 
-          <TouchableOpacity>
-            <Ionicons name="information-circle-outline" size={24} color="black" />
-          </TouchableOpacity>
+          <Ionicons name="information-circle-outline" size={24} color="#fff" />
         </View>
       </View>
 

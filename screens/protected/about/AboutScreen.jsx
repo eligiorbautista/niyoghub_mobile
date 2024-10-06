@@ -89,7 +89,7 @@ const styles = StyleSheet.create({
   /* header */
   headerContainer: {
     backgroundColor: '#FFFFFF',
-    paddingHorizontal: 10,
+    marginHorizontal: 20,
     paddingTop: 30,
   },
   header: {
