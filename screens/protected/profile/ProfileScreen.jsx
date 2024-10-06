@@ -7,7 +7,7 @@ import { useNavigation } from '@react-navigation/native';
 const mockUser = {
   fullName: "Juan Dela Cruz",
   email: "juandelacruz@gmail.com",
-  address: "Lucena City, Quezon Province, Philippines",
+  address: "Lucena City, Quezon",
   language: "English (US)",
   profilePicture: "../../../assets/farmer.png",
   accountType: "local",

@@ -50,9 +50,9 @@ const AccountSettingsScreen = ({ navigation }) => {
         <View style={styles.infoContainer}>
           <Text style={styles.label}>
             Email Address {'\n'}
-            <Text style={styles.value}>{currentInfo.type === 'Email Address' ? currentInfo.value : 'currentemail@example.com'}</Text>
+            <Text style={styles.value}>{currentInfo.type === 'Email Address' ? currentInfo.value : 'juandelacruz@gmail.com'}</Text>
           </Text>
-          <TouchableOpacity onPress={() => handleChangePress('Email Address', 'currentemail@example.com')}>
+          <TouchableOpacity onPress={() => handleChangePress('Email Address', 'juandelacruz@gmail.com')}>
             <Text style={styles.changeButton}>Change</Text>
           </TouchableOpacity>
         </View>
@@ -69,10 +69,10 @@ const AccountSettingsScreen = ({ navigation }) => {
 
         <View style={styles.infoContainer}>
           <Text style={styles.label}>
-            City / Municipality Address {'\n'}
-            <Text style={styles.value}>{currentInfo.type === 'City / Municipality' ? currentInfo.value : 'Lucena City'}</Text>
+            Address {'\n'}
+            <Text style={styles.value}>{currentInfo.type === 'Address' ? currentInfo.value : 'Lucena City, Quezon'}</Text>
           </Text>
-          <TouchableOpacity onPress={() => handleChangePress('City / Municipality', 'Lucena City')}>
+          <TouchableOpacity onPress={() => handleChangePress('Address', 'Lucena City, Quezon')}>
             <Text style={styles.changeButton}>Change</Text>
           </TouchableOpacity>
         </View>
@@ -166,7 +166,7 @@ const styles = StyleSheet.create({
     color: '#555',
     marginBottom: 5,
     flexWrap: 'wrap',
-    fontWeight : '400'
+    fontWeight: '400'
   },
   changeButton: {
     color: '#6FA542',
