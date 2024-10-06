@@ -2,11 +2,12 @@ import { StyleSheet } from 'react-native';
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons } from '@expo/vector-icons';
-import HomeScreen from '../../../screens/protected/home/HomeScreen';
-import IdentificationScreen from '../../../screens/protected/identification/IdentificationScreen';
-import SoilMapScreen from '../../../screens/protected/map/SoilMapScreen';
-import ChatScreen from '../../../screens/protected/chat/ChatScreen';
-import SettingsScreen from '../../../screens/protected/settings/SettingsScreen';
+import HomeScreen from '../../screens/protected/home/HomeScreen';
+import IdentificationScreen from '../../screens/protected/identification/IdentificationScreen';
+import SoilMapScreen from '../../screens/protected/map/SoilMapScreen';
+import ChatScreen from '../../screens/protected/chat/ChatScreen';
+import SettingsScreen from '../../screens/protected/settings/SettingsScreen';
+ 
 
 const Tab = createBottomTabNavigator();
 
@@ -36,30 +37,30 @@ const TabsLayout = () => {
                 tabBarStyle: styles.tabBar,
             })}
         >
-            <Tab.Screen 
-                name="Home" 
-                component={HomeScreen} 
-                options={{ headerShown: false }} 
+            <Tab.Screen
+                name="Home"
+                component={HomeScreen}
+                options={{ headerShown: false }}
             />
-            <Tab.Screen 
-                name="Identification" 
-                component={IdentificationScreen} 
-                options={{ headerShown: false }} 
+            <Tab.Screen
+                name="Identification"
+                component={IdentificationScreen}
+                options={{ headerShown: false }}
             />
-            <Tab.Screen 
-                name="SoilMap" 
-                component={SoilMapScreen} 
-                options={{ headerShown: false }} 
+            <Tab.Screen
+                name="SoilMap"
+                component={SoilMapScreen}
+                options={{ headerShown: false }}
             />
-            <Tab.Screen 
-                name="Chat" 
-                component={ChatScreen} 
-                options={{ headerShown: false }} 
+            <Tab.Screen
+                name="Chat"
+                component={ChatScreen}
+                options={{ headerShown: false }}
             />
-            <Tab.Screen 
-                name="Settings" 
-                component={SettingsScreen} 
-                options={{ headerShown: false }} 
+            <Tab.Screen
+                name="Settings"
+                component={SettingsScreen}
+                options={{ headerShown: false }}
             />
         </Tab.Navigator>
     );

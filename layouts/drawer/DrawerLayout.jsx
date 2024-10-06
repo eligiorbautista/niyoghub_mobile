@@ -6,7 +6,7 @@ import {
   DrawerItemList,
 } from "@react-navigation/drawer";
 import { Ionicons } from "@expo/vector-icons";
-import TabsLayout from "./tabs/TabsLayout";
+import TabsLayout from "../tabs/TabsLayout";
 import { useNavigation } from "@react-navigation/native";
 import ProfileScreen from "../../screens/protected/profile/ProfileScreen";
 import FeedbackScreen from "../../screens/protected/feedback/FeedbackScreen";
