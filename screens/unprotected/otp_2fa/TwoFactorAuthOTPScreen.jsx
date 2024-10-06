@@ -1,11 +1,34 @@
-import React, { useRef, useState } from 'react';
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, Image, KeyboardAvoidingView, Platform, Modal } from 'react-native';
+import React, { useRef, useState, useEffect } from 'react';
+import { StyleSheet, Text, View, TextInput, TouchableOpacity, Image, KeyboardAvoidingView, Platform } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import TwoFactorAuthOTPModal from '../../../components/otp_2fa/TwoFactorAuthOTPModal';
 
-const OTPScreen = ({ navigation }) => {
+const TwoFactorAuthOTPScreen = ({ navigation }) => {
   const [otp, setOtp] = useState(Array(6).fill(''));
   const [isModalVisible, setIsModalVisible] = useState(false);
   const otpRefs = Array(6).fill().map(() => useRef(null));
+
+  // countdown state
+  const [countdown, setCountdown] = useState(300); // (5 minutes)
+  const [isCountdownActive, setIsCountdownActive] = useState(true);
+
+  useEffect(() => {
+    // countdown timer
+    if (isCountdownActive) {
+      const timerId = setInterval(() => {
+        setCountdown(prev => {
+          if (prev <= 1) {
+            clearInterval(timerId);
+            setIsCountdownActive(false); // end 
+            return 0; // end
+          }
+          return prev - 1;
+        });
+      }, 1000);
+
+      return () => clearInterval(timerId); // clear timer on unmount
+    }
+  }, [isCountdownActive]);
 
   const handleOTPChange = (value, index) => {
     const newOtp = [...otp];
@@ -22,16 +45,23 @@ const OTPScreen = ({ navigation }) => {
   };
 
   const handleVerifyOTP = () => {
+    navigation.navigate('Layout');
     const enteredOtp = otp.join('');
     console.log(`OTP Entered: ${enteredOtp}`);
   };
 
   const handleInfoDialog = () => {
-    setIsModalVisible(true); // Show the modal
+    setIsModalVisible(true);
   };
 
   const closeModal = () => {
-    setIsModalVisible(false); // Hide the modal
+    setIsModalVisible(false);
+  };
+
+  const handleResendCode = () => {
+    console.log("Resending OTP...");
+    setCountdown(300); // reset
+    setIsCountdownActive(true); // start
   };
 
   return (
@@ -54,9 +84,9 @@ const OTPScreen = ({ navigation }) => {
         </TouchableOpacity>
       </View>
 
-      <Text style={styles.title}>OTP Verification</Text>
+      <Text style={styles.title}>Two-Factor Authentication</Text>
       <Text style={styles.subtitle}>
-        Please enter the One-Time Password (OTP) sent to your email or mobile number.
+        Please enter the One-Time Password (OTP) sent to your registered email to complete the sign-in process.
       </Text>
 
       {/* OTP input boxes */}
@@ -76,47 +106,29 @@ const OTPScreen = ({ navigation }) => {
 
       <View style={styles.resendContainer}>
         <Text>Didn't get the code? </Text>
-        <TouchableOpacity>
-          <Text style={styles.resendText}>Resend Code</Text>
+        <TouchableOpacity onPress={handleResendCode} disabled={isCountdownActive}>
+          <Text style={styles.resendText}>
+            {isCountdownActive ? `Resend code in ${countdown}s` : 'Resend Code'}
+          </Text>
         </TouchableOpacity>
       </View>
       <View style={styles.signInRow}>
-        <Text style={styles.link}>Already have an account? </Text>
+        <Text style={styles.link}>Already have access? </Text>
         <TouchableOpacity onPress={() => navigation.navigate('Login')}>
           <Text style={styles.signInText}>Sign In</Text>
         </TouchableOpacity>
       </View>
 
       <TouchableOpacity style={styles.verifyButton} onPress={handleVerifyOTP}>
-        <Text style={styles.verifyButtonText}>Verify</Text>
+        <Text style={styles.verifyButtonText}>Verify OTP</Text>
       </TouchableOpacity>
 
-      {/* modal */}
-      <Modal
-        animationType="fade"
-        transparent={true}
-        visible={isModalVisible}
-        onRequestClose={closeModal}
-      >
-        <View style={styles.modalContainer}>
-          <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>What is an OTP?</Text>
-            <Text style={styles.modalText}>
-              An OTP (One-Time Password) is a temporary code sent to your email or phone. It is used
-              to verify your identity when logging in or completing a transaction. Each OTP can only
-              be used once and usually expires after a short period of time.
-            </Text>
-            <TouchableOpacity style={styles.modalButton} onPress={closeModal}>
-              <Text style={styles.modalButtonText}>Got it!</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </Modal>
+      <TwoFactorAuthOTPModal isVisible={isModalVisible} onClose={closeModal} />
     </KeyboardAvoidingView>
   );
 };
 
-export default OTPScreen;
+export default TwoFactorAuthOTPScreen;
 
 const styles = StyleSheet.create({
   container: {
@@ -193,41 +205,6 @@ const styles = StyleSheet.create({
   verifyButtonText: {
     color: '#FFF',
     fontSize: 14,
-    fontWeight: 'bold',
-  },
-  // Modal styles
-  modalContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-  },
-  modalContent: {
-    width: '80%',
-    backgroundColor: 'white',
-    borderRadius: 10,
-    padding: 20,
-    alignItems: 'center',
-  },
-  modalTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginBottom: 10,
-  },
-  modalText: {
-    fontSize: 16,
-    textAlign: 'center',
-    marginBottom: 20,
-  },
-  modalButton: {
-    backgroundColor: '#537F19',
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 10,
-    marginTop: 15,
-  },
-  modalButtonText: {
-    color: 'white',
     fontWeight: 'bold',
   },
 });

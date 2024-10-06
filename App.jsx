@@ -1,18 +1,21 @@
-import { StyleSheet } from "react-native";
 import React, { useEffect, useState } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import DrawerLayout from "./layouts/DrawerLayout";
+import DrawerLayout from "./layouts/drawer/DrawerLayout";
 import NotificationsScreen from "./screens/protected/notifications/NotificationsScreen";
 import OnboardingScreen from "./screens/unprotected/onboarding/OnboardingScreen";
 import SplashScreen from "./screens/unprotected/splashscreen/SplashScreen";
 import LoginScreen from "./screens/unprotected/login/LoginScreen";
-import OTPScreen from "./screens/unprotected/otp/OTPScreen";
 import RegistrationScreen from "./screens/unprotected/registration/RegistrationScreen";
+<<<<<<< HEAD
 import SettingsScreen from "./screens/protected/settings/SettingsScreen";
 import AccountSettingsScreen from "./screens/protected/settings/AccountSettingsScreen";
 import ProfileSettingsScreen from "./screens/protected/settings/ProfileSettingsScreen";
 import NotificationSettingsScreen from "./screens/protected/settings/NotificationSettingsScreen";
+=======
+import ResetPasswordOTPScreen from "./screens/unprotected/otp_reset_password/ResetPasswordOTPScreen";
+import TwoFactorAuthOTPScreen from "./screens/unprotected/otp_2fa/TwoFactorAuthOTPScreen";
+>>>>>>> 4de1d83540c7008e0e992ad2209ad38aa61df818
 
 const Stack = createNativeStackNavigator();
 
@@ -35,7 +38,8 @@ const App = () => {
         />
         <Stack.Screen name="Registration" component={RegistrationScreen} />
         <Stack.Screen name="Login" component={LoginScreen} />
-        <Stack.Screen name="OTP" component={OTPScreen} />
+        <Stack.Screen name="TwoFactorAuthOTP" component={TwoFactorAuthOTPScreen} />
+        <Stack.Screen name="ResetPasswordOTP" component={ResetPasswordOTPScreen} />
 
         {/* protected  */}
         <Stack.Screen name="Layout" component={DrawerLayout} />
