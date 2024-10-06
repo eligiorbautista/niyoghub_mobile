@@ -37,6 +37,8 @@ const App = () => {
         <Stack.Screen name="Login" component={LoginScreen} />
         <Stack.Screen name="TwoFactorAuthOTP" component={TwoFactorAuthOTPScreen} />
         <Stack.Screen name="ResetPasswordOTP" component={ResetPasswordOTPScreen} />
+        <Stack.Screen name="Layout" component={DrawerLayout} />
+        <Stack.Screen name="Notifications" component={NotificationsScreen} />
 
 
         {/* Settings-related screens */}
