@@ -9,6 +9,10 @@ import SplashScreen from "./screens/unprotected/splashscreen/SplashScreen";
 import LoginScreen from "./screens/unprotected/login/LoginScreen";
 import OTPScreen from "./screens/unprotected/otp/OTPScreen";
 import RegistrationScreen from "./screens/unprotected/registration/RegistrationScreen";
+import SettingsScreen from "./screens/protected/settings/SettingsScreen";
+import AccountSettingsScreen from "./screens/protected/settings/AccountSettingsScreen";
+import ProfileSettingsScreen from "./screens/protected/settings/ProfileSettingsScreen";
+import NotificationSettingsScreen from "./screens/protected/settings/NotificationSettingsScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -36,6 +40,14 @@ const App = () => {
         {/* protected  */}
         <Stack.Screen name="Layout" component={DrawerLayout} />
         <Stack.Screen name="Notifications" component={NotificationsScreen} />
+
+
+        {/* Settings-related screens */}
+        <Stack.Screen name="Settings" component={SettingsScreen} />
+        <Stack.Screen name="AccountSettings" component={AccountSettingsScreen} />
+        <Stack.Screen name="ProfileSettings" component={ProfileSettingsScreen} />
+        <Stack.Screen name="NotificationSettings" component={NotificationSettingsScreen} />
+
       </Stack.Navigator>
     </NavigationContainer>
   );

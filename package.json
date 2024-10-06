@@ -25,7 +25,8 @@
     "react-native-reanimated": "~3.10.1",
     "react-native-svg": "^15.7.1",
     "reanimated": "^0.0.1-alpha",
-    "tailwind-rn": "^4.2.0"
+    "tailwind-rn": "^4.2.0",
+    "expo-image-picker": "~15.0.7"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"
