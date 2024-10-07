@@ -1,6 +1,13 @@
-import { StyleSheet, Text, View, TouchableOpacity, Image, ScrollView } from 'react-native';
-import React, { useState } from 'react';
-import { Ionicons } from '@expo/vector-icons';
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  Image,
+  ScrollView,
+} from "react-native";
+import React, { useState } from "react";
+import { Ionicons } from "@expo/vector-icons";
 
 const FAQItem = ({ question, answer }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -13,7 +20,7 @@ const FAQItem = ({ question, answer }) => {
       >
         <Text style={styles.questionText}>{question}</Text>
         <Ionicons
-          name={isOpen ? 'chevron-up' : 'chevron-down'}
+          name={isOpen ? "chevron-up" : "chevron-down"}
           size={24}
           color="black"
         />
@@ -25,7 +32,6 @@ const FAQItem = ({ question, answer }) => {
 
 const FAQScreen = ({ navigation }) => {
   return (
-    
     <View style={styles.container}>
       {/* header */}
       <View style={styles.header}>
@@ -38,16 +44,15 @@ const FAQScreen = ({ navigation }) => {
           style={styles.headerImage}
         />
 
-        <TouchableOpacity
-          onPress={() => navigation.navigate("NotificationSettings")}
-        >
-          <Ionicons name="settings-outline" size={24} color="black" />
-        </TouchableOpacity>
+        <Ionicons name="settings-outline" size={24} color="#F0F0F0" />
       </View>
       <Text style={styles.title}>Frequently asked questions</Text>
 
-      <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
-        {/* FAQ Items */}
+      <ScrollView
+        style={styles.scrollView}
+        showsVerticalScrollIndicator={false}
+      >
+        {/* faq Items */}
         <FAQItem
           question="How do I reset my password?"
           answer="Go to Settings, then choose 'Account', and tap on 'Password Reset'. Follow the steps to change your password."
@@ -74,46 +79,45 @@ export default FAQScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F9F9F9',
+    backgroundColor: "#F9F9F9",
   },
   title: {
     fontSize: 22,
-    fontWeight: 'bold',
-    color: '#000',
+    fontWeight: "bold",
+    color: "#000",
     marginTop: 20,
     marginBottom: 20,
-    textAlign: 'start',
+    textAlign: "start",
     paddingHorizontal: 20,
   },
-  /* FAQ item */
+  /* faq item */
   faqItem: {
     marginBottom: 10,
-    backgroundColor: '#FFF',
+    backgroundColor: "#FFF",
     borderRadius: 8,
     borderWidth: 1,
-    borderColor: '#E0E0E0',
+    borderColor: "#E0E0E0",
     padding: 10,
-    
   },
 
   faqHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
   },
   questionText: {
     flex: 1,
     fontSize: 16,
-    color: '#333',
+    color: "#333",
     paddingRight: 10,
   },
   answerText: {
     marginTop: 10,
     fontSize: 14,
-    color: '#555',
+    color: "#555",
   },
   /* header */
-   header: {
+  header: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",

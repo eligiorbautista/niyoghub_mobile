@@ -4,7 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 import moment from 'moment';
 
 const NotificationItem = ({ notification, onPress }) => {
-  const formattedTime = moment(notification.createdAt).fromNow(); // Format time  
+  const formattedTime = moment(notification.createdAt).fromNow();   
 
   return (
     <TouchableOpacity style={styles.notificationItem} onPress={onPress}>

@@ -10,7 +10,7 @@ import React, { useEffect } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 
-// Mock user data
+// mock user data
 const mockUser = {
   fullName: "Juan Dela Cruz",
   email: "juandelacruz@gmail.com",
@@ -42,7 +42,11 @@ const ProfileScreen = () => {
             style={styles.headerImage}
           />
 
-          <Ionicons name="information-circle-outline" size={24} color="#F0F0F0" />
+          <Ionicons
+            name="information-circle-outline"
+            size={24}
+            color="#F0F0F0"
+          />
         </View>
       </View>
 
@@ -99,7 +103,7 @@ const ProfileScreen = () => {
           </View>
         </View>
 
-        {/* settings card */}
+        {/* card */}
         <View style={styles.settingsCard}>
           <TouchableOpacity
             style={styles.settingsOption}

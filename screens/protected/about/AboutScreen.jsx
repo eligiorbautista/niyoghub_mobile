@@ -18,11 +18,9 @@ const AboutScreen = ({ navigation }) => {
           style={styles.headerImage}
         />
 
-        <TouchableOpacity
-          onPress={() => navigation.navigate("NotificationSettings")}
-        >
-          <Ionicons name="settings-outline" size={24} color="black" />
-        </TouchableOpacity>
+       
+          <Ionicons name="settings-outline" size={24} color="#F0F0F0" />
+     
       </View>
 
 

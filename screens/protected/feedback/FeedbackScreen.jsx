@@ -41,17 +41,17 @@ const StarRating = ({ maxStars = 5, rating, onRatingChange }) => {
 const FeedbackScreen = ({ navigation }) => {
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState("");
-  const [isModalVisible, setModalVisible] = useState(false); // Modal visibility state
-  const [isInfoModalVisible, setInfoModalVisible] = useState(false); // Info modal visibility state
+  const [isModalVisible, setModalVisible] = useState(false);
+  const [isInfoModalVisible, setInfoModalVisible] = useState(false);
 
   const handleSendFeedback = () => {
-    setModalVisible(true); // Show the modal when feedback is submitted
+    setModalVisible(true);
     setRating(0);
     setComment("");
   };
 
   const closeModal = () => {
-    setModalVisible(false); // Close the modal when the close button is pressed
+    setModalVisible(false);
   };
 
   return (
@@ -71,10 +71,12 @@ const FeedbackScreen = ({ navigation }) => {
             style={styles.headerImage}
           />
 
-          <TouchableOpacity
-            onPress={() => navigation.navigate("NotificationSettings")}
-          >
-            <Ionicons name="settings-outline" size={24} color="black" />
+          <TouchableOpacity onPress={() => setInfoModalVisible(true)}>
+            <Ionicons
+              name="information-circle-outline"
+              size={24}
+              color="black"
+            />
           </TouchableOpacity>
         </View>
 
@@ -110,10 +112,8 @@ const FeedbackScreen = ({ navigation }) => {
           </TouchableOpacity>
         </View>
 
-        {/* Feedback Modal */}
+        {/* modals */}
         <ThankYouModal visible={isModalVisible} onClose={closeModal} />
-
-        {/* Feedback Info Modal */}
         <FeedbackInfoModal
           isVisible={isInfoModalVisible}
           onClose={() => setInfoModalVisible(false)}
@@ -179,13 +179,12 @@ const styles = StyleSheet.create({
   content: {
     flex: 1,
     justifyContent: "flex-start",
-    
+
     paddingHorizontal: 20,
   },
   ratingContainer: {
     alignItems: "flex-start",
     marginBottom: 20,
-    
   },
   commentInput: {
     borderWidth: 1,
