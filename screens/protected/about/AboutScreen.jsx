@@ -8,19 +8,21 @@ const AboutScreen = ({ navigation }) => {
   return (
     <ScrollView style={styles.container}>
       {/* header */}
-      <View style={styles.headerContainer}>
-        <View style={styles.header}>
-          <TouchableOpacity onPress={() => navigation.goBack()}>
-            <Ionicons name="arrow-back" size={24} color="black" />
-          </TouchableOpacity>
+      <View style={styles.header}>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <Ionicons name="arrow-back" size={24} color="black" />
+        </TouchableOpacity>
 
-          <Image
-            source={require('../../../assets/niyoghub_banner_1.png')}
-            style={styles.headerImage}
-          />
+        <Image
+          source={require("../../../assets/niyoghub_banner_1.png")}
+          style={styles.headerImage}
+        />
 
-          <Ionicons name="information-circle-outline" size={24} color="#fff" />
-        </View>
+        <TouchableOpacity
+          onPress={() => navigation.navigate("NotificationSettings")}
+        >
+          <Ionicons name="settings-outline" size={24} color="black" />
+        </TouchableOpacity>
       </View>
 
 
@@ -87,21 +89,22 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   /* header */
-  headerContainer: {
-    backgroundColor: '#FFFFFF',
-    marginHorizontal: 20,
-    paddingTop: 30,
-  },
   header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingVertical: 10,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingVertical: 8,
+    paddingHorizontal: 20,
+    backgroundColor: "#F0F0F0",
+    borderBottomWidth: 1,
+    borderBottomColor: "#E0E0E0",
+    marginTop: 35,
+    marginBottom : 10,
   },
   headerImage: {
-    width: 120,
-    height: 40,
-    resizeMode: 'contain',
+    width: 150,
+    height: 50,
+    resizeMode: "contain",
   },
 
   /* content */

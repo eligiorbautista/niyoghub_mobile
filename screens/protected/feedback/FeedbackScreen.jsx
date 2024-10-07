@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -11,22 +11,25 @@ import {
   Image,
   TouchableWithoutFeedback,
   Keyboard,
-} from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
-import ThankYouModal from '../../../components/feedback/ThankYouModal';  
-import FeedbackInfoModal from '../../../components/feedback/FeedbackInfoModal';  
+} from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import ThankYouModal from "../../../components/feedback/ThankYouModal";
+import FeedbackInfoModal from "../../../components/feedback/FeedbackInfoModal";
 
 const StarRating = ({ maxStars = 5, rating, onRatingChange }) => {
   return (
-    <View style={{ flexDirection: 'row', marginBottom: 20 }}>
+    <View style={{ flexDirection: "row", marginBottom: 20 }}>
       {Array(maxStars)
         .fill(0)
         .map((_, index) => (
-          <TouchableOpacity key={index} onPress={() => onRatingChange(index + 1)}>
+          <TouchableOpacity
+            key={index}
+            onPress={() => onRatingChange(index + 1)}
+          >
             <Ionicons
-              name={index < rating ? 'star' : 'star-outline'}
+              name={index < rating ? "star" : "star-outline"}
               size={35}
-              color={index < rating ? '#537F19' : '#CCC'}
+              color={index < rating ? "#537F19" : "#CCC"}
               style={{ marginRight: 10 }}
             />
           </TouchableOpacity>
@@ -37,14 +40,14 @@ const StarRating = ({ maxStars = 5, rating, onRatingChange }) => {
 
 const FeedbackScreen = ({ navigation }) => {
   const [rating, setRating] = useState(0);
-  const [comment, setComment] = useState('');
+  const [comment, setComment] = useState("");
   const [isModalVisible, setModalVisible] = useState(false); // Modal visibility state
   const [isInfoModalVisible, setInfoModalVisible] = useState(false); // Info modal visibility state
 
   const handleSendFeedback = () => {
     setModalVisible(true); // Show the modal when feedback is submitted
     setRating(0);
-    setComment('');
+    setComment("");
   };
 
   const closeModal = () => {
@@ -53,24 +56,26 @@ const FeedbackScreen = ({ navigation }) => {
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+      <KeyboardAvoidingView
+        style={styles.container}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+      >
         {/* header */}
-        <View style={styles.headerContainer}>
-          <View style={styles.header}>
-            <TouchableOpacity onPress={() => navigation.goBack()}>
-              <Ionicons name="arrow-back" size={24} color="black" />
-            </TouchableOpacity>
+        <View style={styles.header}>
+          <TouchableOpacity onPress={() => navigation.goBack()}>
+            <Ionicons name="arrow-back" size={24} color="black" />
+          </TouchableOpacity>
 
-            <Image
-              source={require('../../../assets/niyoghub_banner_1.png')}
-              style={styles.headerImage}
-            />
+          <Image
+            source={require("../../../assets/niyoghub_banner_1.png")}
+            style={styles.headerImage}
+          />
 
-            {/* Info icon to show the FeedbackInfoModal */}
-            <TouchableOpacity onPress={() => setInfoModalVisible(true)}>
-              <Ionicons name="information-circle-outline" size={24} color="black" />
-            </TouchableOpacity>
-          </View>
+          <TouchableOpacity
+            onPress={() => navigation.navigate("NotificationSettings")}
+          >
+            <Ionicons name="settings-outline" size={24} color="black" />
+          </TouchableOpacity>
         </View>
 
         {/* feedback section */}
@@ -78,7 +83,9 @@ const FeedbackScreen = ({ navigation }) => {
           <Text style={styles.title}>Feedback</Text>
           <Text style={styles.headerText}>Rate Your Experience</Text>
         </View>
-        <Text style={styles.subLabel}>Are you satisfied with your experience?</Text>
+        <Text style={styles.subLabel}>
+          Are you satisfied with your experience?
+        </Text>
 
         <View style={styles.content}>
           <View style={styles.ratingContainer}>
@@ -107,7 +114,10 @@ const FeedbackScreen = ({ navigation }) => {
         <ThankYouModal visible={isModalVisible} onClose={closeModal} />
 
         {/* Feedback Info Modal */}
-        <FeedbackInfoModal isVisible={isInfoModalVisible} onClose={() => setInfoModalVisible(false)} />
+        <FeedbackInfoModal
+          isVisible={isInfoModalVisible}
+          onClose={() => setInfoModalVisible(false)}
+        />
       </KeyboardAvoidingView>
     </TouchableWithoutFeedback>
   );
@@ -118,79 +128,84 @@ export default FeedbackScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F9F9F9',
-    paddingHorizontal: 20,
+    backgroundColor: "#F9F9F9",
   },
 
   /* header */
-  headerContainer: {
-    backgroundColor: '#FFFFFF',
-    paddingHorizontal: 10,
-    paddingTop: 30,
-  },
   header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingVertical: 10,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingVertical: 8,
+    paddingHorizontal: 20,
+    backgroundColor: "#F0F0F0",
+    borderBottomWidth: 1,
+    borderBottomColor: "#E0E0E0",
+    marginTop: 35,
   },
   headerImage: {
-    width: 120,
-    height: 40,
-    resizeMode: 'contain',
+    width: 150,
+    height: 50,
+    resizeMode: "contain",
   },
-
   /* content */
   headerTextContainer: {
     marginTop: 20,
     marginBottom: 10,
+
+    paddingHorizontal: 20,
   },
   headerText: {
     fontSize: 26,
-    fontWeight: '400',
-    textAlign: 'start',
+    fontWeight: "400",
+    textAlign: "start",
   },
   subLabel: {
     fontSize: 14,
-    color: '#777',
+    color: "#777",
     marginTop: 5,
     marginBottom: 20,
-    textAlign: 'start',
+    textAlign: "start",
+
+    paddingHorizontal: 20,
   },
   title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#537F19',
-    textAlign: 'start',
-    marginBottom: 10,
+    fontSize: 22,
+    fontWeight: "bold",
+    color: "#000",
+    textAlign: "start",
+    marginBottom: 4,
   },
   content: {
     flex: 1,
-    justifyContent: 'flex-start',
+    justifyContent: "flex-start",
+    
+    paddingHorizontal: 20,
   },
   ratingContainer: {
-    alignItems: 'flex-start',
+    alignItems: "flex-start",
     marginBottom: 20,
+    
   },
   commentInput: {
     borderWidth: 1,
-    borderColor: '#E0E0E0',
+    borderColor: "#E0E0E0",
     borderRadius: 6,
     padding: 15,
-    backgroundColor: '#FFF',
-    textAlignVertical: 'top',
+    backgroundColor: "#FFF",
+    textAlignVertical: "top",
     fontSize: 14,
     marginBottom: 20,
   },
   submitButton: {
-    backgroundColor: '#537F19',
+    backgroundColor: "#537F19",
     paddingVertical: 12,
     borderRadius: 25,
-    alignItems: 'center',
+    alignItems: "center",
   },
   submitButtonText: {
-    color: '#FFF',
+    color: "#FFF",
     fontSize: 14,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
 });

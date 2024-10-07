@@ -1,7 +1,14 @@
-import { StyleSheet, Text, View, TouchableOpacity, Image, ScrollView } from 'react-native';
-import React, { useEffect } from 'react';
-import { Ionicons } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  Image,
+  ScrollView,
+} from "react-native";
+import React, { useEffect } from "react";
+import { Ionicons } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
 
 // Mock user data
 const mockUser = {
@@ -18,7 +25,7 @@ const ProfileScreen = () => {
   const navigation = useNavigation();
 
   useEffect(() => {
-    console.log('Mock User data:', mockUser);
+    console.log("Mock User data:", mockUser);
   }, []);
 
   return (
@@ -31,20 +38,30 @@ const ProfileScreen = () => {
           </TouchableOpacity>
 
           <Image
-            source={require('../../../assets/niyoghub_banner_1.png')}
+            source={require("../../../assets/niyoghub_banner_1.png")}
             style={styles.headerImage}
           />
 
-          <Ionicons name="information-circle-outline" size={24} color="#fff" />
+          <Ionicons name="information-circle-outline" size={24} color="#F0F0F0" />
         </View>
       </View>
 
-      <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
+      <ScrollView
+        style={styles.scrollView}
+        showsVerticalScrollIndicator={false}
+      >
         {/* profile section */}
         <View style={styles.profileContainer}>
-          <Image source={require('../../../assets/farmer.png')} style={styles.profilePicture} />
-          <Text style={styles.fullName}>{mockUser?.fullName || 'Full Name'}</Text>
-          <Text style={styles.email}>{mockUser?.email || 'Email not available'}</Text>
+          <Image
+            source={require("../../../assets/farmer.png")}
+            style={styles.profilePicture}
+          />
+          <Text style={styles.fullName}>
+            {mockUser?.fullName || "Full Name"}
+          </Text>
+          <Text style={styles.email}>
+            {mockUser?.email || "Email not available"}
+          </Text>
 
           <TouchableOpacity style={styles.editButton}>
             <Ionicons name="create-outline" size={18} color="#537F19" />
@@ -69,24 +86,33 @@ const ProfileScreen = () => {
           <View style={styles.infoRow}>
             <Ionicons name="shield-checkmark-outline" size={20} color="#444" />
             <Text style={styles.infoText}>
-              Two-Factor Authentication: {mockUser?.isTwoFactorEnabled ? 'Enabled' : 'Disabled'}
+              Two-Factor Authentication:{" "}
+              {mockUser?.isTwoFactorEnabled ? "Enabled" : "Disabled"}
             </Text>
           </View>
 
           <View style={styles.infoRow}>
             <Ionicons name="key-outline" size={20} color="#444" />
-            <Text style={styles.infoText}>Account Type: {mockUser?.accountType}</Text>
+            <Text style={styles.infoText}>
+              Account Type: {mockUser?.accountType}
+            </Text>
           </View>
         </View>
 
         {/* settings card */}
         <View style={styles.settingsCard}>
-          <TouchableOpacity style={styles.settingsOption} onPress={() => navigation.navigate('AccountSettings')}>
+          <TouchableOpacity
+            style={styles.settingsOption}
+            onPress={() => navigation.navigate("AccountSettings")}
+          >
             <Ionicons name="settings-outline" size={20} color="#444" />
             <Text style={styles.settingsText}>Account Settings</Text>
           </TouchableOpacity>
           <View style={styles.divider}></View>
-          <TouchableOpacity style={styles.logoutButton} onPress={() => navigation.navigate('Login')}>
+          <TouchableOpacity
+            style={styles.logoutButton}
+            onPress={() => navigation.navigate("Login")}
+          >
             <Ionicons name="log-out-outline" size={20} color="white" />
             <Text style={styles.logoutButtonText}>Logout</Text>
           </TouchableOpacity>
@@ -101,31 +127,31 @@ export default ProfileScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F9F9F9',
-    paddingHorizontal: 20,
+    backgroundColor: "#F9F9F9",
   },
   /* header */
-  headerContainer: {
-    backgroundColor: '#FFFFFF',
-    paddingHorizontal: 10,
-    paddingTop: 30,
-  },
   header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingVertical: 10,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingVertical: 8,
+    paddingHorizontal: 20,
+    backgroundColor: "#F0F0F0",
+    borderBottomWidth: 1,
+    borderBottomColor: "#E0E0E0",
+    marginTop: 35,
+    marginBottom: 10,
   },
   headerImage: {
-    width: 120,
-    height: 40,
-    resizeMode: 'contain',
+    width: 150,
+    height: 50,
+    resizeMode: "contain",
   },
   scrollView: {
     flex: 1,
   },
   profileContainer: {
-    alignItems: 'center',
+    alignItems: "center",
     marginVertical: 20,
   },
   profilePicture: {
@@ -136,18 +162,18 @@ const styles = StyleSheet.create({
   },
   fullName: {
     fontSize: 24,
-    fontWeight: 'bold',
-    color: '#333',
+    fontWeight: "bold",
+    color: "#333",
   },
   email: {
     fontSize: 16,
-    color: '#666',
+    color: "#666",
     marginBottom: 10,
   },
   editButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderColor: '#537F19',
+    flexDirection: "row",
+    alignItems: "center",
+    borderColor: "#537F19",
     borderWidth: 1.3,
     paddingVertical: 6,
     paddingHorizontal: 15,
@@ -156,65 +182,67 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   editButtonText: {
-    color: '#537F19',
+    color: "#537F19",
     fontSize: 14,
     marginLeft: 5,
-    fontWeight: '500',
+    fontWeight: "500",
   },
   infoCard: {
-    backgroundColor: '#FFF',
+    backgroundColor: "#FFF",
     padding: 20,
     borderRadius: 8,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     marginBottom: 20,
+    marginHorizontal: 20,
   },
   infoRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     marginBottom: 15,
   },
   infoText: {
     fontSize: 16,
     marginLeft: 10,
-    color: '#444',
+    color: "#444",
   },
 
   settingsCard: {
-    backgroundColor: '#FFF',
+    backgroundColor: "#FFF",
     padding: 20,
     borderRadius: 8,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
+    marginHorizontal: 20,
   },
   settingsOption: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     marginBottom: 20,
   },
   settingsText: {
     fontSize: 16,
     marginLeft: 10,
-    color: '#444',
+    color: "#444",
   },
   logoutButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#537F19',
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#537F19",
     paddingVertical: 12,
     paddingHorizontal: 20,
     borderRadius: 25,
-    justifyContent: 'center',
+    justifyContent: "center",
   },
   logoutButtonText: {
-    color: 'white',
+    color: "white",
     fontSize: 14,
     marginLeft: 10,
   },
   divider: {
     height: 1,
-    backgroundColor: '#E0E0E0',
+    backgroundColor: "#E0E0E0",
     marginBottom: 20,
-    width: '100%',
+    width: "100%",
   },
 });

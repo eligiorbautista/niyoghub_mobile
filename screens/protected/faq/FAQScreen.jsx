@@ -25,24 +25,26 @@ const FAQItem = ({ question, answer }) => {
 
 const FAQScreen = ({ navigation }) => {
   return (
+    
     <View style={styles.container}>
-      {/* Header */}
-      <View style={styles.headerContainer}>
-        <View style={styles.header}>
-          <TouchableOpacity onPress={() => navigation.goBack()}>
-            <Ionicons name="arrow-back" size={24} color="black" />
-          </TouchableOpacity>
+      {/* header */}
+      <View style={styles.header}>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <Ionicons name="arrow-back" size={24} color="black" />
+        </TouchableOpacity>
 
-          <Image
-            source={require('../../../assets/niyoghub_banner_1.png')}
-            style={styles.headerImage}
-          />
+        <Image
+          source={require("../../../assets/niyoghub_banner_1.png")}
+          style={styles.headerImage}
+        />
 
-          <Ionicons name="information-circle-outline" size={24} color="#fff" />
-        </View>
+        <TouchableOpacity
+          onPress={() => navigation.navigate("NotificationSettings")}
+        >
+          <Ionicons name="settings-outline" size={24} color="black" />
+        </TouchableOpacity>
       </View>
-
-      <Text style={styles.title}>FREQUENTLY ASKED QUESTIONS</Text>
+      <Text style={styles.title}>Frequently asked questions</Text>
 
       <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
         {/* FAQ Items */}
@@ -73,15 +75,15 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#F9F9F9',
-    paddingHorizontal: 20,
   },
   title: {
-    fontSize: 18,
+    fontSize: 22,
     fontWeight: 'bold',
-    color: '#537F19',
+    color: '#000',
     marginTop: 20,
     marginBottom: 20,
-    textAlign: 'center',
+    textAlign: 'start',
+    paddingHorizontal: 20,
   },
   /* FAQ item */
   faqItem: {
@@ -91,6 +93,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#E0E0E0',
     padding: 10,
+    
   },
 
   faqHeader: {
@@ -110,23 +113,24 @@ const styles = StyleSheet.create({
     color: '#555',
   },
   /* header */
-  headerContainer: {
-    backgroundColor: '#FFFFFF',
-    paddingHorizontal: 10,
-    paddingTop: 30,
-  },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingVertical: 10,
+   header: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingVertical: 8,
+    paddingHorizontal: 20,
+    backgroundColor: "#F0F0F0",
+    borderBottomWidth: 1,
+    borderBottomColor: "#E0E0E0",
+    marginTop: 35,
   },
   headerImage: {
-    width: 120,
-    height: 40,
-    resizeMode: 'contain',
+    width: 150,
+    height: 50,
+    resizeMode: "contain",
   },
   scrollView: {
     flex: 1,
+    paddingHorizontal: 20,
   },
 });
