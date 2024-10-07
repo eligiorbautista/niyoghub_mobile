@@ -91,7 +91,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    textAlign: 'center',
     paddingVertical: 8,
     paddingHorizontal: 20,
     backgroundColor: '#F0F0F0',
@@ -100,14 +99,13 @@ const styles = StyleSheet.create({
     marginTop: 35,
   },
   titleContainer: {
-    flex: 1,          
-    alignItems: 'center', 
-    paddingVertical: 5,   
+    flex: 1,
+    alignItems: 'center',
+    paddingVertical: 8,
   },
   headerTitle: {
     fontSize: 20,
     fontWeight: 'bold',
-    padding: 8,
   },
   back: {
     fontSize: 18,

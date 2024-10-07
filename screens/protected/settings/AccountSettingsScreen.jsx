@@ -128,7 +128,7 @@ const styles = StyleSheet.create({
   titleContainer: {
     flex: 1,
     alignItems: 'center',
-    paddingVertical: 5,
+    paddingVertical: 8,
   },
   headerTitle: {
     fontSize: 20,
