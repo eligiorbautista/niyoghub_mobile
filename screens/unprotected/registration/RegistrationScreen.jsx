@@ -181,15 +181,15 @@ const styles = StyleSheet.create({
     height: 50,
     borderColor: "#ccc",
     borderWidth: 1,
-    borderRadius: 10,
+    borderRadius: 5,
+    marginBottom: 15,
     paddingHorizontal: 10,
     backgroundColor: "#fff",
-    fontSize: 16,
   },
   pickerContainer: {
     borderWidth: 1,
     borderColor: "#ccc",
-    borderRadius: 10,
+    borderRadius: 5,
     backgroundColor: "#fff",
   },
   picker: {
