@@ -32,7 +32,6 @@ const HomeScreen = ({ navigation }) => {
   };
 
   return (
-
     <ScrollView style={styles.container}>
       <Text style={styles.greeting}>Hello, User!</Text>
       <Text style={styles.subGreeting}>Have a nice Monday</Text>
@@ -70,67 +69,65 @@ const HomeScreen = ({ navigation }) => {
       )}
 
       <Text style={styles.sdgTitle}>Four Global SDG's</Text>
-      <View style={styles.sdgContainer}>
-        {sdgs.map(sdg => (
-          <TouchableOpacity key={sdg.id} style={styles.sdgButton} onPress={() => openModal(sdg)}>
-            <View style={styles.sdgCard}>
-              <Image source={sdg.image} style={styles.sdgImage} />
-              <Text style={styles.sdgText}>{sdg.title}</Text>
-            </View>
-          </TouchableOpacity>
-        ))}
-      </View>
+        <View style={styles.sdgContainer}>
+          {sdgs.map(sdg => (
+            <TouchableOpacity key={sdg.id} style={styles.sdgButton} onPress={() => openModal(sdg)}>
+              <View style={styles.sdgCard}>
+                <Image source={sdg.image} style={styles.sdgImage} />
+                <Text style={styles.sdgText}>{sdg.title}</Text>
+              </View>
+            </TouchableOpacity>
+          ))}
+        </View>
 
-      {modalVisible && (
-        <SDGModal 
-          visible={modalVisible}
-          setVisible={setModalVisible}
-          selectedSDG={selectedSDG}
-        />
-      )}
+        {modalVisible && (
+          <SDGModal 
+            visible={modalVisible}
+            setVisible={setModalVisible}
+            selectedSDG={selectedSDG}
+          />
+        )}
 
-      <Text style={styles.updates}>Updates</Text>
-      <View style={styles.updatesContainer}>
-      <View style={styles.row}>
-        <Pressable
-          style={[styles.item, styles.intercroppingCard]}
-          onPress={() => navigation.navigate('Intercropping')}
-        >
-          <Image source={require('../../../assets/intercropping.png')} style={styles.intercroppingImage} />
-          <Text style={styles.title}>Coconut Intercropping</Text>
-          <Text style={styles.description}>
-            A multiple cropping practice involving growing two or more crops.
-          </Text>
-          <Pressable style={styles.knowMoreButton} onPress={() => navigation.navigate('Intercropping')}>
-            <Text style={styles.knowMoreText}>Know more</Text>
-            <Ionicons name="arrow-forward-outline" size={16} color="black" />
+        <Text style={styles.updates}>Updates</Text>
+        <View style={styles.updatesContainer}>
+        <View style={styles.row}>
+          <Pressable
+            style={[styles.item, styles.intercroppingCard]}
+            onPress={() => navigation.navigate('Intercropping')}
+          >
+            <Image source={require('../../../assets/intercropping.png')} style={styles.intercroppingImage} />
+            <Text style={styles.title}>Coconut Intercropping</Text>
+            <Text style={styles.description}>
+              A multiple cropping practice involving growing two or more crops.
+            </Text>
+            <Pressable style={styles.knowMoreButton} onPress={() => navigation.navigate('Intercropping')}>
+              <Text style={styles.knowMoreText}>Know more</Text>
+              <Ionicons name="arrow-forward-outline" size={16} color="black" />
+            </Pressable>
           </Pressable>
-        </Pressable>
 
-        <Pressable
-          style={[styles.item, styles.priceWatchCard]}
-          onPress={() => navigation.navigate('CopraPrice')}
-        >
-          <Image source={require('../../../assets/copra.png')} style={styles.copraImage} />
-          <Text style={styles.title}>Copra Price Watch</Text>
-          <Text style={styles.description}>
-            Track the daily update of copra and wholenut prices.
-          </Text>
-          <Pressable style={styles.knowMoreButton} onPress={() => navigation.navigate('CopraPrice')}>
-            <Text style={styles.knowMoreText}>Know more</Text>
-            <Ionicons name="arrow-forward-outline" size={16} color="black" />
+          <Pressable
+            style={[styles.item, styles.priceWatchCard]}
+            onPress={() => navigation.navigate('CopraPrice')}
+          >
+            <Image source={require('../../../assets/copra.png')} style={styles.copraImage} />
+            <Text style={styles.title}>Copra Price Watch</Text>
+            <Text style={styles.description}>
+              Track the daily update of copra and wholenut prices.
+            </Text>
+            <Pressable style={styles.knowMoreButton} onPress={() => navigation.navigate('CopraPrice')}>
+              <Text style={styles.knowMoreText}>Know more</Text>
+              <Ionicons name="arrow-forward-outline" size={16} color="black" />
+            </Pressable>
           </Pressable>
-        </Pressable>
+        </View>
       </View>
-    </View>
       
-    <Text style={styles.recentTitle}>Recent News & Programs</Text>
-    
-    <Text style={styles.announcement}>Announcements</Text>
-    <Image source={require('../../../assets/announcement.png')} style={styles.announcementImg} />
+      <Text style={styles.recentTitle}>Recent News & Programs</Text>
       
+      <Text style={styles.announcement}>Announcements</Text>
+      <Image source={require('../../../assets/announcement.png')} style={styles.announcementImg} />
       
-
     </ScrollView>
   );
 };
@@ -169,11 +166,13 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#ccc',
     borderRadius: 8,
+    padding: 10,
+    paddingVertical: 10,
   },
   postImage: {
     width: '100%',
     height: 150,
-    borderRadius: 8
+    borderRadius: 8,
   },
   postCategory: {
     marginTop: 5,
@@ -237,19 +236,15 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold'
   },
-
-
-
   updatesContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    // backgroundColor: '#F2F2F2',
   },
   row: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    width: '100%', // Adjust this value as needed to control the row's width
+    width: '100%', 
   },
   item: {
     flex: 1,
@@ -257,13 +252,13 @@ const styles = StyleSheet.create({
     padding: 20,
     marginVertical: 10,
     alignItems: 'flex-start',
-    marginHorizontal: 5, // Adds space between the cards
+    marginHorizontal: 5, 
   },
   intercroppingCard: {
-    backgroundColor: '#6F9B35', // Green background for Intercropping
+    backgroundColor: '#6F9B35', 
   },
   priceWatchCard: {
-    backgroundColor: '#D2D792', // Lighter background for Price Watch
+    backgroundColor: '#D2D792', 
   },
   icon: {
     marginBottom: 15,
