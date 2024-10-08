@@ -6,7 +6,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 
 const CopraPriceScreen = ({ navigation }) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [date, setDate] = useState(new Date(2024, 3, 25)); 
+  const [date, setDate] = useState(new Date(2024, 3, 25));
   const [showPicker, setShowPicker] = useState(false);
 
   const toggleModal = () => {
@@ -32,17 +32,14 @@ const CopraPriceScreen = ({ navigation }) => {
         />
 
         <TouchableOpacity
-          onPress={() => navigation.navigate("NotificationSettings")}
+          onPress={toggleModal}
         >
-          <Ionicons name="settings-outline" size={24} color="black" />
+          <Ionicons name="information-circle-outline" size={24} color="black" />
         </TouchableOpacity>
       </View>
 
       <View style={styles.copraContainer}>
         <Text style={styles.text}>COPRA AND WHOLENUT PRICE WATCH</Text>
-        <TouchableOpacity onPress={toggleModal}>
-          <Text style={styles.helpText}>!</Text>
-        </TouchableOpacity>
       </View>
 
       <View style={styles.contentContainer}>
@@ -70,8 +67,8 @@ const CopraPriceScreen = ({ navigation }) => {
       </View>
 
       <CopraPriceModal
-        visible={isModalVisible} 
-        setVisible={toggleModal} 
+        visible={isModalVisible}
+        setVisible={toggleModal}
       />
     </View>
   );
@@ -92,7 +89,7 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   text: {
-    fontSize: 24,
+    fontSize: 26,
     fontWeight: 'bold',
     color: '#6F9B35',
   },
@@ -115,7 +112,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#F0F0F0",
     borderBottomWidth: 1,
     borderBottomColor: "#E0E0E0",
-    marginTop: 35,
+    marginTop: 30,
   },
   headerImage: {
     width: 150,

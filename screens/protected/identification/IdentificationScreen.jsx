@@ -23,7 +23,7 @@ const IdentificationScreen = () => {
       console.error('Error capturing image:', error);
     }
   };
-  
+
   const handleUploadImage = async () => {
     try {
       const result = await launchImageLibrary({ mediaType: 'photo' });
@@ -34,15 +34,20 @@ const IdentificationScreen = () => {
       console.error('Error uploading image:', error);
     }
   };
-  
-  
+
+
 
   return (
     <View style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.headerText}>Disease Identification</Text>
         <TouchableOpacity onPress={toggleModal}>
-          <Text style={styles.helpText}>?</Text>
+
+          <Ionicons
+            name="information-circle-outline"
+            size={24}
+            color="black"
+          />
         </TouchableOpacity>
       </View>
       <View style={styles.divider} />
@@ -50,31 +55,31 @@ const IdentificationScreen = () => {
       <Text style={styles.instructionText}>To learn how to use NiyogHub's Disease Identification feature, click the help button.</Text>
       <View style={styles.uploadBodyContainer}>
         <View style={styles.imageContainer}>
-        {imageUri ? (
-          <Image source={{ uri: imageUri }} style={styles.image} />
-        ) : (
-          <View style={styles.placeholder}>
-            <Ionicons name="camera" size={60} color="#6FA542" />
-            <TouchableOpacity onPress={handleCaptureImage} style={styles.captureButton}>
-              <Text style={styles.captureButtonText}>Capture Image</Text>
-            </TouchableOpacity>
-            <Text style={styles.title}>Upload an image using your camera.</Text>
-          </View>
-        )}
+          {imageUri ? (
+            <Image source={{ uri: imageUri }} style={styles.image} />
+          ) : (
+            <View style={styles.placeholder}>
+              <Ionicons name="camera" size={60} color="#6FA542" />
+              <TouchableOpacity onPress={handleCaptureImage} style={styles.captureButton}>
+                <Text style={styles.captureButtonText}>Capture Image</Text>
+              </TouchableOpacity>
+              <Text style={styles.title}>Upload an image using your camera.</Text>
+            </View>
+          )}
+        </View>
+
+        <TouchableOpacity style={styles.uploadButton} onPress={handleUploadImage}>
+          <Ionicons name="image-outline" size={24} color="#6FA542" />
+          <Text style={styles.uploadButtonText}>Upload Image</Text>
+        </TouchableOpacity>
+
       </View>
 
-      <TouchableOpacity style={styles.uploadButton} onPress={handleUploadImage}>
-        <Ionicons name="image-outline" size={24} color="#6FA542" />
-        <Text style={styles.uploadButtonText}>Upload Image</Text>
-      </TouchableOpacity>
-
-      </View>
-      
 
 
-      <DiseaseIdentification 
-        visible={isModalVisible} 
-        onClose={toggleModal} 
+      <DiseaseIdentification
+        visible={isModalVisible}
+        onClose={toggleModal}
       />
     </View>
   );
@@ -86,33 +91,33 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'white',
-    padding: 26, 
+    padding: 26,
   },
   header: {
-    flexDirection: 'row', 
-    justifyContent: 'space-between', 
-    alignItems: 'center', 
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
     borderRadius: 4,
   },
   headerText: {
-    fontSize: 18, 
+    fontSize: 18,
     fontWeight: 'bold',
-    color: '#537F19', 
+    color: '#537F19',
   },
   helpText: {
     color: 'white',
     fontWeight: 'bold',
     backgroundColor: '#515151',
     padding: 6,
-    width: 28, 
+    width: 28,
     height: 28,
     borderRadius: 50,
     textAlign: 'center',
   },
   divider: {
-    borderTopWidth: 1, 
-    borderColor: '#d1d5db', 
-    marginVertical: 16, 
+    borderTopWidth: 1,
+    borderColor: '#d1d5db',
+    marginVertical: 16,
   },
   uploadBodyContainer: {
     justifyContent: 'center',
@@ -132,7 +137,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#F5F5F5',
-    alignItems: 'center', 
+    alignItems: 'center',
 
     flexDirection: 'row',
     paddingVertical: 12,

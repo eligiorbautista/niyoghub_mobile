@@ -43,11 +43,12 @@ const HomeScreen = ({ navigation }) => {
         onChangeText={handleSearch}
       />
 
+      {/* articles section */}
       <Text style={styles.recentPost}>Recent post</Text>
       {filteredContent.length > 0 ? (
         filteredContent.map(item => (
           <Pressable style={[]}
-          onPress={() => navigation.navigate('ViewContent')}>
+            onPress={() => navigation.navigate('Article')}>
             <View key={item.id} style={styles.postContainer}>
               <Image source={require('../../../assets/post.png')} style={styles.postImage} />
               <Text style={styles.postCategory}>{item.category}</Text>
@@ -58,7 +59,7 @@ const HomeScreen = ({ navigation }) => {
         ))
       ) : (
         <Pressable style={[]}
-        onPress={() => navigation.navigate('ViewContent')}>
+          onPress={() => navigation.navigate('Article')}>
           <View style={styles.postContainer}>
             <Image source={require('../../../assets/post.png')} style={styles.postImage} />
             <Text style={styles.postCategory}>News & Programs</Text>
@@ -68,28 +69,32 @@ const HomeScreen = ({ navigation }) => {
         </Pressable>
       )}
 
+      {/* sdg section */}
       <Text style={styles.sdgTitle}>Four Global SDG's</Text>
-        <View style={styles.sdgContainer}>
-          {sdgs.map(sdg => (
-            <TouchableOpacity key={sdg.id} style={styles.sdgButton} onPress={() => openModal(sdg)}>
-              <View style={styles.sdgCard}>
-                <Image source={sdg.image} style={styles.sdgImage} />
-                <Text style={styles.sdgText}>{sdg.title}</Text>
-              </View>
-            </TouchableOpacity>
-          ))}
-        </View>
+      <View style={styles.sdgContainer}>
+        {sdgs.map(sdg => (
+          <TouchableOpacity key={sdg.id} style={styles.sdgButton} onPress={() => openModal(sdg)}>
+            <View style={styles.sdgCard}>
+              <Image source={sdg.image} style={styles.sdgImage} />
+              <Text style={styles.sdgText}>{sdg.title}</Text>
+            </View>
+          </TouchableOpacity>
+        ))}
+      </View>
 
-        {modalVisible && (
-          <SDGModal 
-            visible={modalVisible}
-            setVisible={setModalVisible}
-            selectedSDG={selectedSDG}
-          />
-        )}
+      {modalVisible && (
+        <SDGModal
+          visible={modalVisible}
+          setVisible={setModalVisible}
+          selectedSDG={selectedSDG}
+        />
+      )}
 
-        <Text style={styles.updates}>Updates</Text>
-        <View style={styles.updatesContainer}>
+
+
+      {/* updates section */}
+      <Text style={styles.updates}>Updates</Text>
+      <View style={styles.updatesContainer}>
         <View style={styles.row}>
           <Pressable
             style={[styles.item, styles.intercroppingCard]}
@@ -122,12 +127,14 @@ const HomeScreen = ({ navigation }) => {
           </Pressable>
         </View>
       </View>
-      
+
+
+      {/* announcements section */}
       <Text style={styles.recentTitle}>Recent News & Programs</Text>
-      
+
       <Text style={styles.announcement}>Announcements</Text>
       <Image source={require('../../../assets/announcement.png')} style={styles.announcementImg} />
-      
+
     </ScrollView>
   );
 };
@@ -194,23 +201,23 @@ const styles = StyleSheet.create({
   },
   sdgContainer: {
     flexDirection: 'row',
-    width: '100%', 
+    width: '100%',
     marginTop: 10,
   },
   sdgButton: {
-    flex: 1, 
-    marginHorizontal: 4,  
+    flex: 1,
+    marginHorizontal: 4,
   },
   sdgCard: {
-    borderRadius: 10, 
-    paddingVertical: 14, 
+    borderRadius: 10,
+    paddingVertical: 14,
     alignItems: 'center',
     borderWidth: 2,
-    borderColor: '#ddd', 
-    height: 150, 
+    borderColor: '#ddd',
+    height: 150,
   },
   sdgImage: {
-    width: 60, 
+    width: 60,
     height: 60,
     marginBottom: 10,
     borderRadius: 5,
@@ -218,7 +225,7 @@ const styles = StyleSheet.create({
   sdgText: {
     fontSize: 13,
     fontWeight: 'bold',
-    color: '#537F19',  
+    color: '#537F19',
     textAlign: 'center',
   },
   announcement: {
@@ -244,7 +251,7 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    width: '100%', 
+    width: '100%',
   },
   item: {
     flex: 1,
@@ -252,13 +259,13 @@ const styles = StyleSheet.create({
     padding: 20,
     marginVertical: 10,
     alignItems: 'flex-start',
-    marginHorizontal: 5, 
+    marginHorizontal: 5,
   },
   intercroppingCard: {
-    backgroundColor: '#6F9B35', 
+    backgroundColor: '#6F9B35',
   },
   priceWatchCard: {
-    backgroundColor: '#D2D792', 
+    backgroundColor: '#D2D792',
   },
   icon: {
     marginBottom: 15,

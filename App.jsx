@@ -14,10 +14,10 @@ import NotificationSettingsScreen from "./screens/protected/settings/Notificatio
 import ResetPasswordOTPScreen from "./screens/unprotected/otp_reset_password/ResetPasswordOTPScreen";
 import TwoFactorAuthOTPScreen from "./screens/unprotected/otp_2fa/TwoFactorAuthOTPScreen";
 import HomeScreen from "./screens/protected/home/HomeScreen";
-import IntercroppingScreen from "./screens/protected/home/Intercropping";
-import CopraPriceScreen from "./screens/protected/home/CopraPrice";
 import ChangePasswordScreen from "./screens/unprotected/change_password/ChangePasswordScreen";
-import ViewContentScreen from "./screens/protected/home/ViewContent";
+import IntercroppingScreen from "./screens/protected/home/IntercroppingScreen";
+import CopraPriceScreen from "./screens/protected/home/CopraPriceScreen";
+import ArticleScreen from "./screens/protected/home/ArticleScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -58,7 +58,9 @@ const App = () => {
         <Stack.Screen name="Home" component={HomeScreen} />
         <Stack.Screen name="Intercropping" component={IntercroppingScreen} />
         <Stack.Screen name="CopraPrice" component={CopraPriceScreen} />
-        <Stack.Screen name="ViewContent" component={ViewContentScreen} />
+
+        {/* article-related screens under home */}
+        <Stack.Screen name="Article" component={ArticleScreen} />
 
       </Stack.Navigator>
     </NavigationContainer>

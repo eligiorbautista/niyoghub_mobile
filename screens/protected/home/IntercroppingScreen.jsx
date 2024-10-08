@@ -15,10 +15,10 @@ const IntercroppingScreen = ({ navigation }) => {
           style={styles.headerImage}
         />
 
+        {/* dito mo lagay sa header yung sa pagopen nung modal sa info wag na sa may content*/}
         <TouchableOpacity
-          onPress={() => navigation.navigate("NotificationSettings")}
         >
-          <Ionicons name="settings-outline" size={24} color="black" />
+          <Ionicons name="information-circle-outline" size={24} color="black" />
         </TouchableOpacity>
       </View>
       <Text style={styles.text}>Intercropping Screen</Text>
@@ -35,7 +35,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   text: {
-    fontSize: 18, 
+    fontSize: 18,
     // textAlign: 'center'
     padding: 20,
   },
