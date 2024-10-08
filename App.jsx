@@ -45,14 +45,15 @@ const App = () => {
         <Stack.Screen name="Layout" component={DrawerLayout} />
         <Stack.Screen name="Notifications" component={NotificationsScreen} />
 
+        {/* protected */}
 
-        {/* Settings-related screens */}
+        {/* settings-related screens */}
         <Stack.Screen name="Settings" component={SettingsScreen} />
         <Stack.Screen name="AccountSettings" component={AccountSettingsScreen} />
         <Stack.Screen name="ProfileSettings" component={ProfileSettingsScreen} />
         <Stack.Screen name="NotificationSettings" component={NotificationSettingsScreen} />
 
-        {/* Settings-related screens */}
+        {/* home-related screens */}
         <Stack.Screen name="Home" component={HomeScreen} />
         <Stack.Screen name="Intercropping" component={IntercroppingScreen} />
         <Stack.Screen name="CopraPrice" component={CopraPriceScreen} />
