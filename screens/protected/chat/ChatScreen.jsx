@@ -52,7 +52,7 @@ const ChatScreen = () => {
         />
         <TouchableOpacity style={styles.sendButtonAttach}>
           <Ionicons name="link" style={styles.sendButtonAttachIcon} size={22}/>
-        </TouchableOpacity>
+        </TouchableOpacity> 
         <TouchableOpacity style={styles.sendButtonSend}>
           <Ionicons name="send" style={styles.sendButtonSendIcon} size={22}/>
         </TouchableOpacity>

@@ -14,10 +14,30 @@ const HomeScreen = ({ navigation }) => {
   ];
 
   const sdgs = [
-    { id: 1, title: 'REDUCING POVERTY', description: 'NiyogHub aims to reduce poverty among coconut farmers by providing access to vital information, resources, and government support. To optimize resource utilization, and improve their livelihoods through the use of this platform.', image: require('../../../assets/reducing_poverty.png') },
-    { id: 2, title: 'SUSTAINABLE FARMING', description: 'NiyogHub encourages coconut farmers to use sustainable farming methods to increase food security.', image: require('../../../assets/sustainable_farming.png') },
-    { id: 3, title: 'ECONOMIC GROWTH', description: 'NiyogHub can promote economic growth by providing timely information, disease detection tools, and sustainable farming practices. It enables farmers to increase their yields and quality of produce, leading to higher incomes.', image: require('../../../assets/economic_growth.png') },
-    { id: 4, title: 'TECHNOLOGICAL INNOVATION', description: 'NiyogHub introduces technological solutions to traditional agricultural practices. This platform empowers coconut farmers with innovative tools to enhance their farming techniques and decision-making processes. ', image: require('../../../assets/tech_innovation.png') }
+    { 
+      id: 1, 
+      title: 'REDUCING POVERTY', 
+      description: 'NiyogHub aims to reduce poverty among coconut farmers by providing access to vital information, resources, and government support. To optimize resource utilization, and improve their livelihoods through the use of this platform.', 
+      image: require('../../../assets/reducing_poverty.png') 
+    },
+    { 
+      id: 2, 
+      title: 'SUSTAINABLE FARMING', 
+      description: 'NiyogHub encourages coconut farmers to use sustainable farming methods to increase food security.', 
+      image: require('../../../assets/sustainable_farming.png') 
+    },
+    { 
+      id: 3, 
+      title: 'ECONOMIC GROWTH', 
+      description: 'NiyogHub can promote economic growth by providing timely information, disease detection tools, and sustainable farming practices. It enables farmers to increase their yields and quality of produce, leading to higher incomes.', 
+      image: require('../../../assets/economic_growth.png') 
+    },
+    { 
+      id: 4, 
+      title: 'TECHNOLOGICAL INNOVATION', 
+      description: 'NiyogHub introduces technological solutions to traditional agricultural practices. This platform empowers coconut farmers with innovative tools to enhance their farming techniques and decision-making processes. ', 
+      image: require('../../../assets/tech_innovation.png') 
+    }
   ];
 
   const handleSearch = (query) => {
