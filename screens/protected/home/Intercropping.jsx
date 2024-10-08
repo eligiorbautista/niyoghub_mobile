@@ -35,7 +35,9 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   text: {
-    fontSize: 24, 
+    fontSize: 18, 
+    // textAlign: 'center'
+    padding: 20,
   },
   header: {
     flexDirection: "row",

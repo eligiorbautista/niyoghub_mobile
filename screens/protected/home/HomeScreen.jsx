@@ -47,20 +47,26 @@ const HomeScreen = ({ navigation }) => {
       <Text style={styles.recentPost}>Recent post</Text>
       {filteredContent.length > 0 ? (
         filteredContent.map(item => (
-          <View key={item.id} style={styles.postContainer}>
-            <Image source={require('../../../assets/post.png')} style={styles.postImage} />
-            <Text style={styles.postCategory}>{item.category}</Text>
-            <Text style={styles.postTitle}>{item.title}</Text>
-            <Text style={styles.postMeta}>{`${item.date} - ${item.time}`}</Text>
-          </View>
+          <Pressable style={[]}
+          onPress={() => navigation.navigate('ViewContent')}>
+            <View key={item.id} style={styles.postContainer}>
+              <Image source={require('../../../assets/post.png')} style={styles.postImage} />
+              <Text style={styles.postCategory}>{item.category}</Text>
+              <Text style={styles.postTitle}>{item.title}</Text>
+              <Text style={styles.postMeta}>{`${item.date} - ${item.time}`}</Text>
+            </View>
+          </Pressable>
         ))
       ) : (
-        <View style={styles.postContainer}>
-          <Image source={require('../../../assets/post.png')} style={styles.postImage} />
-          <Text style={styles.postCategory}>News & Programs</Text>
-          <Text style={styles.postTitle}>PCA Embraces Culture of Excellence, Undergoes ISO 9001:2015 Reorientation</Text>
-          <Text style={styles.postMeta}>April 24, 2024 - 3 min read</Text>
-        </View>
+        <Pressable style={[]}
+        onPress={() => navigation.navigate('ViewContent')}>
+          <View style={styles.postContainer}>
+            <Image source={require('../../../assets/post.png')} style={styles.postImage} />
+            <Text style={styles.postCategory}>News & Programs</Text>
+            <Text style={styles.postTitle}>PCA Embraces Culture of Excellence, Undergoes ISO 9001:2015 Reorientation</Text>
+            <Text style={styles.postMeta}>April 24, 2024 - 3 min read</Text>
+          </View>
+        </Pressable>
       )}
 
       <Text style={styles.sdgTitle}>Four Global SDG's</Text>
@@ -118,11 +124,12 @@ const HomeScreen = ({ navigation }) => {
       </View>
     </View>
       
-
-      <Text style={styles.announcement}>Announcements</Text>
-      {/* CAROUSEL */}
-      <Image source={require('../../../assets/announcement.png')} style={styles.announcementImg} />
-
+    <Text style={styles.recentTitle}>Recent News & Programs</Text>
+    
+    <Text style={styles.announcement}>Announcements</Text>
+    <Image source={require('../../../assets/announcement.png')} style={styles.announcementImg} />
+      
+      
 
     </ScrollView>
   );
@@ -159,6 +166,9 @@ const styles = StyleSheet.create({
   },
   postContainer: {
     marginTop: 10,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 8,
   },
   postImage: {
     width: '100%',
@@ -293,5 +303,10 @@ const styles = StyleSheet.create({
     height: 60,
     marginBottom: 10,
     marginTop: 15,
+  },
+  recentTitle: {
+    marginTop: 30,
+    fontSize: 18,
+    fontWeight: 'bold'
   },
 });

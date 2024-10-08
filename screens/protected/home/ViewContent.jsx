@@ -2,7 +2,7 @@ import { StyleSheet, Text, View, TouchableOpacity, Image  } from 'react-native';
 import React from 'react';
 import { Ionicons } from "@expo/vector-icons";
 
-const CopraPriceScreen = ({ navigation }) => {
+const ViewContentScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -21,12 +21,12 @@ const CopraPriceScreen = ({ navigation }) => {
           <Ionicons name="settings-outline" size={24} color="black" />
         </TouchableOpacity>
       </View>
-      <Text style={styles.text}>Copra Price Watch Screen</Text>
+      <Text style={styles.text}>View Content Screen</Text>
     </View>
   );
 };
 
-export default CopraPriceScreen;
+export default ViewContentScreen;
 
 const styles = StyleSheet.create({
   container: {

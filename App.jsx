@@ -17,6 +17,7 @@ import HomeScreen from "./screens/protected/home/HomeScreen";
 import IntercroppingScreen from "./screens/protected/home/Intercropping";
 import CopraPriceScreen from "./screens/protected/home/CopraPrice";
 import ChangePasswordScreen from "./screens/unprotected/change_password/ChangePasswordScreen";
+import ViewContentScreen from "./screens/protected/home/ViewContent";
 
 const Stack = createNativeStackNavigator();
 
@@ -57,6 +58,7 @@ const App = () => {
         <Stack.Screen name="Home" component={HomeScreen} />
         <Stack.Screen name="Intercropping" component={IntercroppingScreen} />
         <Stack.Screen name="CopraPrice" component={CopraPriceScreen} />
+        <Stack.Screen name="ViewContent" component={ViewContentScreen} />
 
       </Stack.Navigator>
     </NavigationContainer>
