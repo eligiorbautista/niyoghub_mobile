@@ -13,8 +13,6 @@ const IdentificationScreen = () => {
 
   const [imageUri, setImageUri] = useState(null);
 
-  
-  
   const handleCaptureImage = async () => {
     try {
       const result = await launchCamera({ mediaType: 'photo' });

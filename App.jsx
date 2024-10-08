@@ -13,6 +13,9 @@ import ProfileSettingsScreen from "./screens/protected/settings/ProfileSettingsS
 import NotificationSettingsScreen from "./screens/protected/settings/NotificationSettingsScreen";
 import ResetPasswordOTPScreen from "./screens/unprotected/otp_reset_password/ResetPasswordOTPScreen";
 import TwoFactorAuthOTPScreen from "./screens/unprotected/otp_2fa/TwoFactorAuthOTPScreen";
+import HomeScreen from "./screens/protected/home/HomeScreen";
+import IntercroppingScreen from "./screens/protected/home/Intercropping";
+import CopraPriceScreen from "./screens/protected/home/CopraPrice";
 
 const Stack = createNativeStackNavigator();
 
@@ -46,6 +49,11 @@ const App = () => {
         <Stack.Screen name="AccountSettings" component={AccountSettingsScreen} />
         <Stack.Screen name="ProfileSettings" component={ProfileSettingsScreen} />
         <Stack.Screen name="NotificationSettings" component={NotificationSettingsScreen} />
+
+        {/* Settings-related screens */}
+        <Stack.Screen name="Home" component={HomeScreen} />
+        <Stack.Screen name="Intercropping" component={IntercroppingScreen} />
+        <Stack.Screen name="CopraPrice" component={CopraPriceScreen} />
 
       </Stack.Navigator>
     </NavigationContainer>
