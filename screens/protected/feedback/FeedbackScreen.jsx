@@ -6,8 +6,7 @@ import {
   TextInput,
   TouchableOpacity,
   KeyboardAvoidingView,
-  Platform,
-  Alert,
+  Platform, 
   Image,
   TouchableWithoutFeedback,
   Keyboard,
@@ -141,7 +140,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#F0F0F0",
     borderBottomWidth: 1,
     borderBottomColor: "#E0E0E0",
-    marginTop: 35,
+    marginTop: 30,
   },
   headerImage: {
     width: 150,
