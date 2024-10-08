@@ -16,6 +16,7 @@ import TwoFactorAuthOTPScreen from "./screens/unprotected/otp_2fa/TwoFactorAuthO
 import HomeScreen from "./screens/protected/home/HomeScreen";
 import IntercroppingScreen from "./screens/protected/home/Intercropping";
 import CopraPriceScreen from "./screens/protected/home/CopraPrice";
+import ChangePasswordScreen from "./screens/unprotected/change_password/ChangePasswordScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -40,6 +41,7 @@ const App = () => {
         <Stack.Screen name="Login" component={LoginScreen} />
         <Stack.Screen name="TwoFactorAuthOTP" component={TwoFactorAuthOTPScreen} />
         <Stack.Screen name="ResetPasswordOTP" component={ResetPasswordOTPScreen} />
+        <Stack.Screen name="ChangePassword" component={ChangePasswordScreen} />
         <Stack.Screen name="Layout" component={DrawerLayout} />
         <Stack.Screen name="Notifications" component={NotificationsScreen} />
 

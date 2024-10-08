@@ -4,7 +4,7 @@ import { View, Text, Modal, TouchableOpacity, StyleSheet, Image } from 'react-na
 const SDGModal = ({ visible, setVisible, selectedSDG }) => {
   return (
     <Modal
-      animationType="slide"
+      animationType="fade"
       transparent={true}
       visible={visible}
       onRequestClose={() => setVisible(false)}

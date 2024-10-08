@@ -59,6 +59,7 @@ const ResetPasswordOTPScreen = ({ navigation }) => {
   const handleVerifyOTP = () => {
     const enteredOtp = otp.join("");
     console.log(`OTP Entered: ${enteredOtp}`);
+    navigation.navigate('ChangePassword');
   };
 
   const handleInfoDialog = () => {
