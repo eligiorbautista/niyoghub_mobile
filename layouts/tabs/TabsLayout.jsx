@@ -1,13 +1,13 @@
 import { StyleSheet } from 'react-native';
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { Ionicons } from '@expo/vector-icons';
+import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import HomeScreen from '../../screens/protected/home/HomeScreen';
 import IdentificationScreen from '../../screens/protected/identification/IdentificationScreen';
 import SoilMapScreen from '../../screens/protected/map/SoilMapScreen';
 import ChatScreen from '../../screens/protected/chat/ChatScreen';
 import SettingsScreen from '../../screens/protected/settings/SettingsScreen';
- 
+import VirtualAssistantScreen from '../../screens/protected/virtual_ai_assistant/VirtualAssistantScreen';
 
 const Tab = createBottomTabNavigator();
 
@@ -19,18 +19,20 @@ const TabsLayout = () => {
                     let iconName;
 
                     if (route.name === 'Home') {
-                        iconName = focused ? 'home' : 'home-outline';
-                    } else if (route.name === 'Identification') {
-                        iconName = focused ? 'search' : 'search-outline';
-                    } else if (route.name === 'SoilMap') {
-                        iconName = focused ? 'map' : 'map-outline';
+                        iconName = focused ? 'home' : 'home';
+                    } else if (route.name === 'Leaf Disease Identification') {
+                        iconName = focused ? 'search' : 'search';
+                    } else if (route.name === 'Soil Map') {
+                        iconName = focused ? 'map' : 'map';
                     } else if (route.name === 'Chat') {
-                        iconName = focused ? 'chatbox' : 'chatbox-outline';
+                        iconName = focused ? 'chat' : 'chat';
+                    } else if (route.name === 'AI Assistant') {
+                        iconName = focused ? 'assistant' : 'assistant';
                     } else if (route.name === 'Settings') {
-                        iconName = focused ? 'settings' : 'settings-outline';
+                        iconName = focused ? 'settings' : 'settings';
                     }
 
-                    return <Ionicons name={iconName} size={size} color={color} />;
+                    return <MaterialIcons name={iconName} size={size} color={color} />; // Use MaterialIcons instead of Ionicons
                 },
                 tabBarActiveTintColor: '#537F19',
                 tabBarInactiveTintColor: 'gray',
@@ -43,18 +45,23 @@ const TabsLayout = () => {
                 options={{ headerShown: false }}
             />
             <Tab.Screen
-                name="Identification"
+                name="Leaf Disease Identification"
                 component={IdentificationScreen}
                 options={{ headerShown: false }}
             />
             <Tab.Screen
-                name="SoilMap"
+                name="Soil Map"
                 component={SoilMapScreen}
                 options={{ headerShown: false }}
             />
             <Tab.Screen
                 name="Chat"
                 component={ChatScreen}
+                options={{ headerShown: false }}
+            />
+            <Tab.Screen
+                name="AI Assistant"
+                component={VirtualAssistantScreen}
                 options={{ headerShown: false }}
             />
             <Tab.Screen
@@ -76,5 +83,6 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         borderTopWidth: 0,
         elevation: 5,
+        paddingHorizontal: 10,
     },
 });
