@@ -16,7 +16,7 @@ import { Audio } from "expo-av";
 import axios from "axios";
 import LottieView from "lottie-react-native";
 import * as Speech from "expo-speech";
-import { Ionicons } from "@expo/vector-icons"; // Added for the header icon
+import { Ionicons } from "@expo/vector-icons";
 
 export default function VirtualAssistantScreen() {
     const [text, setText] = useState("");
@@ -26,7 +26,7 @@ export default function VirtualAssistantScreen() {
     const [AIResponse, setAIResponse] = useState(false);
     const [AISpeaking, setAISpeaking] = useState(false);
     const [responseText, setResponseText] = useState("");
-    const [isModalVisible, setIsModalVisible] = useState(false); // For modal toggle
+    const [isModalVisible, setIsModalVisible] = useState(false);
 
     const toggleModal = () => {
         setIsModalVisible(!isModalVisible);
@@ -55,7 +55,7 @@ export default function VirtualAssistantScreen() {
             outputFormat: Audio.AndroidOutputFormat.MPEG_4,
             androidEncoder: Audio.AndroidAudioEncoder.AAC,
             sampleRate: 44100,
-            numberOfChannels: 1, // Mono recording is generally better for speech
+            numberOfChannels: 1, // Mono recording  
             bitRate: 128000,
         },
         ios: {
@@ -124,7 +124,7 @@ export default function VirtualAssistantScreen() {
             const formData = new FormData();
             formData.append("file", {
                 uri,
-                type: "audio/wav", // Adjust this based on your recording format
+                type: "audio/wav",
                 name: "recording.wav",
             });
             formData.append("model", "whisper-1");
@@ -345,7 +345,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
     },
     headerContainer: {
-        position: 'absolute', // Make the header absolute
+        position: 'absolute',
         top: 0,
         left: 0,
         right: 0,
@@ -354,7 +354,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 20,
         paddingTop: 20,
         paddingBottom: 16,
-        zIndex: 10, // Ensure the header is on top of other content
+        zIndex: 10,
     },
     header: {
         flexDirection: 'row',
