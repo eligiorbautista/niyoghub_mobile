@@ -20,40 +20,61 @@ const CopraPriceScreen = ({ navigation }) => {
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.copraContainer}>
-        <Text style={styles.text}>COPRA AND WHOLENUT PRICE WATCH</Text>
-      </View>
-
-      <View style={styles.contentContainer}>
-        <View style={styles.datePickerContainer}>
-          <Text style={styles.label}>Date</Text>
-          <TouchableOpacity
-            style={styles.dateButton}
-            onPress={() => setShowPicker(true)}
-          >
-            <Text style={styles.dateText}>
-              {date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
-            </Text>
+    <>
+      <View style={styles.header}>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+            <Ionicons name="arrow-back" size={24} color="black" />
           </TouchableOpacity>
-          {showPicker && (
-            <DateTimePicker
-              value={date}
-              mode="date"
-              display="default"
-              onChange={onChange}
+
+          <Image
+            source={require("../../../assets/niyoghub_banner_1.png")}
+            style={styles.headerImage}
+          />
+          
+          <TouchableOpacity onPress={toggleModal}>
+            <Ionicons
+              name="information-circle-outline"
+              size={24}
+              color="black"
             />
-          )}
+          </TouchableOpacity>
+      </View> 
+
+      <View style={styles.container}>
+        <View style={styles.copraContainer}>
+          <Text style={styles.text}>COPRA AND WHOLENUT PRICE WATCH</Text>
         </View>
 
-        <Image source={require('../../../assets/coprapricewatch.png')} style={styles.image} />
-      </View>
+        <View style={styles.contentContainer}>
+          <View style={styles.datePickerContainer}>
+            <Text style={styles.label}>Date</Text>
+            <TouchableOpacity
+              style={styles.dateButton}
+              onPress={() => setShowPicker(true)}
+            >
+              <Text style={styles.dateText}>
+                {date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+              </Text>
+            </TouchableOpacity>
+            {showPicker && (
+              <DateTimePicker
+                value={date}
+                mode="date"
+                display="default"
+                onChange={onChange}
+              />
+            )}
+          </View>
 
-      <CopraPriceModal
-        visible={isModalVisible}
-        setVisible={toggleModal}
-      />
-    </View>
+          <Image source={require('../../../assets/coprapricewatch.png')} style={styles.image} />
+        </View>
+
+        <CopraPriceModal
+          visible={isModalVisible}
+          setVisible={toggleModal}
+        />
+      </View>
+    </>
   );
 };
 

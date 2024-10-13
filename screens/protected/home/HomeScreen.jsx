@@ -2,6 +2,8 @@ import { ScrollView, View, Text, TextInput, Image, TouchableOpacity, StyleSheet,
 import React, { useState } from 'react';
 import SDGModal from '../../../components/modals/SDGModals';
 import { Ionicons } from "@expo/vector-icons";
+import { SafeAreaView } from 'react-native';
+import ImageCarousel from './CarouselAnnouncement';
 
 const HomeScreen = ({ navigation }) => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -51,6 +53,39 @@ const HomeScreen = ({ navigation }) => {
     setModalVisible(true);
   };
 
+  const handlePress = (cardText) => {
+    console.log(`${cardText} pressed!`);
+  };
+
+  // RECENT NEWS AND PROGRAMS
+  const newsData = [
+    {
+      id: 1,
+      category: 'News & Programs',
+      date: "April 10, 2024",
+      description: "8.5 million coconut seedlings set to be planted in 2024 under the PCA’s Massive Coconut Planting and Replanting Project",
+      image: require("../../../assets/newsprograms1.png"),
+    },
+    {
+      id: 2,
+      category: 'News & Programs',
+      date: "April 8, 2024",
+      description: "Updated Copra and wholenut prices in Region - IV.",
+      image: require("../../../assets/newsprograms2.png"),
+    },
+    {
+      id: 3, 
+      category: 'News & Programs',
+      date: "April 3, 2023",
+      description: "May Anak ka ba na Kolehiyo? Isali sa CoScho.",
+      image: require("../../../assets/newsprograms3.png"),
+    },
+  ];
+  
+  const handleReadMore = (newsItem) => {
+    navigation.navigate('ReadNewsPrograms', { newsItem }); 
+  };
+  
   return (
     <ScrollView style={styles.container}>
       <Text style={styles.greeting}>Hello, User!</Text>
@@ -63,7 +98,7 @@ const HomeScreen = ({ navigation }) => {
         onChangeText={handleSearch}
       />
 
-      {/* articles section */}
+      {/* RECENT ARTICLE SECTION */}
       <Text style={styles.recentPost}>Recent post</Text>
       {filteredContent.length > 0 ? (
         filteredContent.map(item => (
@@ -89,7 +124,7 @@ const HomeScreen = ({ navigation }) => {
         </Pressable>
       )}
 
-      {/* sdg section */}
+      {/* SDG BUTTONS SECTION */}
       <Text style={styles.sdgTitle}>Four Global SDG's</Text>
       <View style={styles.sdgContainer}>
         {sdgs.map(sdg => (
@@ -110,9 +145,44 @@ const HomeScreen = ({ navigation }) => {
         />
       )}
 
+      {/* ANNOUNCEMENT SECTION */}
+      <Text style={styles.announcement}>Announcements</Text>
+      <SafeAreaView>
+        <ImageCarousel />
+      </SafeAreaView>
 
+      {/* NEWS AND PROGRAMS */}
+      <View style={styles.headerNewsPrograms}>
+        <Text style={styles.recentTitle}>Recent News & Programs</Text>
+        <Pressable
+          style={styles.seeAllButton}
+          onPress={() => navigation.navigate('SeeAllNewsPrograms', { newsData })}
+        >
+          <Text style={styles.seeAllText}>See all news & programs</Text>
+        </Pressable>
+      </View>
+      <View style={styles.containerNewsPrograms}>
+        <ScrollView 
+          horizontal 
+          showsHorizontalScrollIndicator={false} 
+          contentContainerStyle={styles.scrollContainer}
+        >
+          {newsData.map((news, index) => (
+            <View key={index} style={styles.card}>
+              <Image source={news.image} style={styles.image} />
+              <Text style={styles.categoryText}>{news.category}</Text>
+              <Text style={styles.dateText}>{news.date}</Text>
+              <Text style={styles.descriptionText} numberOfLines={3}>{news.description}</Text>
+              <Pressable style={styles.readButton}
+                onPress={() => handleReadMore(news)}> 
+                <Text style={styles.readButtonText}>Read</Text>
+              </Pressable>
+            </View>
+          ))}
+        </ScrollView>
+      </View>
 
-      {/* updates section */}
+      {/* UPDATES SECTION */}
       <Text style={styles.updates}>Updates</Text>
       <View style={styles.updatesContainer}>
         <View style={styles.row}>
@@ -147,14 +217,7 @@ const HomeScreen = ({ navigation }) => {
           </Pressable>
         </View>
       </View>
-
-
-      {/* announcements section */}
-      <Text style={styles.recentTitle}>Recent News & Programs</Text>
-
-      <Text style={styles.announcement}>Announcements</Text>
-      <Image source={require('../../../assets/announcement.png')} style={styles.announcementImg} />
-
+      
     </ScrollView>
   );
 };
@@ -253,11 +316,6 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold'
   },
-  announcementImg: {
-    width: '100%',
-    marginBottom: 50,
-    marginTop: 10,
-  },
   updates: {
     marginTop: 30,
     fontSize: 18,
@@ -272,6 +330,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     width: '100%',
+    marginBottom: 40,
   },
   item: {
     flex: 1,
@@ -326,9 +385,79 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     marginTop: 15,
   },
+  headerNewsPrograms: {
+    flexDirection: 'row',
+    justifyContent: 'space-between', 
+    alignItems: 'center', 
+  },
   recentTitle: {
     marginTop: 30,
     fontSize: 18,
     fontWeight: 'bold'
+  },
+  seeAllButton: {
+    paddingVertical: 5,
+    flexShrink: 1,
+  },
+  seeAllText: {
+    color: 'black',
+    fontSize: 12,
+    marginTop: 30,
+  },
+  containerNewsPrograms: {
+    flex: 1,
+    justifyContent: 'center',
+    paddingTop: 10,
+  },
+  scrollContainer: {
+    paddingTop: 10,
+    paddingHorizontal: 5,
+  },
+  card: {
+    width: 220,
+    backgroundColor: 'white',
+    borderRadius: 10,
+    marginRight: 15,
+    padding: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.8,
+    shadowRadius: 5,
+    elevation: 3,
+    justifyContent: 'space-between',
+  },
+  image: {
+    width: '100%',
+    height: 100,
+    borderRadius: 8,
+    marginBottom: 10,
+  },
+  categoryText: {
+    fontSize: 12,
+    color: '#666',
+  },
+  dateText: {
+    fontSize: 12,
+    color: '#666',
+    marginBottom: 5,
+  },
+  descriptionText: {
+    fontSize: 14,
+    color: '#333',
+    marginBottom: 10,
+    fontWeight: 'bold'
+  },
+  readButton: {
+    backgroundColor: '#537F19', 
+    borderRadius: 5,
+    paddingVertical: 8,
+    paddingHorizontal: 20,
+    alignItems: 'center',
+    marginTop: 20, 
+  },
+  readButtonText: {
+    color: 'white',
+    fontSize: 14,
+    fontWeight: 'bold',
   },
 });

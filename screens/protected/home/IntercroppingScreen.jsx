@@ -30,7 +30,7 @@ const data = [
 
 const IntercroppingScreen = ({ navigation }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const carouselRef = useRef(null); // Reference for the Carousel component
+  const carouselRef = useRef(null); 
 
   const handlePrev = () => {
     if (currentIndex > 0) {
@@ -47,7 +47,7 @@ const IntercroppingScreen = ({ navigation }) => {
   };
 
   return (
-    <ScrollView style={styles.container}>
+    <>
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <Ionicons name="arrow-back" size={24} color="black" />
@@ -63,128 +63,116 @@ const IntercroppingScreen = ({ navigation }) => {
         </TouchableOpacity>
       </View>
 
-      <View style={styles.imageContainer}>
-        <Image
-          source={require("../../../assets/intercroppingbg.png")}
-          style={styles.interImage}
-        />
-        <Text style={styles.imageText}>COCONUT {"\n"} INTERCROPPING</Text>
-      </View>
-
-      <View style={styles.infoContainer}>
-        <Text style={styles.sectionHeader}>Coconut Based Farming Systems</Text>
-        <Text style={styles.sectionText}>
-          • A system or practice in coconut production{"\n"}• All available farm
-          resources like soil, water, farm labor, agricultural inputs are
-          utilized and optimized{"\n"}• Production of food and non-food products
-          {"\n"}
-        </Text>
-
-        <Text style={styles.sectionHeader}>Important Considerations</Text>
-        <Text style={styles.sectionText}>
-          • Suitable environmental conditions{"\n"}• Right technology (package
-          of viable technologies){"\n"}• Available planting materials{"\n"}•
-          Favorable market of farm produce{"\n"}• Available working capital
-          {"\n"}• Timely extension service{"\n"}• Human capital endowment:
-          skills/capacities and attitudes{"\n"}
-        </Text>
-      </View>
-
-      <View style={styles.imgSection}>
-        <Image
-          source={require("../../../assets/solar_radiation.png")}
-          style={styles.solarImage}
-        />
-        <Text style={styles.solarText}>
-          On average, 56% of solar radiation reaches the ground (may vary with
-          age of the stand)
-        </Text>
-        <Image
-          source={require("../../../assets/root_system.png")}
-          style={styles.rootImage}
-        />
-        <Text style={styles.rootText}>
-          80% of active root system is located n 25-60 cm soil layer in a 2 m
-          radius, leaving 70-75% for intercropping
-        </Text>
-      </View>
-
-      <View style={styles.factorSection}>
-        <Text style={styles.factorText}>
-          MAIN FACTORS AFFECTING COCONUT PRODUCTION & QUALITY
-        </Text>
-        <Text style={styles.factorItem}>1. Environment or site selection</Text>
-        <Text style={styles.factorItem}>2. Variety or species selection</Text>
-        <Text style={styles.factorItem}>3. Management</Text>
-      </View>
-
-      <View style={styles.carouselSection}>
-        <Text style={styles.carouselText}>RECOMMENDED INTERCROPS</Text>
-        {/* <Carousel
-          width={width}
-          height={400}
-          data={data}
-          scrollAnimationDuration={1000}
-          renderItem={({ index }) => (
-            <View style={styles.slide}>
-              <Image source={data[index].image} style={styles.image} />
-              <Text style={styles.title}>{data[index].title}</Text>
-              <Text style={styles.description}>{data[index].description}</Text>
-            </View>
-          )}
-        /> */}
-
-        <View style={styles.carouselWrapper}>
-          {/* Previous Button */}
-          <TouchableOpacity onPress={handlePrev} style={styles.arrowButton}>
-            <Ionicons name="chevron-back" size={24} color="black" />
-          </TouchableOpacity>
-
-          {/* Carousel */}
-          <Carousel
-            ref={carouselRef} 
-            width={width - 80}
-            height={400}
-            data={data}
-            scrollAnimationDuration={1000}
-            onSnapToItem={(index) => setCurrentIndex(index)}
-            renderItem={({ index }) => (
-              <View style={styles.slide}>
-                <Image source={data[index].image} style={styles.image} />
-                <Text style={styles.title}>{data[index].title}</Text>
-                <Text style={styles.description}>{data[index].description}</Text>
-              </View>
-            )}
+      <ScrollView style={styles.container}>
+        <View style={styles.imageContainer}>
+          <Image
+            source={require("../../../assets/intercroppingbg.png")}
+            style={styles.interImage}
           />
-
-          {/* Next Button */}
-          <TouchableOpacity onPress={handleNext} style={styles.arrowButton}>
-            <Ionicons name="chevron-forward" size={24} color="black" />
-          </TouchableOpacity>
+          <Text style={styles.imageText}>COCONUT {"\n"} INTERCROPPING</Text>
         </View>
 
-        {/* Breadcrumb Indicators */}
-        <View style={styles.indicatorWrapper}>
-          {data.map((_, index) => (
-            <View
-              key={index}
-              style={[
-                styles.indicator,
-                index === currentIndex ? styles.activeIndicator : styles.inactiveIndicator,
-              ]}
+        <View style={styles.infoContainer}>
+          <Text style={styles.sectionHeader}>Coconut Based Farming Systems</Text>
+          <Text style={styles.sectionText}>
+            • A system or practice in coconut production{"\n"}• All available farm
+            resources like soil, water, farm labor, agricultural inputs are
+            utilized and optimized{"\n"}• Production of food and non-food products
+            {"\n"}
+          </Text>
+
+          <Text style={styles.sectionHeader}>Important Considerations</Text>
+          <Text style={styles.sectionText}>
+            • Suitable environmental conditions{"\n"}• Right technology (package
+            of viable technologies){"\n"}• Available planting materials{"\n"}•
+            Favorable market of farm produce{"\n"}• Available working capital
+            {"\n"}• Timely extension service{"\n"}• Human capital endowment:
+            skills/capacities and attitudes{"\n"}
+          </Text>
+        </View>
+
+        <View style={styles.imgSection}>
+          <Image
+            source={require("../../../assets/solar_radiation.png")}
+            style={styles.solarImage}
+          />
+          <Text style={styles.solarText}>
+            On average, 56% of solar radiation reaches the ground (may vary with
+            age of the stand)
+          </Text>
+          <Image
+            source={require("../../../assets/root_system.png")}
+            style={styles.rootImage}
+          />
+          <Text style={styles.rootText}>
+            80% of active root system is located n 25-60 cm soil layer in a 2 m
+            radius, leaving 70-75% for intercropping
+          </Text>
+        </View>
+
+        <View style={styles.factorSection}>
+          <Text style={styles.factorText}>
+            MAIN FACTORS AFFECTING COCONUT PRODUCTION & QUALITY
+          </Text>
+          <Text style={styles.factorItem}>1. Environment or site selection</Text>
+          <Text style={styles.factorItem}>2. Variety or species selection</Text>
+          <Text style={styles.factorItem}>3. Management</Text>
+        </View>
+
+        <View style={styles.carouselSection}>
+          <Text style={styles.carouselText}>RECOMMENDED INTERCROPS</Text>
+          <View style={styles.carouselWrapper}>
+            {/* Previous Button */}
+            <TouchableOpacity onPress={handlePrev} style={styles.arrowButton}>
+              <Ionicons name="chevron-back" size={24} color="black" />
+            </TouchableOpacity>
+
+            {/* Carousel */}
+            <Carousel
+              ref={carouselRef} 
+              width={width - 80}
+              height={400}
+              data={data}
+              scrollAnimationDuration={1000}
+              onSnapToItem={(index) => setCurrentIndex(index)}
+              renderItem={({ index }) => (
+                <View style={styles.slide}>
+                  <Image source={data[index].image} style={styles.image} />
+                  <Text style={styles.title}>{data[index].title}</Text>
+                  <Text style={styles.description}>{data[index].description}</Text>
+                </View>
+              )}
             />
-          ))}
-        </View>
-      </View>
 
-      <View style={styles.faqSection}>
-        <Image
-          source={require("../../../assets/didyouknow.png")}
-          style={styles.dykImage}
-        />
-        <Text style={styles.PCAText}>Philippine Coconut Authority (2024)</Text>
-      </View>
-    </ScrollView>
+            {/* Next Button */}
+            <TouchableOpacity onPress={handleNext} style={styles.arrowButton}>
+              <Ionicons name="chevron-forward" size={24} color="black" />
+            </TouchableOpacity>
+          </View>
+
+          {/* Breadcrumb Indicators */}
+          <View style={styles.indicatorWrapper}>
+            {data.map((_, index) => (
+              <View
+                key={index}
+                style={[
+                  styles.indicator,
+                  index === currentIndex ? styles.activeIndicator : styles.inactiveIndicator,
+                ]}
+              />
+            ))}
+          </View>
+        </View>
+
+        <View style={styles.faqSection}>
+          <Image
+            source={require("../../../assets/didyouknow.png")}
+            style={styles.dykImage}
+          />
+          <Text style={styles.PCAText}>Philippine Coconut Authority (2024)</Text>
+        </View>
+      </ScrollView>
+    </>
   );
 };
 

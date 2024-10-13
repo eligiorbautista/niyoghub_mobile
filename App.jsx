@@ -18,6 +18,8 @@ import ChangePasswordScreen from "./screens/unprotected/change_password/ChangePa
 import IntercroppingScreen from "./screens/protected/home/IntercroppingScreen";
 import CopraPriceScreen from "./screens/protected/home/CopraPriceScreen";
 import ArticleScreen from "./screens/protected/home/ArticleScreen";
+import SeeAllNewsProgramsScreen from "./screens/protected/home/SeeAllNewsPrograms";
+import ReadNewsProgramsScreen from "./screens/protected/home/ReadNewsPrograms";
 
 const Stack = createNativeStackNavigator();
 
@@ -61,6 +63,8 @@ const App = () => {
 
         {/* article-related screens under home */}
         <Stack.Screen name="Article" component={ArticleScreen} />
+        <Stack.Screen name="SeeAllNewsPrograms" component={SeeAllNewsProgramsScreen} />
+        <Stack.Screen name="ReadNewsPrograms" component={ReadNewsProgramsScreen} />
 
       </Stack.Navigator>
     </NavigationContainer>
