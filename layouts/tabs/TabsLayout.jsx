@@ -7,8 +7,7 @@ import IdentificationScreen from '../../screens/protected/identification/Identif
 import SoilMapScreen from '../../screens/protected/map/SoilMapScreen';
 import ChatScreen from '../../screens/protected/chat/ChatScreen';
 import SettingsScreen from '../../screens/protected/settings/SettingsScreen';
-import VirtualAssistantScreen from '../../screens/protected/virtual_ai_assistant/VirtualAssistantScreen';
-import TestScreen from '../../screens/protected/virtual_ai_assistant/Test';
+import VirtualAIAssistantScreen from '../../screens/protected/virtual_ai_assistant/VirtualAIAssistantScreen';
 
 const Tab = createBottomTabNavigator();
 
@@ -62,7 +61,7 @@ const TabsLayout = () => {
             />
             <Tab.Screen
                 name="AI Assistant"
-                component={TestScreen}
+                component={VirtualAIAssistantScreen}
                 options={{ headerShown: false }}
             />
             <Tab.Screen
