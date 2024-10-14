@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   StyleSheet,
   Text,
@@ -10,16 +10,19 @@ import {
   KeyboardAvoidingView,
   ActivityIndicator,
   Image,
+  Keyboard
 } from "react-native";
-import { Ionicons, MaterialIcons } from "@expo/vector-icons"; // Import MaterialIcons for voice assistant icon
+import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useNavigation } from "@react-navigation/native"; // For Voice Assistant navigation
+import { useNavigation } from "@react-navigation/native";
+import { scale } from "react-native-size-matters";
 
 export default function ChatAssistantScreen() {
   const [messages, setMessages] = useState([]);
   const [userInput, setUserInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const scrollViewRef = useRef();
   const navigation = useNavigation();
 
   useEffect(() => {
@@ -46,6 +49,7 @@ export default function ChatAssistantScreen() {
     };
     if (messages.length > 0) {
       saveMessages();
+      scrollViewRef.current?.scrollToEnd({ animated: true });
     }
   }, [messages]);
 
@@ -70,7 +74,22 @@ export default function ChatAssistantScreen() {
             {
               role: "system",
               content:
-                "You are NiyogHub's Virtual AI Assistant, a helpful, friendly assistant who always refers to yourself as 'NiyogHub's Virtual AI Assistant' when asked for your name...",
+                "You are NiyogHub's AI Assistant, a helpful, friendly assistant who always refers to yourself as 'NiyogHub's Virtual AI Assistant' when asked for your name. You respond in either English or Filipino based on the user's language. If the question is in Filipino, reply in Filipino. Otherwise, respond in English. Your goal is to provide simple, clear, and supportive answers to assist users, many of whom may be local farmers and may not be highly tech-savvy.",
+            },
+            {
+              role: "system",
+              content:
+                "If the user asks about the Philippine Coconut Authority (PCA), always mention that they can connect with PCA administrators through NiyogHub's mobile app or website. For PCA-related questions, suggest adding NiyogHub for direct assistance. Also, provide relevant PCA contact information or office addresses to give users more options beyond NiyogHub.",
+            },
+            {
+              role: "system",
+              content:
+                "If the user asks 'Who made NiyogHub or NiyogHub's Virtual AI Assistant?' respond with: 'NiyogHub is a capstone project developed by students from Manuel S Enverga University named Eligio Bautista, Enya Almendras, and Marianne Nikki Bernardo. The purpose of NiyogHub is to support local coconut farmers and the Philippine Coconut Authority (PCA) by providing them with easy access to resources, communication, and assistance through our platform.'",
+            },
+            {
+              role: "system",
+              content:
+                "If the user asks about real-time data or information, check the internet to answer those questions.",
             },
             {
               role: "user",
@@ -105,6 +124,7 @@ export default function ChatAssistantScreen() {
     if (userInput.trim()) {
       sendMessageToGpt(userInput);
       setUserInput("");
+      Keyboard.dismiss();
     }
   };
 
@@ -129,42 +149,51 @@ export default function ChatAssistantScreen() {
       <View style={styles.divider} />
 
       {/* Chat Section */}
-      <ScrollView style={styles.chatContainer}>
-        {messages.map((message, index) => (
-          <View
-            key={index}
-            style={[
-              styles.messageContainer,
-              message.role === "user"
-                ? styles.userContainer
-                : styles.aiContainer,
-            ]}
-          >
-            {message.role === "assistant" && (
-              <Image
-                source={require("../../../assets/niyoghub_logo_2.png")}
-                style={styles.chatImage}
-              />
-            )}
+      <ScrollView style={styles.chatContainer} ref={scrollViewRef}>
+        {messages.length === 0 ? (
+          <View style={styles.emptyStateContainer}>
+            <Image
+              source={require("../../../assets/niyoghub_logo_2.png")}
+              style={styles.emptyStateImage}
+            />
+            <Text style={styles.emptyStateText}>How can I help you today? Just type your message.</Text>
+          </View>
+        ) : (
+          messages.map((message, index) => (
             <View
+              key={index}
               style={[
-                styles.messageBubble,
-                message.role === "user" ? styles.userMessage : styles.aiMessage,
+                styles.messageContainer,
+                message.role === "user" ? styles.userContainer : styles.aiContainer,
               ]}
             >
-              <Text
+              {message.role === "assistant" && (
+                <Image
+                  source={require("../../../assets/niyoghub_logo_2.png")}
+                  style={styles.chatImage}
+                />
+              )}
+              <View
                 style={[
-                  styles.messageText,
-                  message.role === "user" ? styles.userText : styles.aiText,
+                  styles.messageBubble,
+                  message.role === "user" ? styles.userMessage : styles.aiMessage,
                 ]}
               >
-                {message.content}
-              </Text>
-              <Text style={styles.timestamp}>{message.timestamp}</Text>
+                <Text
+                  style={[
+                    styles.messageText,
+                    message.role === "user" ? styles.userText : styles.aiText,
+                  ]}
+                >
+                  {message.content}
+                </Text>
+                <Text style={styles.timestamp}>{message.timestamp}</Text>
+              </View>
             </View>
-          </View>
-        ))}
+          ))
+        )}
       </ScrollView>
+
 
       <View style={styles.divider} />
 
@@ -194,7 +223,7 @@ export default function ChatAssistantScreen() {
               style={styles.voiceAssistantButton}
               onPress={() => navigation.navigate("Voice Assistant")}
             >
-              <Image source={require('../../../assets/animations/ai-passive.gif')} style={{height: 35, width : 35}} />
+              <Image source={require('../../../assets/animations/ai-passive.gif')} style={{ height: 33, width: 33 }} />
             </TouchableOpacity>
           </>
         )}
@@ -231,6 +260,22 @@ const styles = StyleSheet.create({
     marginVertical: 0,
     marginHorizontal: 20,
   },
+  emptyStateContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: scale(90),
+  },
+  emptyStateImage: {
+    width: 150,
+    height: 150,
+    marginBottom: 20,
+  },
+  emptyStateText: {
+    fontSize: 14,
+    color: "#999",
+  },
+
   chatContainer: {
     flex: 1,
     paddingHorizontal: 20,
