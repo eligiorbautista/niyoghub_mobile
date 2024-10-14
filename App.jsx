@@ -20,6 +20,8 @@ import CopraPriceScreen from "./screens/protected/home/CopraPriceScreen";
 import ArticleScreen from "./screens/protected/home/ArticleScreen";
 import SeeAllNewsProgramsScreen from "./screens/protected/home/SeeAllNewsPrograms";
 import ReadNewsProgramsScreen from "./screens/protected/home/ReadNewsPrograms";
+import ChatAssistantScreen from "./screens/protected/virtual_ai_assistant/ChatAssistantScreen";
+import VoiceAssistantScreen from "./screens/protected/virtual_ai_assistant/VoiceAssistantScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -42,19 +44,36 @@ const App = () => {
         />
         <Stack.Screen name="Registration" component={RegistrationScreen} />
         <Stack.Screen name="Login" component={LoginScreen} />
-        <Stack.Screen name="TwoFactorAuthOTP" component={TwoFactorAuthOTPScreen} />
-        <Stack.Screen name="ResetPasswordOTP" component={ResetPasswordOTPScreen} />
+        <Stack.Screen
+          name="TwoFactorAuthOTP"
+          component={TwoFactorAuthOTPScreen}
+        />
+        <Stack.Screen
+          name="ResetPasswordOTP"
+          component={ResetPasswordOTPScreen}
+        />
         <Stack.Screen name="ChangePassword" component={ChangePasswordScreen} />
         <Stack.Screen name="Layout" component={DrawerLayout} />
         <Stack.Screen name="Notifications" component={NotificationsScreen} />
 
         {/* protected */}
 
+        <Stack.Screen name="Voice Assistant" component={VoiceAssistantScreen} />
+
         {/* settings-related screens */}
         <Stack.Screen name="Settings" component={SettingsScreen} />
-        <Stack.Screen name="AccountSettings" component={AccountSettingsScreen} />
-        <Stack.Screen name="ProfileSettings" component={ProfileSettingsScreen} />
-        <Stack.Screen name="NotificationSettings" component={NotificationSettingsScreen} />
+        <Stack.Screen
+          name="AccountSettings"
+          component={AccountSettingsScreen}
+        />
+        <Stack.Screen
+          name="ProfileSettings"
+          component={ProfileSettingsScreen}
+        />
+        <Stack.Screen
+          name="NotificationSettings"
+          component={NotificationSettingsScreen}
+        />
 
         {/* home-related screens */}
         <Stack.Screen name="Home" component={HomeScreen} />
@@ -63,9 +82,14 @@ const App = () => {
 
         {/* article-related screens under home */}
         <Stack.Screen name="Article" component={ArticleScreen} />
-        <Stack.Screen name="SeeAllNewsPrograms" component={SeeAllNewsProgramsScreen} />
-        <Stack.Screen name="ReadNewsPrograms" component={ReadNewsProgramsScreen} />
-
+        <Stack.Screen
+          name="SeeAllNewsPrograms"
+          component={SeeAllNewsProgramsScreen}
+        />
+        <Stack.Screen
+          name="ReadNewsPrograms"
+          component={ReadNewsProgramsScreen}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );

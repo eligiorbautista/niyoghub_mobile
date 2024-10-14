@@ -67,7 +67,10 @@ const ProfileScreen = () => {
             {mockUser?.email || "Email not available"}
           </Text>
 
-          <TouchableOpacity style={styles.editButton}>
+          <TouchableOpacity
+            style={styles.editButton}
+            onPress={() => navigation.navigate("ProfileSettings")}
+          >
             <Ionicons name="create-outline" size={18} color="#537F19" />
             <Text style={styles.editButtonText}>Edit Profile</Text>
           </TouchableOpacity>
@@ -143,7 +146,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#F0F0F0",
     borderBottomWidth: 1,
     borderBottomColor: "#E0E0E0",
-    marginTop: 30,
+    marginTop: 0,
     marginBottom: 10,
   },
   headerImage: {
