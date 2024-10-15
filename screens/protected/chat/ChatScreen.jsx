@@ -241,6 +241,7 @@ const styles = StyleSheet.create({
     borderColor: '#d1d5db',
     marginVertical: 0,
     marginHorizontal: 20,
+    marginBottom: 10,
   },
   emptyStateContainer: {
     flex: 1,
@@ -263,6 +264,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: 20,
     paddingTop: 10,
+    marginBottom: 10,
   },
   messageContainer: {
     flexDirection: 'row',

@@ -72,6 +72,21 @@ export default function ChatAssistantScreen() {
 
   const sendMessageToGpt = async (text) => {
     setIsLoading(true);
+
+    // add user's message
+    const userTimestamp = getCurrentTimestamp();
+    setMessages((prevMessages) => [
+      ...prevMessages,
+      { role: "user", content: text, timestamp: userTimestamp }
+    ]);
+
+    // render loader
+    const aiTimestamp = getCurrentTimestamp();
+    setMessages((prevMessages) => [
+      ...prevMessages,
+      { role: "assistant", content: "loading", isPending: true, timestamp: aiTimestamp }
+    ]);
+
     try {
       const response = await axios.post(
         "https://api.openai.com/v1/chat/completions",
@@ -113,19 +128,29 @@ export default function ChatAssistantScreen() {
       );
 
       const aiResponse = response.data.choices[0].message.content;
-      const timestamp = getCurrentTimestamp();
 
-      setMessages((prevMessages) => [
-        ...prevMessages,
-        { role: "user", content: text, timestamp },
-        { role: "assistant", content: aiResponse, timestamp },
-      ]);
+      // the loader will be replaced with the actual response
+      setMessages((prevMessages) =>
+        prevMessages.map((message) =>
+          message.isPending
+            ? { ...message, content: aiResponse, isPending: false }
+            : message
+        )
+      );
     } catch (error) {
       console.error("Error sending message:", error);
+      setMessages((prevMessages) =>
+        prevMessages.map((message) =>
+          message.isPending
+            ? { ...message, content: "Error: Unable to get response", isPending: false }
+            : message
+        )
+      );
     } finally {
       setIsLoading(false);
     }
   };
+
 
   const handleSendMessage = () => {
     if (userInput.trim()) {
@@ -142,12 +167,12 @@ export default function ChatAssistantScreen() {
       {/* Header */}
       <View style={styles.subHeaderContainer}>
         <View style={styles.subHeader}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <TouchableOpacity onPress={() => navigation.goBack()}>
             <Ionicons name="chevron-back" size={24} color="black" />
           </TouchableOpacity>
           <Text style={styles.subHeaderText}>Chat AI Assistant</Text>
           <TouchableOpacity onPress={toggleModal}>
-            <Ionicons 
+            <Ionicons
               name="information-circle-outline"
               size={24}
               color="gray"
@@ -189,17 +214,22 @@ export default function ChatAssistantScreen() {
                   message.role === "user" ? styles.userMessage : styles.aiMessage,
                 ]}
               >
-                <Text
-                  style={[
-                    styles.messageText,
-                    message.role === "user" ? styles.userText : styles.aiText,
-                  ]}
-                >
-                  {message.content}
-                </Text>
+                {message.isPending ? (
+                  <ActivityIndicator size="small" color="#000" />
+                ) : (
+                  <Text
+                    style={[
+                      styles.messageText,
+                      message.role === "user" ? styles.userText : styles.aiText,
+                    ]}
+                  >
+                    {message.content}
+                  </Text>
+                )}
                 <Text style={styles.timestamp}>{message.timestamp}</Text>
               </View>
             </View>
+
           ))
         )}
       </ScrollView>
@@ -255,7 +285,7 @@ const styles = StyleSheet.create({
   subHeaderContainer: {
     backgroundColor: "white",
     paddingHorizontal: 20,
-    paddingTop: 30,
+    paddingTop: 15,
     paddingBottom: 16,
     zIndex: 10,
   },
@@ -274,6 +304,7 @@ const styles = StyleSheet.create({
     borderColor: "#d1d5db",
     marginVertical: 0,
     marginHorizontal: 20,
+    marginBottom: 10,
   },
   emptyStateContainer: {
     flex: 1,
