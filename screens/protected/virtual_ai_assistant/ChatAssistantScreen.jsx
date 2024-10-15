@@ -255,7 +255,7 @@ const styles = StyleSheet.create({
   subHeaderContainer: {
     backgroundColor: "white",
     paddingHorizontal: 20,
-    paddingTop: 20,
+    paddingTop: 30,
     paddingBottom: 16,
     zIndex: 10,
   },

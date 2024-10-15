@@ -16,6 +16,7 @@ import { scale, verticalScale } from "react-native-size-matters";
 import axios from "axios";
 import * as Speech from "expo-speech";
 import { useNavigation } from "@react-navigation/native";
+import AIAssistantModal from '../../../components/modals/AIAssistantModal'
 
 export default function VoiceAssistantScreen() {
   const navigation = useNavigation();
@@ -34,6 +35,13 @@ export default function VoiceAssistantScreen() {
 
   /* Loading State */
   const [isLoading, setIsLoading] = useState(false);
+
+  const [isModalVisible, setIsModalVisible] = useState(false);
+
+  const toggleModal = () => {
+    setIsModalVisible(!isModalVisible);
+  };
+
 
   const getMicrophonePermission = async () => {
     try {
@@ -268,11 +276,11 @@ export default function VoiceAssistantScreen() {
             <Ionicons name="chevron-back" size={24} color="black" />
           </TouchableOpacity>
           <Text style={styles.headerText}>Voice AI Assistant</Text>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={toggleModal}>
             <Ionicons
               name="information-circle-outline"
               size={24}
-              color="black"
+              color="gray"
             />
           </TouchableOpacity>
         </View>
@@ -417,6 +425,10 @@ export default function VoiceAssistantScreen() {
           <MaterialIcons name="stop-circle" size={24} color="#000" />
         </TouchableOpacity>
       </View>
+      <AIAssistantModal
+        visible={isModalVisible}
+        onClose={toggleModal}
+      />
     </View>
   );
 }
@@ -429,7 +441,7 @@ const styles = StyleSheet.create({
   headerContainer: {
     backgroundColor: "white",
     paddingHorizontal: 20,
-    paddingTop: 20,
+    paddingTop: 30,
     paddingBottom: 16,
     zIndex: 10,
   },
