@@ -6,14 +6,14 @@ import {
   TextInput,
   TouchableOpacity,
   KeyboardAvoidingView,
-  Platform, 
+  Platform,
   Image,
   TouchableWithoutFeedback,
   Keyboard,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import ThankYouModal from "../../../components/feedback/ThankYouModal";
-import FeedbackInfoModal from "../../../components/feedback/FeedbackInfoModal";
+import ThankYouModal from "../../../components/modals/ThankYouModal";
+import FeedbackInfoModal from "../../../components/modals/FeedbackInfoModal";
 
 const StarRating = ({ maxStars = 5, rating, onRatingChange }) => {
   return (
@@ -74,7 +74,7 @@ const FeedbackScreen = ({ navigation }) => {
             <Ionicons
               name="information-circle-outline"
               size={24}
-              color="black"
+              color="gray"
             />
           </TouchableOpacity>
         </View>
@@ -140,7 +140,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#F0F0F0",
     borderBottomWidth: 1,
     borderBottomColor: "#E0E0E0",
-    marginTop: 0,
+    // paddingTop: 30,
   },
   headerImage: {
     width: 150,

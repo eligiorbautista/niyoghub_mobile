@@ -364,7 +364,7 @@ const styles = StyleSheet.create({
     alignItems: 'start',
     backgroundColor: '#F0F0F0',
     paddingVertical: 8,
-    paddingHorizontal: 20,
+    paddingHorizontal: 10,
     borderRadius: 20,
     alignSelf: 'flex-start',
   },
@@ -410,7 +410,7 @@ const styles = StyleSheet.create({
     paddingTop: 10,
   },
   scrollContainer: {
-    paddingTop: 10,
+    paddingVertical: 10,
     paddingHorizontal: 5,
   },
   card: {

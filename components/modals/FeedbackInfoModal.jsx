@@ -23,7 +23,7 @@ const FeedbackInfoModal = ({ isVisible, onClose }) => {
             Your feedback could be about features, ease of use, performance, or anything else that matters to you.
           </Text>
           <TouchableOpacity style={styles.modalButton} onPress={onClose}>
-            <Text style={styles.modalButtonText}>Got it!</Text>
+            <Text style={styles.modalButtonText}>I understand</Text>
           </TouchableOpacity>
         </View>
       </View>

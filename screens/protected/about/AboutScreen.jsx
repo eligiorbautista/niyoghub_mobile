@@ -18,16 +18,16 @@ const AboutScreen = ({ navigation }) => {
           style={styles.headerImage}
         />
 
-       
-          <Ionicons name="settings-outline" size={24} color="#F0F0F0" />
-     
+
+        <Ionicons name="settings-outline" size={24} color="#F0F0F0" />
+
       </View>
 
 
       {/* about section */}
       <View style={styles.contentContainer}>
         <Image
-          source={require('../../../assets/niyoghub_logo_1.png')} 
+          source={require('../../../assets/niyoghub_logo_1.png')}
           style={styles.icon}
         />
         <Text style={styles.title}>ABOUT</Text>
@@ -96,8 +96,8 @@ const styles = StyleSheet.create({
     backgroundColor: "#F0F0F0",
     borderBottomWidth: 1,
     borderBottomColor: "#E0E0E0",
-    marginTop: 0,
-    marginBottom : 10,
+    // paddingTop: 30,
+    marginBottom: 10,
   },
   headerImage: {
     width: 150,

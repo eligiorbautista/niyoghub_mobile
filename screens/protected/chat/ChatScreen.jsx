@@ -1,162 +1,305 @@
-import React, { useState } from 'react';
-import { StyleSheet, Text, View, Modal, TouchableOpacity, TextInput, Image } from 'react-native';
-import { Ionicons } from "@expo/vector-icons";
-import ChatModal from './ChatModal';
+import React, { useState, useRef } from 'react';
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  ScrollView,
+  TextInput,
+  Image,
+  KeyboardAvoidingView,
+  ActivityIndicator,
+  Keyboard,
+} from 'react-native';
+import { scale } from "react-native-size-matters";
+import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
+import ChatModal from '../../../components/modals/ChatModal'
 
-const ChatScreen = () => {
+export default function ChatScreen({ navigation }) {
+  const [messages, setMessages] = useState([]);
+  const [inputMessage, setInputMessage] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const scrollViewRef = useRef();
   const [isModalVisible, setIsModalVisible] = useState(false);
 
   const toggleModal = () => {
     setIsModalVisible(!isModalVisible);
   };
 
+
+  // Mock admin responses
+  const mockAdminResponses = [
+    "Hello! How can I assist you with your coconut farming today?",
+    "Certainly! You can reach the PCA office at the following address...",
+    "Thank you for reaching out. If you have any more questions, feel free to ask!",
+    "We're here to support local coconut farmers. Let us know how we can help.",
+    "For more detailed information, please visit our website or contact us directly.",
+  ];
+
+  // Function to get a random admin response
+  const getAdminResponse = () => {
+    const randomIndex = Math.floor(Math.random() * mockAdminResponses.length);
+    return mockAdminResponses[randomIndex];
+  };
+
+  // Function to get current timestamp
+  const getCurrentTimestamp = () => {
+    const now = new Date();
+    const hours = now.getHours();
+    const minutes = now.getMinutes();
+    const ampm = hours >= 12 ? 'PM' : 'AM';
+    const formattedHours = hours % 12 || 12;
+    const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
+    return `${formattedHours}:${formattedMinutes} ${ampm}`;
+  };
+
+  // Function to handle sending user message and receiving admin response
+  const handleSendMessage = () => {
+    if (inputMessage.trim()) {
+      const timestamp = getCurrentTimestamp();
+
+      // Add user's message
+      setMessages((prevMessages) => [
+        ...prevMessages,
+        { role: 'user', content: inputMessage, timestamp },
+      ]);
+
+      setInputMessage('');
+      Keyboard.dismiss();
+
+      // Simulate admin response after a short delay
+      setIsLoading(true);
+      setTimeout(() => {
+        const adminResponse = getAdminResponse();
+        const adminTimestamp = getCurrentTimestamp();
+
+        setMessages((prevMessages) => [
+          ...prevMessages,
+          { role: 'admin', content: adminResponse, timestamp: adminTimestamp },
+        ]);
+        setIsLoading(false);
+
+        // Scroll to bottom after receiving admin response
+        scrollViewRef.current?.scrollToEnd({ animated: true });
+      }, 1000); // 1-second delay to simulate response time
+    }
+  };
+
   return (
-    <View style={styles.container}>
-
+    <KeyboardAvoidingView style={styles.mainContainer} behavior="padding">
+      {/* Header */}
       <View style={styles.header}>
-        <Text style={styles.headerText}>Chat Support</Text>
+        <Text style={styles.headerText}>Chat with PCA</Text>
         <TouchableOpacity onPress={toggleModal}>
-
-          <Ionicons
-            name="information-circle-outline"
-            size={24}
-            color="black"
-          />
+          <Ionicons name="information-circle-outline" size={24} color="gray" />
         </TouchableOpacity>
       </View>
 
       <View style={styles.divider} />
 
-      <View style={styles.logoContainer}>
-        <Image
-          source={require('../../../assets/niyoghub_logo_2.png')}
-          style={styles.logo}
-        />
-        <Text style={styles.helpMessage}>
-          How can we help you today?
-        </Text>
-      </View>
+      {/* Chat Section */}
+      <ScrollView style={styles.chatContainer} ref={scrollViewRef}>
+        {messages.length === 0 ? (
+          <View style={styles.emptyStateContainer}>
+            <Image
+              source={require('../../../assets/niyoghub_logo_2.png')}
+              style={styles.emptyStateImage}
+            />
+            <Text style={styles.emptyStateText}>
+              How can we help you today? Just type your message.
+            </Text>
+          </View>
+        ) : (
+          messages.map((message, index) => (
+            <View
+              key={index}
+              style={[styles.messageContainer, message.role === 'user' ? styles.userContainer : styles.adminContainer]}
+            >
+              {message.role === 'admin' && (
+                <Image
+                  source={require('../../../assets/niyoghub_logo_2.png')}
+                  style={styles.chatImage}
+                />
+              )}
+              <View
+                style={[styles.messageBubble, message.role === 'user' ? styles.userMessage : styles.adminMessage]}
+              >
+                <Text
+                  style={[styles.messageText, message.role === 'user' ? styles.userText : styles.adminText]}
+                >
+                  {message.content}
+                </Text>
+                <Text style={styles.timestamp}>{message.timestamp}</Text>
+              </View>
+            </View>
+          ))
+        )}
+        {isLoading && (
+          <View style={styles.adminContainer}>
+            <Image
+              source={require('../../../assets/niyoghub_logo_2.png')}
+              style={styles.chatImage}
+            />
+            <View style={styles.messageBubble}>
+              <ActivityIndicator size="small" color="#000" />
+            </View>
+          </View>
+        )}
+      </ScrollView>
 
-      <View>
-        <TouchableOpacity style={styles.button}>
-          <Text style={styles.buttonTextBold}>Common pests and diseases</Text>
-          <Text style={styles.buttonText}>List of pests and disease from the database</Text>
-        </TouchableOpacity>
+      <View style={styles.divider} />
 
-        <TouchableOpacity style={styles.button}>
-          <Text style={styles.buttonTextBold}>Can I connect with copra producers?</Text>
-          <Text style={styles.buttonText}>How to gain connection</Text>
-        </TouchableOpacity>
-      </View>
-
-      {/* Message Input Box */}
+      {/* Input Section */}
       <View style={styles.inputContainer}>
-        <TextInput
-          style={styles.input}
-          placeholder="Message NiyogHub"
-        />
-        <TouchableOpacity style={styles.sendButtonAttach}>
-          <Ionicons name="link" style={styles.sendButtonAttachIcon} size={22} />
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.sendButtonSend}>
-          <Ionicons name="send" style={styles.sendButtonSendIcon} size={22} />
-        </TouchableOpacity>
-      </View>
 
+        <TextInput
+          style={styles.textInput}
+          value={inputMessage}
+          onChangeText={setInputMessage}
+          placeholder="Type your message..."
+          placeholderTextColor="#999"
+        />
+        {/* Attachment Button */}
+        <TouchableOpacity style={styles.attachmentButton}>
+          <MaterialCommunityIcons name="attachment" size={24} color="black" />
+        </TouchableOpacity>
+
+        {/* Send Button */}
+        <TouchableOpacity style={styles.sendButton} onPress={handleSendMessage}>
+          <MaterialCommunityIcons name="send" size={24} color="#000" />
+        </TouchableOpacity>
+
+
+      </View>
       <ChatModal
         visible={isModalVisible}
         onClose={toggleModal}
       />
-    </View>
+    </KeyboardAvoidingView>
   );
-};
-
-export default ChatScreen;
+}
 
 const styles = StyleSheet.create({
-  container: {
+  mainContainer: {
     flex: 1,
-    backgroundColor: 'white',
-    padding: 20,
+    backgroundColor: '#FFFFFF',
   },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    borderRadius: 4,
+    padding: 20,
+    backgroundColor: 'white',
   },
   headerText: {
     fontSize: 18,
     fontWeight: 'bold',
     color: '#537F19',
   },
-  helpText: {
-    color: 'white',
-    fontWeight: 'bold',
-    backgroundColor: '#515151',
-    padding: 6,
-    width: 28,
-    height: 28,
-    borderRadius: 50,
-    textAlign: 'center',
-  },
   divider: {
     borderTopWidth: 1,
     borderColor: '#d1d5db',
-    marginVertical: 16,
+    marginVertical: 0,
+    marginHorizontal: 20,
   },
-  logoContainer: {
+  emptyStateContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    marginTop: scale(90),
   },
-  logo: {
-    height: 80,
-    width: 80,
+  emptyStateImage: {
+    width: 150,
+    height: 150,
+    marginBottom: 20,
+    resizeMode: 'contain',
   },
-  helpMessage: {
-    fontSize: 18,
-    fontWeight: '600',
+  emptyStateText: {
+    fontSize: 16,
+    color: '#999',
     textAlign: 'center',
-    marginTop: 16,
   },
-  button: {
-    backgroundColor: '#90B74B',
-    padding: 16,
-    borderRadius: 8,
-    marginBottom: 8,
+  chatContainer: {
+    flex: 1,
+    paddingHorizontal: 20,
+    paddingTop: 10,
   },
-  buttonTextBold: {
-    color: 'black',
-    fontWeight: 'bold',
+  messageContainer: {
+    flexDirection: 'row',
+    marginBottom: 10,
   },
-  buttonText: {
-    color: 'white',
-    fontSize: 14,
+  userContainer: {
+    justifyContent: 'flex-end',
+  },
+  adminContainer: {
+    justifyContent: 'flex-start',
+  },
+  chatImage: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    marginRight: 10,
+    marginTop: 5,
+  },
+  messageBubble: {
+    padding: 10,
+    borderRadius: 10,
+    maxWidth: '75%',
+  },
+  userMessage: {
+    backgroundColor: '#DCF8C6',
+    alignSelf: 'flex-end',
+  },
+  adminMessage: {
+    backgroundColor: '#ECECEC',
+  },
+  messageText: {
+    fontSize: 16,
+  },
+  userText: {
+    color: '#000',
+  },
+  adminText: {
+    color: '#000',
+  },
+  timestamp: {
+    fontSize: 12,
+    color: '#999',
+    marginTop: 5,
+    textAlign: 'right',
   },
   inputContainer: {
     flexDirection: 'row',
+    paddingHorizontal: 20,
+    paddingVertical: 20,
+    backgroundColor: '#fff',
     alignItems: 'center',
-    marginTop: 16,
-    borderWidth: .7,
   },
-  input: {
+  textInput: {
     flex: 1,
-    backgroundColor: 'white',
-    padding: 12,
-    borderRadius: 4,
+    height: 40,
+    borderColor: '#ddd',
+    borderWidth: 1,
+    borderRadius: 20,
+    paddingHorizontal: 15,
+    fontSize: 14,
+    backgroundColor: '#F5F5F5',
+    marginRight: 10,
   },
-  sendButtonAttach: {
-    marginLeft: 0,
-    padding: 12,
-    backgroundColor: '#f3f4f6',
-    borderRadius: 2,
-    borderColor: 'black',
+  sendButton: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginLeft: 5,
   },
-  sendButtonSend: {
-    marginLeft: 0,
-    padding: 12,
-    backgroundColor: '#f3f4f6',
-    borderRadius: 2,
+  attachmentButton: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 5,
+  },
+  aiButton: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginLeft: 5,
   },
 });
+

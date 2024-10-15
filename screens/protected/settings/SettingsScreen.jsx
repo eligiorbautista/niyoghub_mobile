@@ -1,11 +1,29 @@
 import React from "react";
-import { View, Text, Pressable, StyleSheet } from "react-native";
+import { View, Text, Pressable, StyleSheet, TouchableOpacity, Image } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
 const SettingsScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>General Settings</Text>
+      <View style={styles.headerContainer}>
+        <View style={styles.header}>
+          <TouchableOpacity onPress={() => navigation.goBack()}>
+            <Ionicons name="arrow-back" size={24} color="black" />
+          </TouchableOpacity>
+
+          <Image
+            source={require("../../../assets/niyoghub_banner_1.png")}
+            style={styles.headerImage}
+          />
+
+          <Ionicons
+            name="information-circle-outline"
+            size={24}
+            color="#F0F0F0"
+          />
+        </View>
+      </View>
+      <Text style={styles.subHeader}>General Settings</Text>
 
       <Pressable
         style={styles.item}
@@ -15,10 +33,15 @@ const SettingsScreen = ({ navigation }) => {
           style={styles.icon}
           name="person-outline"
           size={22}
-          color="gray"
+          color="#537f19"
         />
         <Text style={styles.text}>Account</Text>
-        <Text style={styles.arrow}>›</Text>
+        <Ionicons
+          style={styles.arrowIcon}
+          name="chevron-forward-outline"
+          size={22}
+          color="#537f19"
+        />
       </Pressable>
 
       <Pressable
@@ -29,10 +52,15 @@ const SettingsScreen = ({ navigation }) => {
           style={styles.icon}
           name="id-card-outline"
           size={22}
-          color="gray"
+          color="#537f19"
         />
         <Text style={styles.text}>Profile</Text>
-        <Text style={styles.arrow}>›</Text>
+        <Ionicons
+          style={styles.arrowIcon}
+          name="chevron-forward-outline"
+          size={22}
+          color="#537f19"
+        />
       </Pressable>
 
       <Pressable
@@ -43,10 +71,15 @@ const SettingsScreen = ({ navigation }) => {
           style={styles.icon}
           name="notifications-outline"
           size={22}
-          color="gray"
+          color="#537f19"
         />
         <Text style={styles.text}>Notifications</Text>
-        <Text style={styles.arrow}>›</Text>
+        <Ionicons
+          style={styles.arrowIcon}
+          name="chevron-forward-outline"
+          size={22}
+          color="#537f19"
+        />
       </Pressable>
     </View>
   );
@@ -54,13 +87,31 @@ const SettingsScreen = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   container: {
-    padding: 20,
     backgroundColor: "#fff",
     height: "100%",
   },
+  /* header */
   header: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingVertical: 8,
+    paddingHorizontal: 20,
+    backgroundColor: "#F0F0F0",
+    borderBottomWidth: 1,
+    borderBottomColor: "#E0E0E0",
+    // paddingTop: 30,
+    marginBottom: 10,
+  },
+  headerImage: {
+    width: 150,
+    height: 50,
+    resizeMode: "contain",
+  },
+  subHeader: {
     fontSize: 24,
     fontWeight: "bold",
+    marginTop: 20,
     marginBottom: 20,
     textAlign: "center",
   },
@@ -72,20 +123,20 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginBottom: 15,
     justifyContent: "space-between",
+    marginHorizontal: 20,
   },
   icon: {
     width: 24,
     height: 24,
     marginRight: 15,
-    color: "#537F19",
   },
   text: {
     fontSize: 18,
     flex: 1,
   },
-  arrow: {
-    fontSize: 22,
-    color: "#537F19",
+  arrowIcon: {
+    width: 24,
+    height: 24,
   },
 });
 

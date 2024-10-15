@@ -5,7 +5,7 @@ import {
   DrawerContentScrollView,
   DrawerItemList,
 } from "@react-navigation/drawer";
-import { Ionicons } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons"; // Retained Ionicons
 import TabsLayout from "../tabs/TabsLayout";
 import { useNavigation } from "@react-navigation/native";
 import ProfileScreen from "../../screens/protected/profile/ProfileScreen";
@@ -13,7 +13,7 @@ import FeedbackScreen from "../../screens/protected/feedback/FeedbackScreen";
 import FAQScreen from "../../screens/protected/faq/FAQScreen";
 import AboutScreen from "../../screens/protected/about/AboutScreen";
 import LoginScreen from "../../screens/unprotected/login/LoginScreen";
-
+import SettingsScreen from "../../screens/protected/settings/SettingsScreen";
 
 const Drawer = createDrawerNavigator();
 
@@ -21,7 +21,7 @@ const CustomDrawerContent = (props) => {
   const navigation = useNavigation();
 
   return (
-    <DrawerContentScrollView {...props}>
+    <DrawerContentScrollView {...props} contentContainerStyle={{ flexGrow: 1 }}>
       <View style={styles.logoContainer}>
         <Image
           source={require("../../assets/niyoghub_banner_1.png")}
@@ -86,6 +86,9 @@ const DrawerLayout = () => {
                 ? "information-circle"
                 : "information-circle-outline";
               break;
+            case "Settings":
+              iconName = focused ? "settings" : "settings-outline";
+              break;
           }
           return (
             <Ionicons
@@ -116,17 +119,15 @@ const DrawerLayout = () => {
         component={TabsLayout}
         options={{ title: "Home", headerTitle: "", drawerItemStyle: { display: 'none' } }}
       />
-
       <Drawer.Screen
         name="Login"
         component={LoginScreen}
         options={{ title: "Login", headerTitle: "", drawerItemStyle: { display: 'none' } }}
       />
-
       <Drawer.Screen
         name="Profile"
         component={ProfileScreen}
-        options={{ title: "Profile", headerShown: false }}
+        options={{ title: "Profile", headerShown: false}}
       />
       <Drawer.Screen
         name="Feedback"
@@ -142,6 +143,11 @@ const DrawerLayout = () => {
         name="About"
         component={AboutScreen}
         options={{ title: "About", headerShown: false }}
+      />
+      <Drawer.Screen
+        name="Settings"
+        component={SettingsScreen}
+        options={{ title: "Settings", headerShown: false }}
       />
     </Drawer.Navigator>
   );

@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View, TouchableOpacity, Image, } from 'react-native';
 import React, { useState } from 'react';
-import DiseaseIdentification from './IdentificationModal';
+import DiseaseIdentification from '../../../components/modals/IdentificationModal';
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
@@ -46,7 +46,7 @@ const IdentificationScreen = () => {
           <Ionicons
             name="information-circle-outline"
             size={24}
-            color="black"
+            color="gray"
           />
         </TouchableOpacity>
       </View>

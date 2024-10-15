@@ -6,8 +6,7 @@ import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import HomeScreen from "../../screens/protected/home/HomeScreen";
 import IdentificationScreen from "../../screens/protected/identification/IdentificationScreen";
 import SoilMapScreen from "../../screens/protected/map/SoilMapScreen";
-import ChatScreen from "../../screens/protected/chat/ChatScreen";
-import SettingsScreen from "../../screens/protected/settings/SettingsScreen";
+import ChatScreen from "../../screens/protected/chat/ChatScreen"; 
 import ChatAssistantScreen from "../../screens/protected/virtual_ai_assistant/ChatAssistantScreen";
 
 const Tab = createBottomTabNavigator();
@@ -39,9 +38,7 @@ const TabsLayout = () => {
                         iconName = focused ? "chat" : "chat";
                     } else if (route.name === "AI Assistant") {
                         iconName = focused ? "assistant" : "assistant";
-                    } else if (route.name === "Settings") {
-                        iconName = focused ? "settings" : "settings";
-                    }
+                    }  
 
                     return <MaterialIcons name={iconName} size={size} color={color} />;
                 },
@@ -75,11 +72,7 @@ const TabsLayout = () => {
                 component={ChatAssistantScreen}
                 options={{ headerShown: false }}
             />
-            <Tab.Screen
-                name="Settings"
-                component={SettingsScreen}
-                options={{ headerShown: false }}
-            />
+             
         </Tab.Navigator>
     );
 };

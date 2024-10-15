@@ -12,7 +12,7 @@ const IdentificationModal = ({ visible, onClose }) => {
       <View style={styles.modalContainer}>
         <View style={styles.modalContent}>
           <Text style={styles.modalTitle}>HOW TO USE DISEASE IDENTIFICATION?</Text>
-          <Text style={styles.subTitle}>Last Updated December 2024</Text>
+          <Text style={styles.subTitle}>Last Updated October 2024</Text>
           <View style={styles.divider} />
           <Text style={styles.modalTextTitle}>
             Uploading an Image:
@@ -96,7 +96,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 4,
-    marginBottom: 16,
+    marginBottom: 16, 
   },
   modalButtonText: {
     color: 'white',

@@ -17,6 +17,7 @@ import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
 import { scale } from "react-native-size-matters";
+import AIAssistantModal from '../../../components/modals/AIAssistantModal'
 
 export default function ChatAssistantScreen() {
   const [messages, setMessages] = useState([]);
@@ -24,6 +25,12 @@ export default function ChatAssistantScreen() {
   const [isLoading, setIsLoading] = useState(false);
   const scrollViewRef = useRef();
   const navigation = useNavigation();
+  const [isModalVisible, setIsModalVisible] = useState(false);
+
+  const toggleModal = () => {
+    setIsModalVisible(!isModalVisible);
+  };
+
 
   useEffect(() => {
     const loadMessages = async () => {
@@ -136,11 +143,11 @@ export default function ChatAssistantScreen() {
       <View style={styles.subHeaderContainer}>
         <View style={styles.subHeader}>
           <Text style={styles.subHeaderText}>Chat AI Assistant</Text>
-          <TouchableOpacity>
-            <Ionicons
+          <TouchableOpacity onPress={toggleModal}>
+            <Ionicons 
               name="information-circle-outline"
               size={24}
-              color="black"
+              color="gray"
             />
           </TouchableOpacity>
         </View>
@@ -228,6 +235,11 @@ export default function ChatAssistantScreen() {
           </>
         )}
       </View>
+
+      <AIAssistantModal
+        visible={isModalVisible}
+        onClose={toggleModal}
+      />
     </KeyboardAvoidingView>
   );
 }
@@ -272,8 +284,9 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   emptyStateText: {
-    fontSize: 14,
+    fontSize: 16,
     color: "#999",
+    textAlign: 'center'
   },
 
   chatContainer: {

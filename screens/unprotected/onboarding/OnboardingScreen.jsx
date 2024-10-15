@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
-import TermsPrivacyPolicyModal from '../../../components/onboarding/TermsAndPrivacyPolicyModal';
+import TermsPrivacyPolicyModal from '../../../components/modals/TermsAndPrivacyPolicyModal';
 
 const OnboardingScreen = ({ navigation }) => {
     const [isModalVisible, setIsModalVisible] = useState(false);

@@ -124,7 +124,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: '#E0E0E0',
     marginTop: 0,
-    
+
   },
   titleContainer: {
     flex: 1,
