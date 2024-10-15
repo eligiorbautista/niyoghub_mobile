@@ -59,7 +59,8 @@ const App = () => {
         {/* protected */}
 
         <Stack.Screen name="Voice Assistant" component={VoiceAssistantScreen} />
-
+        <Stack.Screen name="AI Assistant" component={ChatAssistantScreen} />
+        
         {/* settings-related screens */}
         <Stack.Screen name="Settings" component={SettingsScreen} />
         <Stack.Screen

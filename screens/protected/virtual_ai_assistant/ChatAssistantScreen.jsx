@@ -142,6 +142,9 @@ export default function ChatAssistantScreen() {
       {/* Header */}
       <View style={styles.subHeaderContainer}>
         <View style={styles.subHeader}>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+            <Ionicons name="chevron-back" size={24} color="black" />
+          </TouchableOpacity>
           <Text style={styles.subHeaderText}>Chat AI Assistant</Text>
           <TouchableOpacity onPress={toggleModal}>
             <Ionicons 
@@ -264,7 +267,7 @@ const styles = StyleSheet.create({
   subHeaderText: {
     fontSize: 18,
     fontWeight: "bold",
-    color: "#537F19",
+    color: 'rgba(83, 127, 25, 0.8)',
   },
   divider: {
     borderTopWidth: 1,

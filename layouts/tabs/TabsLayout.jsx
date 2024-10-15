@@ -14,13 +14,7 @@ const Tab = createBottomTabNavigator();
 const TabsLayout = () => {
     const navigation = useNavigation();
     const route = useRoute();
-
-    useEffect(() => {
-
-        if (route.name === "ChatAssistant") {
-            navigation.navigate("Voice Assistant");
-        }
-    }, [route.name]);
+ 
 
     return (
         <Tab.Navigator
@@ -36,13 +30,11 @@ const TabsLayout = () => {
                         iconName = focused ? "map" : "map";
                     } else if (route.name === "Chat") {
                         iconName = focused ? "chat" : "chat";
-                    } else if (route.name === "AI Assistant") {
-                        iconName = focused ? "assistant" : "assistant";
                     }  
 
                     return <MaterialIcons name={iconName} size={size} color={color} />;
                 },
-                tabBarActiveTintColor: "#537F19",
+                tabBarActiveTintColor: 'rgba(83, 127, 25, 0.8)',
                 tabBarInactiveTintColor: "gray",
                 tabBarStyle: styles.tabBar,
             })}
@@ -67,11 +59,7 @@ const TabsLayout = () => {
                 component={ChatScreen}
                 options={{ headerShown: false }}
             />
-            <Tab.Screen
-                name="AI Assistant"
-                component={ChatAssistantScreen}
-                options={{ headerShown: false }}
-            />
+            
              
         </Tab.Navigator>
     );

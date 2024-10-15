@@ -11,7 +11,7 @@ const AIAssistantModal = ({ visible, onClose }) => {
         >
             <View style={styles.modalContainer}>
                 <View style={styles.modalContent}>
-                    <Text style={styles.modalTitle}>HOW TO USE THE CHAT AI ASSISTANT?</Text>
+                    <Text style={styles.modalTitle}>HOW TO USE THE AI ASSISTANT?</Text>
                     <Text style={styles.subTitle}>Last Updated October 2024</Text>
                     <View style={styles.divider} />
                     <Text style={styles.modalTextTitle}>Starting a Chat:</Text>

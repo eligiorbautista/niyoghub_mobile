@@ -181,8 +181,7 @@ const styles = StyleSheet.create({
     height: 50,
     borderColor: "#ccc",
     borderWidth: 1,
-    borderRadius: 5,
-    marginBottom: 15,
+    borderRadius: 5, 
     paddingHorizontal: 10,
     backgroundColor: "#fff",
   },
@@ -198,7 +197,7 @@ const styles = StyleSheet.create({
   },
   signUpButton: {
     marginTop: 15,
-    backgroundColor: "#537F19",
+    backgroundColor: 'rgba(83, 127, 25, 0.8)',
     padding: 12,
     alignItems: "center",
     borderRadius: 25,
@@ -221,7 +220,7 @@ const styles = StyleSheet.create({
   },
   signInText: {
     fontSize: 14,
-    color: "#537F19",
+    color: 'rgba(83, 127, 25, 0.8)',
     fontWeight: "bold",
   },
 });

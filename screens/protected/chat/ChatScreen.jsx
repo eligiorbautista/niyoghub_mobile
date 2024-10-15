@@ -26,7 +26,6 @@ export default function ChatScreen({ navigation }) {
     setIsModalVisible(!isModalVisible);
   };
 
-
   // Mock admin responses
   const mockAdminResponses = [
     "Hello! How can I assist you with your coconut farming today?",
@@ -90,9 +89,21 @@ export default function ChatScreen({ navigation }) {
       {/* Header */}
       <View style={styles.header}>
         <Text style={styles.headerText}>Chat with PCA</Text>
-        <TouchableOpacity onPress={toggleModal}>
-          <Ionicons name="information-circle-outline" size={24} color="gray" />
-        </TouchableOpacity>
+        <View style={styles.headerIcons}>
+          {/* AI Assistant Button in the header */}
+          <TouchableOpacity
+            style={styles.voiceAssistantButton}
+            onPress={() => navigation.navigate("Voice Assistant")}
+          >
+            <View style={styles.aiButtonContent}>
+              <Image source={require('../../../assets/animations/ai-passive.gif')} style={styles.aiImage} />
+              <Text style={styles.aiButtonText}>Talk with AI</Text>
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={toggleModal}>
+            <Ionicons name="information-circle-outline" size={24} color="gray" />
+          </TouchableOpacity>
+        </View>
       </View>
 
       <View style={styles.divider} />
@@ -152,6 +163,7 @@ export default function ChatScreen({ navigation }) {
       {/* Input Section */}
       <View style={styles.inputContainer}>
 
+
         <TextInput
           style={styles.textInput}
           value={inputMessage}
@@ -159,6 +171,7 @@ export default function ChatScreen({ navigation }) {
           placeholder="Type your message..."
           placeholderTextColor="#999"
         />
+
         {/* Attachment Button */}
         <TouchableOpacity style={styles.attachmentButton}>
           <MaterialCommunityIcons name="attachment" size={24} color="black" />
@@ -168,9 +181,8 @@ export default function ChatScreen({ navigation }) {
         <TouchableOpacity style={styles.sendButton} onPress={handleSendMessage}>
           <MaterialCommunityIcons name="send" size={24} color="#000" />
         </TouchableOpacity>
-
-
       </View>
+
       <ChatModal
         visible={isModalVisible}
         onClose={toggleModal}
@@ -195,6 +207,34 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     color: '#537F19',
+  },
+  headerIcons: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  voiceAssistantButton: {
+    backgroundColor: 'rgba(83, 127, 25, 0.8)',
+    borderRadius: 20,
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginRight: 10,   
+  },
+  aiButtonContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  aiButtonText: {
+    color: '#fff',
+    fontWeight: 'bold',
+    fontSize: 14,
+    marginLeft: 8,   
+  },
+  aiImage: {
+    width: 22,
+    height: 22,
+    resizeMode: 'contain',
   },
   divider: {
     borderTopWidth: 1,
@@ -282,24 +322,17 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 20,
     paddingHorizontal: 15,
-    fontSize: 14,
-    backgroundColor: '#F5F5F5',
+    fontSize: 16,
     marginRight: 10,
-  },
-  sendButton: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginLeft: 5,
+    color: '#000',
   },
   attachmentButton: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginRight: 5,
+    padding: 5,
+  },
+  sendButton: {
+    padding: 5,
   },
   aiButton: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginLeft: 5,
+    marginRight: 10,
   },
 });
-

@@ -12,7 +12,7 @@ const TermsPrivacyPolicyModal = ({ isVisible, onClose }) => {
             <View style={styles.modalContainer}>
                 <View style={styles.modalContent}>
                     <Text style={styles.modalTitle}>Terms & Privacy Policy</Text>
-                    <Text style={styles.lastUpdatedText}>Last updated: October 1, 2024</Text>
+                    <Text style={styles.lastUpdatedText}>Last Updated October 2024</Text>
                     <View style={styles.divider} />
                     <ScrollView>
                         <Text style={styles.modalText}>

@@ -264,6 +264,9 @@ export default function VoiceAssistantScreen() {
       {/* Header Section */}
       <View style={styles.headerContainer}>
         <View style={styles.header}>
+          <TouchableOpacity onPress={() => navigation.goBack()}>
+            <Ionicons name="chevron-back" size={24} color="black" />
+          </TouchableOpacity>
           <Text style={styles.headerText}>Voice AI Assistant</Text>
           <TouchableOpacity>
             <Ionicons
@@ -438,7 +441,7 @@ const styles = StyleSheet.create({
   headerText: {
     fontSize: 18,
     fontWeight: "bold",
-    color: "#537F19",
+    color: 'rgba(83, 127, 25, 0.8)',
   },
   divider: {
     borderTopWidth: 1,

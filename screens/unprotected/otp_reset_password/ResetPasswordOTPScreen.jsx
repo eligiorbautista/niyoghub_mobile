@@ -209,7 +209,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   resendText: {
-    color: "#537F19",
+    color: 'rgba(83, 127, 25, 0.8)',
     fontWeight: "bold",
   },
   signInRow: {
@@ -219,11 +219,11 @@ const styles = StyleSheet.create({
   },
   signInText: {
     fontSize: 14,
-    color: "#537F19",
+    color: 'rgba(83, 127, 25, 0.8)',
     fontWeight: "bold",
   },
   verifyButton: {
-    backgroundColor: "#537F19",
+    backgroundColor: 'rgba(83, 127, 25, 0.8)',
     paddingVertical: 12,
     borderRadius: 25,
     alignItems: "center",

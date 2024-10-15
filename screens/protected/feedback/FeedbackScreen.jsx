@@ -28,7 +28,7 @@ const StarRating = ({ maxStars = 5, rating, onRatingChange }) => {
             <Ionicons
               name={index < rating ? "star" : "star-outline"}
               size={35}
-              color={index < rating ? "#537F19" : "#CCC"}
+              color={index < rating ? 'rgba(83, 127, 25, 0.8)' : "#CCC"}
               style={{ marginRight: 10 }}
             />
           </TouchableOpacity>
@@ -62,7 +62,7 @@ const FeedbackScreen = ({ navigation }) => {
         {/* header */}
         <View style={styles.header}>
           <TouchableOpacity onPress={() => navigation.goBack()}>
-            <Ionicons name="arrow-back" size={24} color="black" />
+            <Ionicons name="chevron-back" size={24} color="black" />
           </TouchableOpacity>
 
           <Image
@@ -196,7 +196,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   submitButton: {
-    backgroundColor: "#537F19",
+    backgroundColor: 'rgba(83, 127, 25, 0.8)',
     paddingVertical: 12,
     borderRadius: 25,
     alignItems: "center",

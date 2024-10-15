@@ -8,7 +8,7 @@ const SettingsScreen = ({ navigation }) => {
       <View style={styles.headerContainer}>
         <View style={styles.header}>
           <TouchableOpacity onPress={() => navigation.goBack()}>
-            <Ionicons name="arrow-back" size={24} color="black" />
+            <Ionicons name="chevron-back" size={24} color="black" />
           </TouchableOpacity>
 
           <Image
@@ -33,14 +33,14 @@ const SettingsScreen = ({ navigation }) => {
           style={styles.icon}
           name="person-outline"
           size={22}
-          color="#537f19"
+          color='rgba(83, 127, 25, 0.8)'
         />
         <Text style={styles.text}>Account</Text>
         <Ionicons
           style={styles.arrowIcon}
           name="chevron-forward-outline"
           size={22}
-          color="#537f19"
+          color='rgba(83, 127, 25, 0.8)'
         />
       </Pressable>
 
@@ -52,14 +52,14 @@ const SettingsScreen = ({ navigation }) => {
           style={styles.icon}
           name="id-card-outline"
           size={22}
-          color="#537f19"
+          color='rgba(83, 127, 25, 0.8)'
         />
         <Text style={styles.text}>Profile</Text>
         <Ionicons
           style={styles.arrowIcon}
           name="chevron-forward-outline"
           size={22}
-          color="#537f19"
+          color='rgba(83, 127, 25, 0.8)'
         />
       </Pressable>
 
@@ -71,14 +71,14 @@ const SettingsScreen = ({ navigation }) => {
           style={styles.icon}
           name="notifications-outline"
           size={22}
-          color="#537f19"
+          color='rgba(83, 127, 25, 0.8)'
         />
         <Text style={styles.text}>Notifications</Text>
         <Ionicons
           style={styles.arrowIcon}
           name="chevron-forward-outline"
           size={22}
-          color="#537f19"
+          color='rgba(83, 127, 25, 0.8)'
         />
       </Pressable>
     </View>

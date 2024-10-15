@@ -12,7 +12,7 @@ const ChatModal = ({ visible, onClose }) => {
       <View style={styles.modalContainer}>
         <View style={styles.modalContent}>
           <Text style={styles.modalTitle}>WHAT IS REAL TIME CHAT SUPPORT?</Text>
-          <Text style={styles.subTitle}>Last Updated December 2024</Text>
+          <Text style={styles.subTitle}>Last Updated October 2024</Text>
           <View style={styles.divider} />
           <Text style={styles.modalTextTitle}>
             Initiate the Chat:

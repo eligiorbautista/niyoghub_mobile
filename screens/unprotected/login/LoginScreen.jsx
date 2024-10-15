@@ -154,11 +154,11 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   signupText: {
-    color: "#537F19",
+    color: 'rgba(83, 127, 25, 0.8)',
     fontWeight: "500",
   },
   signInButton: {
-    backgroundColor: "#537F19",
+    backgroundColor: 'rgba(83, 127, 25, 0.8)',
     padding: 12,
     alignItems: "center",
     borderRadius: 25,

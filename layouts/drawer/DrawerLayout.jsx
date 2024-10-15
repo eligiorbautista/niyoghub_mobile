@@ -94,11 +94,11 @@ const DrawerLayout = () => {
             <Ionicons
               name={iconName}
               size={size}
-              color={focused ? "#537F19" : "gray"}
+              color={focused ? 'rgba(83, 127, 25, 0.8)' : "gray"}
             />
           );
         },
-        drawerActiveTintColor: "#537F19",
+        drawerActiveTintColor: 'rgba(83, 127, 25, 0.8)',
         drawerInactiveTintColor: "gray",
         headerRight: () => (
           <TouchableOpacity

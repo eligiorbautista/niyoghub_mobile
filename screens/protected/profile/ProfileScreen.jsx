@@ -35,7 +35,7 @@ const ProfileScreen = () => {
       <View style={styles.headerContainer}>
         <View style={styles.header}>
           <TouchableOpacity onPress={() => navigation.goBack()}>
-            <Ionicons name="arrow-back" size={24} color="black" />
+            <Ionicons name="chevron-back" size={24} color="black" />
           </TouchableOpacity>
 
           <Image
@@ -72,7 +72,7 @@ const ProfileScreen = () => {
             style={styles.editButton}
             onPress={() => navigation.navigate("ProfileSettings")}
           >
-            <Ionicons name="create-outline" size={18} color="#537F19" />
+            <Ionicons name="create-outline" size={18} color='rgba(83, 127, 25, 0.8)' />
             <Text style={styles.editButtonText}>Edit Profile</Text>
           </TouchableOpacity>
         </View>
@@ -181,7 +181,7 @@ const styles = StyleSheet.create({
   editButton: {
     flexDirection: "row",
     alignItems: "center",
-    borderColor: "#537F19",
+    borderColor: 'rgba(83, 127, 25, 0.8)',
     borderWidth: 1.3,
     paddingVertical: 6,
     paddingHorizontal: 15,
@@ -190,7 +190,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   editButtonText: {
-    color: "#537F19",
+    color: 'rgba(83, 127, 25, 0.8)',
     fontSize: 14,
     marginLeft: 5,
     fontWeight: "500",
@@ -236,7 +236,7 @@ const styles = StyleSheet.create({
   logoutButton: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#537F19",
+    backgroundColor: 'rgba(83, 127, 25, 0.8)',
     paddingVertical: 12,
     paddingHorizontal: 20,
     borderRadius: 25,
