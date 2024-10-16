@@ -48,8 +48,7 @@ const LoginScreen = ({ navigation }) => {
           value={password}
           onChangeText={setPassword}
         />
-
-        {/* Aligning 'Forgot password?' to the right */}
+ 
         <View style={styles.actionRow}>
           <TouchableOpacity onPress={() => navigation.navigate('ResetPasswordOTP')}>
             <Text style={styles.forgotPasswordLink}>Forgot password?</Text>
@@ -129,9 +128,9 @@ const styles = StyleSheet.create({
   },
   actionRow: {
     flexDirection: "row",
-    justifyContent: "flex-end", // Aligns content to the right
+    justifyContent: "flex-end",  
     marginBottom: 15,
-    marginRight: 20, // Adds some spacing to the right
+    marginRight: 20, 
   },
   signUpLink: {
     color: "#000000",
