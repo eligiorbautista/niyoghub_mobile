@@ -7,9 +7,10 @@ import {
   ScrollView,
   SafeAreaView
 } from "react-native";
-import React, { useEffect } from "react";
+import React, { useEffect, useContext } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
+import { AuthContext } from '../../../contexts/AuthContext';
 
 // mock user data
 const mockUser = {
@@ -24,6 +25,7 @@ const mockUser = {
 
 const ProfileScreen = () => {
   const navigation = useNavigation();
+  const { user, logout } = useContext(AuthContext);
 
   useEffect(() => {
     console.log("Mock User data:", mockUser);
@@ -58,14 +60,14 @@ const ProfileScreen = () => {
         {/* profile section */}
         <View style={styles.profileContainer}>
           <Image
-            source={require("../../../assets/farmer.png")}
+            source={{ uri: user?.profilePicture || `https://www.pngarts.com/files/10/Default-Profile-Picture-Download-PNG-Image.png` }}
             style={styles.profilePicture}
           />
           <Text style={styles.fullName}>
-            {mockUser?.fullName || "Full Name"}
+            {user?.fullName || mockUser.fullName}
           </Text>
           <Text style={styles.email}>
-            {mockUser?.email || "Email not available"}
+            {user?.email || mockUser.email}
           </Text>
 
           <TouchableOpacity
@@ -82,27 +84,27 @@ const ProfileScreen = () => {
           {mockUser?.address && (
             <View style={styles.infoRow}>
               <Ionicons name="location-outline" size={20} color="#444" />
-              <Text style={styles.infoText}>{mockUser?.address}</Text>
+              <Text style={styles.infoText}>{user?.city || mockUser?.address}</Text>
             </View>
           )}
 
           <View style={styles.infoRow}>
             <Ionicons name="language-outline" size={20} color="#444" />
-            <Text style={styles.infoText}>Language: {mockUser?.language}</Text>
+            <Text style={styles.infoText}>Language: {user?.language || mockUser?.language}</Text>
           </View>
 
           <View style={styles.infoRow}>
             <Ionicons name="shield-checkmark-outline" size={20} color="#444" />
             <Text style={styles.infoText}>
               Two-Factor Authentication:{" "}
-              {mockUser?.isTwoFactorEnabled ? "Enabled" : "Disabled"}
+              {user?.isTwoFactorEnabled || mockUser?.isTwoFactorEnabled ? "Enabled" : "Disabled"}
             </Text>
           </View>
 
           <View style={styles.infoRow}>
             <Ionicons name="key-outline" size={20} color="#444" />
             <Text style={styles.infoText}>
-              Account Type: {mockUser?.accountType}
+              Account Type: {user?.accountType || mockUser?.accountType}
             </Text>
           </View>
         </View>
@@ -119,7 +121,10 @@ const ProfileScreen = () => {
           <View style={styles.divider}></View>
           <TouchableOpacity
             style={styles.logoutButton}
-            onPress={() => navigation.navigate("Login")}
+            onPress={() => {
+              logout();
+              navigation.navigate("Login")
+            }}
           >
             <Ionicons name="log-out-outline" size={20} color="white" />
             <Text style={styles.logoutButtonText}>Logout</Text>

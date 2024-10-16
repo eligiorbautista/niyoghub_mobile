@@ -1,45 +1,60 @@
+
+
+import React, { useState, useContext } from 'react';
 import {
-  ImageBackground,
-  StyleSheet,
-  Text,
-  View,
-  TextInput,
-  TouchableOpacity,
-  Alert,
-  ScrollView,
-} from "react-native";
-import React, { useState } from "react";
-import { Picker } from "@react-native-picker/picker";
+  ImageBackground, StyleSheet, Text, View, TextInput, TouchableOpacity, Alert, ScrollView, ActivityIndicator, Keyboard
+} from 'react-native';
+import { Picker } from '@react-native-picker/picker';
+import { AuthContext } from '../../../contexts/AuthContext';
 
 const RegistrationScreen = ({ navigation }) => {
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [city, setCity] = useState("");
-  const [language, setLanguage] = useState("");
+  const { register, loading } = useContext(AuthContext);
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [city, setCity] = useState('');
+  const [language, setLanguage] = useState('');
 
-  const handleSignUp = ({ navigate }) => {
-    // if (!firstName || !lastName || !email || !password || !confirmPassword || !city || !language) {
-    //   Alert.alert('Error', 'Please fill in all the fields');
-    //   return;
-    // }
+  const handleSignUp = async () => {
 
-    // if (password !== confirmPassword) {
-    //   Alert.alert('Error', 'Passwords do not match');
-    //   return;
-    // }
+    if (!firstName || !lastName || !email || !password || !confirmPassword || !city || !language) {
+      Alert.alert('Error', 'Please fill in all the fields');
+      return;
+    }
 
-    Alert.alert("Success", "Account created successfully");
-    navigation.navigate("Layout");
+    if (password !== confirmPassword) {
+      Alert.alert('Error', 'Passwords do not match');
+      return;
+    }
+
+    const userDetails = {
+      fullName: `${firstName} ${lastName}`,
+      email: email,
+      password: password,
+      confirmPassword: confirmPassword,
+      city: city,
+      language: language,
+    }
+
+    try {
+      await register(userDetails);
+      Keyboard.dismiss();
+      navigation.navigate('Layout');
+      setFirstName('');
+      setLastName('');
+      setEmail('');
+      setPassword('');
+      setConfirmPassword('');
+
+    } catch (error) {
+      Alert.alert('Registration Failed', 'An error occurred during registration.');
+    }
   };
 
   return (
-    <ImageBackground
-      source={require("../../../assets/background.png")}
-      style={styles.background}
-    >
+    <ImageBackground source={require('../../../assets/background.png')} style={styles.background}>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <View style={styles.container}>
           <Text style={styles.title}>Create Account</Text>
@@ -106,9 +121,9 @@ const RegistrationScreen = ({ navigation }) => {
                 style={styles.picker}
               >
                 <Picker.Item label="Select city / municipality" value="" />
-                <Picker.Item label="Agdangan" value="agdangan" />
-                <Picker.Item label="Alabat" value="alabat" />
-                <Picker.Item label="Atimonan" value="atimonan" />
+                <Picker.Item label="Lucena City" value="Lucena City" />
+                <Picker.Item label="Tayabas" value="Tayabas" />
+                <Picker.Item label="Lucban" value="Lucban" />
               </Picker>
             </View>
           </View>
@@ -122,19 +137,19 @@ const RegistrationScreen = ({ navigation }) => {
                 style={styles.picker}
               >
                 <Picker.Item label="Select language" value="" />
-                <Picker.Item label="English" value="en" />
-                <Picker.Item label="Filipino" value="fil" />
+                <Picker.Item label="English" value="english" />
+                <Picker.Item label="Filipino" value="filipino" />
               </Picker>
             </View>
           </View>
 
           <TouchableOpacity style={styles.signUpButton} onPress={handleSignUp}>
-            <Text style={styles.buttonText}>Sign Up</Text>
+            {loading ? <ActivityIndicator color="#fff" /> : <Text style={styles.buttonText}>Sign Up</Text>}
           </TouchableOpacity>
 
           <View style={styles.signInRow}>
             <Text style={styles.link}>Already have an account? </Text>
-            <TouchableOpacity onPress={() => navigation.navigate("Login")}>
+            <TouchableOpacity onPress={() => navigation.navigate('Login')}>
               <Text style={styles.signInText}>Sign In</Text>
             </TouchableOpacity>
           </View>
@@ -145,7 +160,6 @@ const RegistrationScreen = ({ navigation }) => {
 };
 
 export default RegistrationScreen;
-
 const styles = StyleSheet.create({
   scrollContainer: {
     flexGrow: 1,
@@ -181,7 +195,7 @@ const styles = StyleSheet.create({
     height: 50,
     borderColor: "#ccc",
     borderWidth: 1,
-    borderRadius: 5, 
+    borderRadius: 5,
     paddingHorizontal: 10,
     backgroundColor: "#fff",
   },
