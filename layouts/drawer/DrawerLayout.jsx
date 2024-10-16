@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
 import {
   createDrawerNavigator,
@@ -14,10 +14,13 @@ import FAQScreen from "../../screens/protected/faq/FAQScreen";
 import AboutScreen from "../../screens/protected/about/AboutScreen";
 import LoginScreen from "../../screens/unprotected/login/LoginScreen";
 import SettingsScreen from "../../screens/protected/settings/SettingsScreen";
+import { AuthContext } from '../../contexts/AuthContext';
 
 const Drawer = createDrawerNavigator();
 
 const CustomDrawerContent = (props) => {
+  const { user, logout } = useContext(AuthContext);
+
   const navigation = useNavigation();
 
   return (
@@ -33,11 +36,11 @@ const CustomDrawerContent = (props) => {
       <View style={styles.headerContainer}>
         <Image
           source={{
-            uri: "https://www.shutterstock.com/image-photo/smiling-elderly-man-asian-farmer-600nw-2327263875.jpg",
+            uri: user?.profilePicture || `https://www.pngarts.com/files/10/Default-Profile-Picture-Download-PNG-Image.png`,
           }}
           style={styles.profileImage}
         />
-        <Text style={styles.username}>Juan Dela Cruz</Text>
+        <Text style={styles.username}>{user?.fullName || `full name`}</Text>
       </View>
 
       {/* drawer items */}
@@ -47,7 +50,7 @@ const CustomDrawerContent = (props) => {
         <TouchableOpacity
           style={styles.logoutButton}
           onPress={() => {
-            // handle logout
+            logout();
             navigation.navigate("Login");
           }}
         >
@@ -127,7 +130,7 @@ const DrawerLayout = () => {
       <Drawer.Screen
         name="Profile"
         component={ProfileScreen}
-        options={{ title: "Profile", headerShown: false}}
+        options={{ title: "Profile", headerShown: false }}
       />
       <Drawer.Screen
         name="Feedback"
@@ -172,13 +175,13 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   profileImage: {
-    width: 40,
-    height: 40,
+    width: 50,
+    height: 50,
     borderRadius: 25,
     marginRight: 12,
   },
   username: {
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: "500",
   },
   logoutContainer: {

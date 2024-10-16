@@ -1,28 +1,32 @@
+import React, { useState, useContext } from 'react';
 import {
-  StyleSheet,
-  Text,
-  View,
-  TextInput,
-  TouchableOpacity,
-  Image,
-  Alert,
-  ImageBackground,
-} from "react-native";
-import React from "react";
-import FontAwesome from "react-native-vector-icons/FontAwesome";
+  StyleSheet, Text, View, TextInput, TouchableOpacity, Image, ActivityIndicator, ImageBackground, Alert, Keyboard
+} from 'react-native';
+import { AuthContext } from '../../../contexts/AuthContext';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
 const LoginScreen = ({ navigation }) => {
+  const { login, loading } = useContext(AuthContext);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  const handleLogin = async () => {
+    try {
+      await login(email, password);
+
+      Keyboard.dismiss();
+      navigation.navigate('Layout');
+      setEmail('');
+      setPassword('');
+    } catch (error) {
+      Alert.alert('Login Failed', 'Invalid credentials.');
+    }
+  };
+
   return (
-    <ImageBackground
-      source={require("../../../assets/background.png")}
-      style={styles.background}
-    >
+    <ImageBackground source={require('../../../assets/background.png')} style={styles.background}>
       <View style={styles.container}>
-        <Image
-          source={require("../../../assets/niyoghub_logo_1.png")}
-          style={styles.logo}
-          resizeMode="contain"
-        />
+        <Image source={require('../../../assets/niyoghub_logo_1.png')} style={styles.logo} resizeMode="contain" />
         <Text style={styles.title}>Welcome Back!</Text>
         <Text style={styles.subtitle}>Continue your farming journey</Text>
 
@@ -32,6 +36,8 @@ const LoginScreen = ({ navigation }) => {
           keyboardType="email-address"
           autoCapitalize="none"
           style={styles.input}
+          value={email}
+          onChangeText={setEmail}
         />
 
         <Text style={styles.inputLabel}>Password</Text>
@@ -39,38 +45,30 @@ const LoginScreen = ({ navigation }) => {
           placeholder="Enter your password"
           secureTextEntry
           style={styles.input}
+          value={password}
+          onChangeText={setPassword}
         />
 
+        {/* Aligning 'Forgot password?' to the right */}
         <View style={styles.actionRow}>
-          <TouchableOpacity
-            onPress={() => navigation.navigate("ResetPasswordOTP")}
-          >
+          <TouchableOpacity onPress={() => navigation.navigate('ResetPasswordOTP')}>
             <Text style={styles.forgotPasswordLink}>Forgot password?</Text>
           </TouchableOpacity>
         </View>
 
-        <TouchableOpacity
-          style={styles.signInButton}
-          onPress={() => navigation.navigate("TwoFactorAuthOTP")}
-        >
-          <Text style={styles.buttonText}>Sign In</Text>
+        <TouchableOpacity style={styles.signInButton} onPress={handleLogin}>
+          {loading ? <ActivityIndicator color="#fff" /> : <Text style={styles.buttonText}>Sign In</Text>}
         </TouchableOpacity>
 
-        <TouchableOpacity
-          style={styles.googleButton}
-          onPress={() => Alert.alert("Google sign-in is not available yet.")}
-        >
-          <View style={styles.googleButtonContent}>
-            <Text style={styles.buttonText}>
-              <FontAwesome name="google" size={18} color="#fff" />
-              {"  "}Continue with Google
-            </Text>
-          </View>
+        <TouchableOpacity style={styles.googleButton}>
+          <Text style={styles.buttonText}>
+            <FontAwesome name="google" size={18} color="#fff" /> Continue with Google
+          </Text>
         </TouchableOpacity>
 
         <View style={styles.signupRow}>
           <Text style={styles.signUpLink}>Don't have an account? </Text>
-          <TouchableOpacity onPress={() => navigation.navigate("Registration")}>
+          <TouchableOpacity onPress={() => navigation.navigate('Registration')}>
             <Text style={styles.signupText}>Sign up</Text>
           </TouchableOpacity>
         </View>
@@ -87,7 +85,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-
   container: {
     width: "100%",
     height: "100%",
@@ -119,7 +116,6 @@ const styles = StyleSheet.create({
     color: "#333",
     fontWeight: "600",
     marginLeft: 20,
-    marginBottom : 10,
   },
   input: {
     height: 50,
@@ -133,20 +129,19 @@ const styles = StyleSheet.create({
   },
   actionRow: {
     flexDirection: "row",
-    justifyContent: "flex-end",
+    justifyContent: "flex-end", // Aligns content to the right
     marginBottom: 15,
+    marginRight: 20, // Adds some spacing to the right
   },
   signUpLink: {
     color: "#000000",
     fontWeight: "400",
     marginBottom: 10,
   },
-
   forgotPasswordLink: {
     color: "#000000",
     fontWeight: "400",
     marginBottom: 10,
-    marginRight: 20,
   },
   signupRow: {
     flexDirection: "row",
@@ -172,10 +167,6 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     marginBottom: 20,
     marginHorizontal: 20,
-  },
-  googleButtonContent: {
-    flexDirection: "row",
-    alignItems: "center",
   },
   buttonText: {
     color: "#fff",

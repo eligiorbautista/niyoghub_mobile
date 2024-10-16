@@ -1,44 +1,46 @@
 import { ScrollView, View, Text, TextInput, Image, TouchableOpacity, StyleSheet, Pressable } from 'react-native';
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import SDGModal from '../../../components/modals/SDGModals';
 import { Ionicons } from "@expo/vector-icons";
 import { SafeAreaView } from 'react-native';
 import ImageCarousel from './CarouselAnnouncement';
+import { AuthContext } from '../../../contexts/AuthContext';
 
 const HomeScreen = ({ navigation }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [filteredContent, setFilteredContent] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedSDG, setSelectedSDG] = useState(null);
+  const { user } = useContext(AuthContext);
 
   const content = [
     { id: 1, category: 'News & Programs', title: 'PCA Embraces Culture of Excellence, Undergoes ISO 9001:2015 Reorientation', date: 'April 24, 2024', time: '3 min read' }
   ];
 
   const sdgs = [
-    { 
-      id: 1, 
-      title: 'REDUCING POVERTY', 
-      description: 'NiyogHub aims to reduce poverty among coconut farmers by providing access to vital information, resources, and government support. To optimize resource utilization, and improve their livelihoods through the use of this platform.', 
-      image: require('../../../assets/reducing_poverty.png') 
+    {
+      id: 1,
+      title: 'REDUCING POVERTY',
+      description: 'NiyogHub aims to reduce poverty among coconut farmers by providing access to vital information, resources, and government support. To optimize resource utilization, and improve their livelihoods through the use of this platform.',
+      image: require('../../../assets/reducing_poverty.png')
     },
-    { 
-      id: 2, 
-      title: 'SUSTAINABLE FARMING', 
-      description: 'NiyogHub encourages coconut farmers to use sustainable farming methods to increase food security.', 
-      image: require('../../../assets/sustainable_farming.png') 
+    {
+      id: 2,
+      title: 'SUSTAINABLE FARMING',
+      description: 'NiyogHub encourages coconut farmers to use sustainable farming methods to increase food security.',
+      image: require('../../../assets/sustainable_farming.png')
     },
-    { 
-      id: 3, 
-      title: 'ECONOMIC GROWTH', 
-      description: 'NiyogHub can promote economic growth by providing timely information, disease detection tools, and sustainable farming practices. It enables farmers to increase their yields and quality of produce, leading to higher incomes.', 
-      image: require('../../../assets/economic_growth.png') 
+    {
+      id: 3,
+      title: 'ECONOMIC GROWTH',
+      description: 'NiyogHub can promote economic growth by providing timely information, disease detection tools, and sustainable farming practices. It enables farmers to increase their yields and quality of produce, leading to higher incomes.',
+      image: require('../../../assets/economic_growth.png')
     },
-    { 
-      id: 4, 
-      title: 'TECHNOLOGICAL INNOVATION', 
-      description: 'NiyogHub introduces technological solutions to traditional agricultural practices. This platform empowers coconut farmers with innovative tools to enhance their farming techniques and decision-making processes. ', 
-      image: require('../../../assets/tech_innovation.png') 
+    {
+      id: 4,
+      title: 'TECHNOLOGICAL INNOVATION',
+      description: 'NiyogHub introduces technological solutions to traditional agricultural practices. This platform empowers coconut farmers with innovative tools to enhance their farming techniques and decision-making processes. ',
+      image: require('../../../assets/tech_innovation.png')
     }
   ];
 
@@ -74,22 +76,28 @@ const HomeScreen = ({ navigation }) => {
       image: require("../../../assets/newsprograms2.png"),
     },
     {
-      id: 3, 
+      id: 3,
       category: 'News & Programs',
       date: "April 3, 2023",
       description: "May Anak ka ba na Kolehiyo? Isali sa CoScho.",
       image: require("../../../assets/newsprograms3.png"),
     },
   ];
-  
+
   const handleReadMore = (newsItem) => {
-    navigation.navigate('ReadNewsPrograms', { newsItem }); 
+    navigation.navigate('ReadNewsPrograms', { newsItem });
   };
-  
+
+  const getCurrentDay = () => {
+    const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+    const currentDay = new Date().getDay();  
+    return days[currentDay];  
+  };
+
   return (
     <ScrollView style={styles.container}>
-      <Text style={styles.greeting}>Hello, User!</Text>
-      <Text style={styles.subGreeting}>Have a nice Monday</Text>
+      <Text style={styles.greeting}>Hello, {user?.fullName.split(' ')[0] || `first name`}</Text>
+      <Text style={styles.subGreeting}>Have a nice {getCurrentDay()}</Text>
 
       <TextInput
         style={styles.searchInput}
@@ -162,9 +170,9 @@ const HomeScreen = ({ navigation }) => {
         </Pressable>
       </View>
       <View style={styles.containerNewsPrograms}>
-        <ScrollView 
-          horizontal 
-          showsHorizontalScrollIndicator={false} 
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
           contentContainerStyle={styles.scrollContainer}
         >
           {newsData.map((news, index) => (
@@ -174,7 +182,7 @@ const HomeScreen = ({ navigation }) => {
               <Text style={styles.dateText}>{news.date}</Text>
               <Text style={styles.descriptionText} numberOfLines={3}>{news.description}</Text>
               <Pressable style={styles.readButton}
-                onPress={() => handleReadMore(news)}> 
+                onPress={() => handleReadMore(news)}>
                 <Text style={styles.readButtonText}>Read</Text>
               </Pressable>
             </View>
@@ -217,7 +225,7 @@ const HomeScreen = ({ navigation }) => {
           </Pressable>
         </View>
       </View>
-      
+
     </ScrollView>
   );
 };
@@ -387,8 +395,8 @@ const styles = StyleSheet.create({
   },
   headerNewsPrograms: {
     flexDirection: 'row',
-    justifyContent: 'space-between', 
-    alignItems: 'center', 
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
   recentTitle: {
     marginTop: 30,
@@ -448,12 +456,12 @@ const styles = StyleSheet.create({
     fontWeight: 'bold'
   },
   readButton: {
-    backgroundColor: '#537F19', 
+    backgroundColor: '#537F19',
     borderRadius: 5,
     paddingVertical: 8,
     paddingHorizontal: 20,
     alignItems: 'center',
-    marginTop: 20, 
+    marginTop: 20,
   },
   readButtonText: {
     color: 'white',
