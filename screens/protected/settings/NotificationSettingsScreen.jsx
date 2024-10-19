@@ -1,17 +1,107 @@
-import React, { useState } from 'react'; // Added useState here
-import { View, Text, StyleSheet, TouchableOpacity, Switch, ScrollView } from 'react-native';
+import React, { useState, useContext } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Alert } from 'react-native';
 import { Ionicons } from "@expo/vector-icons";
+import useUpdateUser from '../../../hooks/useUpdateUser';
+import { AuthContext } from '../../../contexts/AuthContext';
 
 const NotificationSettingsScreen = ({ navigation }) => {
-  const [isAnnouncementsEnabled, setIsAnnouncementsEnabled] = useState(true);
-  const [isEventsEnabled, setIsEventsEnabled] = useState(true);
-  const [isNewsProgramsEnabled, setIsNewsProgramsEnabled] = useState(true);
-  const [isChatMessagesEnabled, setIsChatMessagesEnabled] = useState(true);
+  const { user } = useContext(AuthContext);
+  const { updateUser, error } = useUpdateUser();
 
-  const toggleAnnouncements = () => setIsAnnouncementsEnabled(previousState => !previousState);
-  const toggleEvents = () => setIsEventsEnabled(previousState => !previousState);
-  const toggleNewsPrograms = () => setIsNewsProgramsEnabled(previousState => !previousState);
-  const toggleChatMessages = () => setIsChatMessagesEnabled(previousState => !previousState);
+  const [isNotificationsEnabled, setIsNotificationsEnabled] = useState(true);
+  const [isAnnouncementsEnabled, setIsAnnouncementsEnabled] = useState(user?.notifications?.announcements || true);
+  const [isEventsEnabled, setIsEventsEnabled] = useState(user?.notifications?.events || true);
+  const [isNewsProgramsEnabled, setIsNewsProgramsEnabled] = useState(user?.notifications?.newsAndPrograms || true);
+  const [isChatMessagesEnabled, setIsChatMessagesEnabled] = useState(user?.notifications?.chatMessages || true);
+
+  const updateNotificationSettings = async (updatedNotifications) => {
+    const updatedUserData = { ...user, notifications: updatedNotifications };
+
+    await updateUser(updatedUserData);
+
+    if (error) {
+      Alert.alert('Update Failed', 'An error occurred while updating notification settings.');
+    }
+  };
+
+  // Toggle the main notifications setting
+  const toggleNotifications = () => {
+    const newStatus = !isNotificationsEnabled;
+    setIsNotificationsEnabled(newStatus);
+
+    if (!newStatus) {
+      // If disabling notifications, turn all specific notifications off
+      setIsAnnouncementsEnabled(false);
+      setIsEventsEnabled(false);
+      setIsNewsProgramsEnabled(false);
+      setIsChatMessagesEnabled(false);
+
+      updateNotificationSettings({
+        announcements: false,
+        events: false,
+        newsAndPrograms: false,
+        chatMessages: false,
+      });
+    } else {
+      // If enabling notifications, revert to the previous state or enable all
+      setIsAnnouncementsEnabled(true);
+      setIsEventsEnabled(true);
+      setIsNewsProgramsEnabled(true);
+      setIsChatMessagesEnabled(true);
+
+      updateNotificationSettings({
+        announcements: true,
+        events: true,
+        newsAndPrograms: true,
+        chatMessages: true,
+      });
+    }
+  };
+
+  // Toggle notification settings and update in the backend
+  const toggleAnnouncements = () => {
+    const newStatus = !isAnnouncementsEnabled;
+    setIsAnnouncementsEnabled(newStatus);
+    updateNotificationSettings({
+      announcements: newStatus,
+      events: isEventsEnabled,
+      newsAndPrograms: isNewsProgramsEnabled,
+      chatMessages: isChatMessagesEnabled
+    });
+  };
+
+  const toggleEvents = () => {
+    const newStatus = !isEventsEnabled;
+    setIsEventsEnabled(newStatus);
+    updateNotificationSettings({
+      announcements: isAnnouncementsEnabled,
+      events: newStatus,
+      newsAndPrograms: isNewsProgramsEnabled,
+      chatMessages: isChatMessagesEnabled
+    });
+  };
+
+  const toggleNewsPrograms = () => {
+    const newStatus = !isNewsProgramsEnabled;
+    setIsNewsProgramsEnabled(newStatus);
+    updateNotificationSettings({
+      announcements: isAnnouncementsEnabled,
+      events: isEventsEnabled,
+      newsAndPrograms: newStatus,
+      chatMessages: isChatMessagesEnabled
+    });
+  };
+
+  const toggleChatMessages = () => {
+    const newStatus = !isChatMessagesEnabled;
+    setIsChatMessagesEnabled(newStatus);
+    updateNotificationSettings({
+      announcements: isAnnouncementsEnabled,
+      events: isEventsEnabled,
+      newsAndPrograms: isNewsProgramsEnabled,
+      chatMessages: newStatus
+    });
+  };
 
   return (
     <View style={styles.container}>
@@ -27,46 +117,60 @@ const NotificationSettingsScreen = ({ navigation }) => {
       <Text style={styles.settingsTitle}>Notification Settings</Text>
 
       <ScrollView style={styles.scrollContainer}>
-        <Text style={styles.sectionTitle1}>UPDATES</Text>
+        <Text style={styles.sectionTitle1}>ALLOW NOTIFICATIONS</Text>
         <View style={styles.item}>
-          <Text style={styles.itemText}>Announcements</Text>
-          <TouchableOpacity 
-            style={[styles.customSwitch, isAnnouncementsEnabled ? styles.switchOn : styles.switchOff]}
-            onPress={toggleAnnouncements}
+          <Text style={styles.itemText}>Allow notifications on NiyogHub</Text>
+          <TouchableOpacity
+            style={[styles.customSwitch, isNotificationsEnabled ? styles.switchOn : styles.switchOff]}
+            onPress={toggleNotifications}
           >
-            <View style={isAnnouncementsEnabled ? styles.thumbOn : styles.thumbOff} />
+            <View style={isNotificationsEnabled ? styles.thumbOn : styles.thumbOff} />
           </TouchableOpacity>
         </View>
-        <View style={styles.item}>
-          <Text style={styles.itemText}>Events</Text>
-          <TouchableOpacity 
-            style={[styles.customSwitch, isEventsEnabled ? styles.switchOn : styles.switchOff]}
-            onPress={toggleEvents}
-          >
-            <View style={isEventsEnabled ? styles.thumbOn : styles.thumbOff} />
-          </TouchableOpacity>
-        </View>
-        <View style={styles.item}>
-          <Text style={styles.itemText}>News & Programs</Text>
-          <TouchableOpacity 
-            style={[styles.customSwitch, isNewsProgramsEnabled ? styles.switchOn : styles.switchOff]}
-            onPress={toggleNewsPrograms}
-          >
-            <View style={isNewsProgramsEnabled ? styles.thumbOn : styles.thumbOff} />
-          </TouchableOpacity>
-        </View>
-        
-        <Text style={styles.sectionTitle2}>MESSAGES</Text>
-        <View style={styles.item}>
-          <Text style={styles.itemText}>Chat Messages</Text>
-          <TouchableOpacity 
-            style={[styles.customSwitch, isChatMessagesEnabled ? styles.switchOn : styles.switchOff]}
-            onPress={toggleChatMessages}
-          >
-            <View style={isChatMessagesEnabled ? styles.thumbOn : styles.thumbOff} />
-          </TouchableOpacity>
-        </View>
-        
+
+        {isNotificationsEnabled && (
+          <>
+            <Text style={styles.sectionTitle1}>UPDATES</Text>
+            <View style={styles.item}>
+              <Text style={styles.itemText}>Announcements</Text>
+              <TouchableOpacity
+                style={[styles.customSwitch, isAnnouncementsEnabled ? styles.switchOn : styles.switchOff]}
+                onPress={toggleAnnouncements}
+              >
+                <View style={isAnnouncementsEnabled ? styles.thumbOn : styles.thumbOff} />
+              </TouchableOpacity>
+            </View>
+            <View style={styles.item}>
+              <Text style={styles.itemText}>Events</Text>
+              <TouchableOpacity
+                style={[styles.customSwitch, isEventsEnabled ? styles.switchOn : styles.switchOff]}
+                onPress={toggleEvents}
+              >
+                <View style={isEventsEnabled ? styles.thumbOn : styles.thumbOff} />
+              </TouchableOpacity>
+            </View>
+            <View style={styles.item}>
+              <Text style={styles.itemText}>News & Programs</Text>
+              <TouchableOpacity
+                style={[styles.customSwitch, isNewsProgramsEnabled ? styles.switchOn : styles.switchOff]}
+                onPress={toggleNewsPrograms}
+              >
+                <View style={isNewsProgramsEnabled ? styles.thumbOn : styles.thumbOff} />
+              </TouchableOpacity>
+            </View>
+
+            <Text style={styles.sectionTitle2}>MESSAGES</Text>
+            <View style={styles.item}>
+              <Text style={styles.itemText}>Chat Messages</Text>
+              <TouchableOpacity
+                style={[styles.customSwitch, isChatMessagesEnabled ? styles.switchOn : styles.switchOff]}
+                onPress={toggleChatMessages}
+              >
+                <View style={isChatMessagesEnabled ? styles.thumbOn : styles.thumbOff} />
+              </TouchableOpacity>
+            </View>
+          </>
+        )}
       </ScrollView>
     </View>
   );
@@ -78,15 +182,6 @@ const styles = StyleSheet.create({
     height: '100%',
     flex: 1,
   },
-  headerContainer: {
-    flexDirection: 'row',    
-    alignItems: 'center',     
-    justifyContent: 'space-between', 
-    paddingHorizontal: 20,    
-    paddingVertical: 15,     
-    position: 'relative',
-    backgroundColor: 'gray',
-  },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -96,7 +191,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#F0F0F0',
     borderBottomWidth: 1,
     borderBottomColor: '#E0E0E0',
-    marginTop: 0,
+    paddingTop: 30,
   },
   titleContainer: {
     flex: 1,
@@ -106,11 +201,6 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontSize: 20,
     fontWeight: 'bold',
-  },
-  back: {
-    fontSize: 18,
-    color: 'green',
-    marginBottom: 20,
   },
   settingsTitle: {
     fontSize: 18,
@@ -125,6 +215,7 @@ const styles = StyleSheet.create({
   },
   sectionTitle1: {
     fontSize: 12,
+    marginTop: 20,
   },
   sectionTitle2: {
     fontSize: 12,
@@ -171,158 +262,3 @@ const styles = StyleSheet.create({
 });
 
 export default NotificationSettingsScreen;
-
-
-
-// import React from 'react';
-// import { View, Text, StyleSheet, TouchableOpacity, Switch, ScrollView } from 'react-native';
-// import { Ionicons } from "@expo/vector-icons";
-
-// const NotificationSettingsScreen = ({ navigation }) => {
-//   const [isAnnouncementsEnabled, setIsAnnouncementsEnabled] = useState(false);
-//   const [isEventsEnabled, setIsEventsEnabled] = useState(false);
-//   const [isNewsProgramsEnabled, setIsNewsProgramsEnabled] = useState(false);
-//   const [isChatMessagesEnabled, setIsChatMessagesEnabled] = useState(false);
-
-//   const toggleAnnouncements = () => setIsAnnouncementsEnabled(previousState => !previousState);
-//   const toggleEvents = () => setIsEventsEnabled(previousState => !previousState);
-//   const toggleNewsPrograms = () => setIsNewsProgramsEnabled(previousState => !previousState);
-//   const toggleChatMessages = () => setIsChatMessagesEnabled(previousState => !previousState);
-
-//   return (
-//     <View style={styles.container}>
-//       <View style={styles.header}>
-//         <TouchableOpacity onPress={() => navigation.goBack()}>
-//           <Ionicons name="chevron-back" size={24} color="black" />
-//         </TouchableOpacity>
-//         <View style={styles.titleContainer}>
-//           <Text style={styles.headerTitle}>General Settings</Text>
-//         </View>
-//       </View>
-
-//       <Text style={styles.header}>Notification Settings</Text>
-//       <ScrollView style={styles.scrollContainer}>
-//         {/* <Text style={styles.header}>Notification Settings</Text> */}
-        
-//         <Text style={styles.sectionTitle}>UPDATES</Text>
-//         <View style={styles.item}>
-//           <Text style={styles.itemText}>Announcements</Text>
-//           <Switch
-//             trackColor={{ false: '#767577', true: '#81b0ff' }}
-//             thumbColor={isAnnouncementsEnabled ? '#f5dd4b' : '#f4f3f4'}
-//             onValueChange={toggleAnnouncements}
-//             value={isAnnouncementsEnabled}
-//           />
-//         </View>
-//         <View style={styles.item}>
-//           <Text style={styles.itemText}>Events</Text>
-//           <Switch
-//             trackColor={{ false: '#767577', true: '#81b0ff' }}
-//             thumbColor={isEventsEnabled ? '#f5dd4b' : '#f4f3f4'}
-//             onValueChange={toggleEvents}
-//             value={isEventsEnabled}
-//           />
-//         </View>
-//         <View style={styles.item}>
-//           <Text style={styles.itemText}>News & Programs</Text>
-//           <Switch
-//             trackColor={{ false: '#767577', true: '#81b0ff' }}
-//             thumbColor={isNewsProgramsEnabled ? '#f5dd4b' : '#f4f3f4'}
-//             onValueChange={toggleNewsPrograms}
-//             value={isNewsProgramsEnabled}
-//           />
-//         </View>
-        
-//         <Text style={styles.sectionTitle}>MESSAGES</Text>
-//         <View style={styles.item}>
-//           <Text style={styles.itemText}>Chat Messages</Text>
-//           <Switch
-//             trackColor={{ false: '#767577', true: '#81b0ff' }}
-//             thumbColor={isChatMessagesEnabled ? '#f5dd4b' : '#f4f3f4'}
-//             onValueChange={toggleChatMessages}
-//             value={isChatMessagesEnabled}
-//           />
-//         </View>
-        
-//         <View style={styles.separator} />
-//       </ScrollView>
-//     </View>
-//   );
-// };
-
-// const styles = StyleSheet.create({
-//   container: {
-//     backgroundColor: '#fff',
-//     height: '100%',
-//     flex: 1,
-//   },
-//   headerContainer: {
-//     flexDirection: 'row',    
-//     alignItems: 'center',     
-//     justifyContent: 'space-between', 
-//     paddingHorizontal: 20,    
-//     paddingVertical: 15,     
-//     position: 'relative',
-//     backgroundColor: 'gray',
-//   },
-//   header: {
-//     flexDirection: 'row',
-//     justifyContent: 'space-between',
-//     alignItems: 'center',
-//     textAlign: 'center',
-//     paddingVertical: 8,
-//     paddingHorizontal: 20,
-//     backgroundColor: '#F0F0F0',
-//     borderBottomWidth: 1,
-//     borderBottomColor: '#E0E0E0',
-//     marginTop: 35,
-//   },
-//   titleContainer: {
-//     flex: 1,          
-//     alignItems: 'center', 
-//     paddingVertical: 5,   
-//   },
-//   headerTitle: {
-//     fontSize: 20,
-//     fontWeight: 'bold',
-//     textAlign: 'center', 
-//   },
-//   back: {
-//     fontSize: 18,
-//     color: 'green',
-//     marginBottom: 20,
-//   },
-//   scrollContainer: {
-//     flex: 1,
-//     padding: 20,
-//     backgroundColor: '#ffffff',
-//   },
-//   header: {
-//     fontSize: 24,
-//     fontWeight: 'bold',
-//     marginBottom: 20,
-//   },
-//   sectionTitle: {
-//     fontSize: 18,
-//     fontWeight: 'bold',
-//     marginVertical: 10,
-//   },
-//   item: {
-//     flexDirection: 'row',
-//     justifyContent: 'space-between',
-//     alignItems: 'center',
-//     paddingVertical: 10,
-//     borderBottomWidth: 1,
-//     borderBottomColor: '#E0E0E0',
-//   },
-//   itemText: {
-//     fontSize: 16,
-//   },
-//   separator: {
-//     marginVertical: 20,
-//     borderBottomWidth: 1,
-//     borderBottomColor: '#E0E0E0',
-//   },
-// });
-
-// export default NotificationSettingsScreen;

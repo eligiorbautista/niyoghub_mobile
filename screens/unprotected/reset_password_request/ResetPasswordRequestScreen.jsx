@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   StyleSheet,
   Text,
@@ -13,39 +13,32 @@ import {
   ActivityIndicator,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import useResetPassword from "../../../hooks/useResetPassword";
+import useRequestPasswordReset from "../../../hooks/useRequestPasswordReset"; // Import the custom hook
 
-const ChangePasswordScreen = ({ navigation, route }) => {
-  const [newPassword, setNewPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const { resetPassword, loading, error, message } = useResetPassword();
-  const { resetToken } = route.params; // reset token from the navigation route
+const ResetPasswordRequestScreen = ({ navigation }) => {
+  const [email, setEmail] = useState("");
+  const { requestPasswordReset, loading, message, error } = useRequestPasswordReset();
 
-  const handlePasswordChange = async () => {
-    if (!newPassword || !confirmPassword) {
-      Alert.alert("Error", "Please fill in both fields.");
+  const handleRequestPasswordReset = async () => {
+    // Validation for email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      Alert.alert("Error", "Please enter a valid email address.");
       return;
     }
 
-    if (newPassword !== confirmPassword) {
-      Alert.alert("Error", "Passwords do not match.");
-      return;
-    }
+    // Use the custom hook to request a password reset
+    await requestPasswordReset(email);
+  };
 
-    if (newPassword.length < 6) {
-      Alert.alert("Error", "Password should be at least 6 characters long.");
-      return;
-    }
-
-    await resetPassword(resetToken, newPassword, confirmPassword);
-
+  // Watch for changes in the message or error state
+  useEffect(() => {
     if (message) {
-      Alert.alert("Success", message);
-      navigation.navigate("Login");
+      Alert.alert("Success", message, [{ text: "OK", onPress: () => navigation.navigate("Login") }]);
     } else if (error) {
       Alert.alert("Error", error);
     }
-  };
+  }, [message, error, navigation]);
 
   return (
     <ImageBackground
@@ -60,46 +53,47 @@ const ChangePasswordScreen = ({ navigation, route }) => {
           <TouchableOpacity onPress={() => navigation.goBack()}>
             <Ionicons name="arrow-back" size={24} color="black" />
           </TouchableOpacity>
+
           <Image
             source={require("../../../assets/niyoghub_banner_1.png")}
             style={styles.headerImage}
           />
+
           <Ionicons name="information-circle-outline" size={24} color="transparent" />
         </View>
-        <Text style={styles.title}>Change Your Password</Text>
+
+        <Text style={styles.title}>Request Password Reset</Text>
         <Text style={styles.subtitle}>
-          Please enter your new password and confirm it.
+          Please enter your email address. We will send you a link to reset your password if it is registered in our system.
         </Text>
-        <Text style={styles.inputLabel}>New Password</Text>
+
+        <Text style={styles.inputLabel}>Email Address</Text>
         <TextInput
-          placeholder="Enter new password"
-          secureTextEntry
+          placeholder="Enter your email"
+          keyboardType="email-address"
           style={styles.input}
-          value={newPassword}
-          onChangeText={setNewPassword}
+          value={email}
+          onChangeText={setEmail}
+          autoCapitalize="none"
         />
-        <Text style={styles.inputLabel}>Confirm Password</Text>
-        <TextInput
-          placeholder="Confirm your password"
-          secureTextEntry
-          style={styles.input}
-          value={confirmPassword}
-          onChangeText={setConfirmPassword}
-        />
+
         <TouchableOpacity
-          style={styles.changePasswordButton}
-          onPress={handlePasswordChange}
+          style={styles.requestButton}
+          onPress={handleRequestPasswordReset}
           disabled={loading}
         >
-          <Text style={styles.buttonText}>Change Password</Text>
+          {loading ? (
+            <ActivityIndicator size="small" color="#fff" />
+          ) : (
+            <Text style={styles.buttonText}>Request Password Reset</Text>
+          )}
         </TouchableOpacity>
-        {loading && <ActivityIndicator size="large" color="#537F19" style={styles.loading} />}
       </KeyboardAvoidingView>
     </ImageBackground>
   );
 };
 
-export default ChangePasswordScreen;
+export default ResetPasswordRequestScreen;
 
 const styles = StyleSheet.create({
   background: {
@@ -152,7 +146,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     backgroundColor: "#fff",
   },
-  changePasswordButton: {
+  requestButton: {
     backgroundColor: "#537F19",
     padding: 12,
     alignItems: "center",
@@ -163,8 +157,5 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontWeight: "bold",
     fontSize: 14,
-  },
-  loading: {
-    marginTop: 20,
   },
 });

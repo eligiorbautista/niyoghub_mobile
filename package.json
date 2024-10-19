@@ -9,6 +9,7 @@
     "web": "expo start --web"
   },
   "dependencies": {
+    "@react-native-async-storage/async-storage": "^1.23.1",
     "@react-native-community/checkbox": "^0.5.17",
     "@react-native-community/datetimepicker": "^8.2.0",
     "@react-native-picker/picker": "^2.7.5",
@@ -18,6 +19,7 @@
     "@react-navigation/native-stack": "^6.11.0",
     "axios": "^1.7.7",
     "expo": "^51.0.35",
+    "expo-auth-session": "^5.5.2",
     "expo-av": "~14.0.7",
     "expo-image-picker": "~15.0.7",
     "expo-linear-gradient": "~13.0.2",
@@ -38,9 +40,9 @@
     "react-native-size-matters": "^0.4.2",
     "react-native-snap-carousel": "^3.9.1",
     "react-native-svg": "^15.7.1",
+    "react-native-webview": "^13.8.6",
     "reanimated": "^0.0.1-alpha",
-    "tailwind-rn": "^4.2.0",
-    "@react-native-async-storage/async-storage": "1.23.1"
+    "tailwind-rn": "^4.2.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"

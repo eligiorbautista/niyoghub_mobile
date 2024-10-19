@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useState, useEffect, useContext } from "react";
 import {
   ImageBackground,
   StyleSheet,
@@ -9,13 +9,21 @@ import {
   Image,
   KeyboardAvoidingView,
   Platform,
+  ActivityIndicator,
+  BackHandler
 } from "react-native";
+import { useFocusEffect } from '@react-navigation/native';
 import { Ionicons } from "@expo/vector-icons";
 import TwoFactorAuthOTPModal from "../../../components/otp_2fa/TwoFactorAuthOTPModal";
+import useVerifyTwoFactorOTP from "../../../hooks/useVerifyTwoFactorOTP";
+import useLogin from "../../../hooks/useLogin";
+import { AuthContext } from '../../../contexts/AuthContext';
 
 const TwoFactorAuthOTPScreen = ({ navigation }) => {
   const [otp, setOtp] = useState(Array(6).fill(""));
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const { user } = useContext(AuthContext);
+
   const otpRefs = Array(6)
     .fill()
     .map(() => useRef(null));
@@ -23,6 +31,22 @@ const TwoFactorAuthOTPScreen = ({ navigation }) => {
   // countdown state
   const [countdown, setCountdown] = useState(300); // 5 minutes
   const [isCountdownActive, setIsCountdownActive] = useState(true);
+
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  useEffect(() => {
+    const fetchUserEmail = async () => {
+      if (user) {
+        setEmail(user.email);
+      }
+    };
+    fetchUserEmail();
+  }, []);
+
+  // Using the custom hook for OTP verification
+  const { verifyTwoFactorOTP, loading, error } = useVerifyTwoFactorOTP();
+
+  const { login } = useLogin();
 
   useEffect(() => {
     // countdown timer
@@ -56,11 +80,22 @@ const TwoFactorAuthOTPScreen = ({ navigation }) => {
     }
   };
 
-  const handleVerifyOTP = () => {
-    navigation.navigate("Layout");
+  const handleVerifyOTP = async () => {
     const enteredOtp = otp.join("");
     console.log(`OTP Entered: ${enteredOtp}`);
+    console.log(`Email: ${email}`);
+
+    if (email) {
+      const response = await verifyTwoFactorOTP(email, enteredOtp);
+ 
+      if (response.status === 200) {
+        navigation.navigate("Layout");
+      } else { 
+        console.log("OTP verification failed:", error);
+      }
+    }
   };
+
 
   const handleInfoDialog = () => {
     setIsModalVisible(true);
@@ -70,11 +105,31 @@ const TwoFactorAuthOTPScreen = ({ navigation }) => {
     setIsModalVisible(false);
   };
 
-  const handleResendCode = () => {
+  const handleResendCode = async () => {
     console.log("Resending OTP...");
+
+    await login(email, password);
+
     setCountdown(300); // reset
     setIsCountdownActive(true); // start
   };
+
+  // Handle hardware back button press
+  useFocusEffect(
+    React.useCallback(() => {
+      const onBackPress = () => {
+        navigation.navigate('Login'); // Navigate to Login screen
+        return true; // Prevent default behavior
+      };
+
+      const subscription = BackHandler.addEventListener(
+        'hardwareBackPress',
+        onBackPress
+      );
+
+      return () => subscription.remove(); // Clean up the listener on unmount
+    }, [navigation])
+  );
 
   return (
     <ImageBackground
@@ -86,7 +141,7 @@ const TwoFactorAuthOTPScreen = ({ navigation }) => {
         behavior={Platform.OS === "ios" ? "padding" : "height"}
       >
         <View style={styles.header}>
-          <TouchableOpacity onPress={() => navigation.goBack()}>
+          <TouchableOpacity onPress={() => navigation.navigate('Login')}>
             <Ionicons name="arrow-back" size={24} color="black" />
           </TouchableOpacity>
 
@@ -140,16 +195,16 @@ const TwoFactorAuthOTPScreen = ({ navigation }) => {
             </Text>
           </TouchableOpacity>
         </View>
-        <View style={styles.signInRow}>
-          <Text style={styles.link}>Already have access? </Text>
-          <TouchableOpacity onPress={() => navigation.navigate("Login")}>
-            <Text style={styles.signInText}>Sign In</Text>
-          </TouchableOpacity>
-        </View>
 
-        <TouchableOpacity style={styles.verifyButton} onPress={handleVerifyOTP}>
-          <Text style={styles.verifyButtonText}>Verify OTP</Text>
-        </TouchableOpacity>
+        {loading ? (
+          <ActivityIndicator size="large" color="rgba(83, 127, 25, 0.8)" />
+        ) : (
+          <TouchableOpacity style={styles.verifyButton} onPress={handleVerifyOTP}>
+            <Text style={styles.verifyButtonText}>Verify OTP</Text>
+          </TouchableOpacity>
+        )}
+
+        {error && <Text style={styles.errorText}>{error}</Text>}
 
         <TwoFactorAuthOTPModal
           isVisible={isModalVisible}
@@ -215,19 +270,9 @@ const styles = StyleSheet.create({
   resendContainer: {
     flexDirection: "row",
     justifyContent: "center",
-    marginBottom: 10,
+    marginBottom: 40,
   },
   resendText: {
-    color: 'rgba(83, 127, 25, 0.8)',
-    fontWeight: "bold",
-  },
-  signInRow: {
-    flexDirection: "row",
-    justifyContent: "center",
-    marginBottom: 15,
-  },
-  signInText: {
-    fontSize: 14,
     color: 'rgba(83, 127, 25, 0.8)',
     fontWeight: "bold",
   },
@@ -242,5 +287,10 @@ const styles = StyleSheet.create({
     color: "#FFF",
     fontSize: 14,
     fontWeight: "bold",
+  },
+  errorText: {
+    color: "red",
+    marginTop: 10,
+    textAlign: "center",
   },
 });

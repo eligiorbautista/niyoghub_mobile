@@ -1,28 +1,86 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
+import React, { useContext, useState } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, SafeAreaView, Alert } from 'react-native';
 import { Ionicons } from "@expo/vector-icons";
-import ASDisplayModal from '../../../components/modals/AccountSettingsModal';
+import UpdateModal from '../../../components/modals/UpdateModal';
+import { AuthContext } from '../../../contexts/AuthContext';
+import useUpdateUser from '../../../hooks/useUpdateUser';
+import useChangePassword from '../../../hooks/useChangePassword';
 
 const AccountSettingsScreen = ({ navigation }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [currentInfo, setCurrentInfo] = useState({ type: '', value: '' });
+  const [passwordInput, setPasswordInput] = useState('');
+  const [isTwoFactorEnabled, setIsTwoFactorEnabled] = useState(false);
+
+  const { user } = useContext(AuthContext);
+  const { updateUser, loading, error } = useUpdateUser();
+  const { changePassword, loading: passwordLoading, error: passwordError } = useChangePassword(); // Destructure the custom hook
+
+  // Initialize two-factor authentication state from user context
+  useState(() => {
+    setIsTwoFactorEnabled(user?.isTwoFactorEnabled || false);
+  }, [user]);
 
   const handleChangePress = (infoType, currentValue) => {
     setCurrentInfo({ type: infoType, value: currentValue });
+    setPasswordInput(''); // Reset password input when showing the modal
     setModalVisible(true);
   };
 
   const handleModalClose = () => {
     setModalVisible(false);
+    setPasswordInput(''); // Clear password input when closing the modal
   };
 
-  const handleModalSubmit = (newValue) => {
-    setCurrentInfo(prev => ({ ...prev, value: newValue }));
+  const handleModalSubmit = async (newValue) => {
+    if (currentInfo.type === 'Password') {
+      // Handle password change separately
+      const response = await changePassword(newValue);
+      if (response?.success) {
+        Alert.alert('Success', response.message);
+      } else {
+        Alert.alert('Failed', passwordError || 'Password change failed.');
+      }
+    } else {
+      const fieldToUpdate = currentInfo.type === 'Full Name' ? 'fullName' :
+        currentInfo.type === 'Email Address' ? 'email' :
+          currentInfo.type === 'City / Municipality' ? 'city' :
+            currentInfo.type === 'Language' ? 'language' : '';
+
+      if (!fieldToUpdate) {
+        Alert.alert('Error', 'Unable to update the selected field.');
+        return;
+      }
+
+      // Merge the existing user data with the new updated field
+      const updatedUserData = { ...user, [fieldToUpdate]: newValue };
+      await updateUser(updatedUserData);
+
+      if (error) {
+        Alert.alert('Update Failed', error);
+      }
+    }
+
     setModalVisible(false);
   };
 
+
+  const handleTwoFactorToggle = async () => {
+    const newTwoFactorStatus = !isTwoFactorEnabled;
+    setIsTwoFactorEnabled(newTwoFactorStatus);
+
+    // Merge the existing user data with the new two-factor authentication status
+    const updatedUserData = { ...user, isTwoFactorEnabled: newTwoFactorStatus };
+    await updateUser(updatedUserData);
+
+    if (error) {
+      Alert.alert('Update Failed', error);
+      setIsTwoFactorEnabled(!newTwoFactorStatus); // revert back on error
+    }
+  };
+
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <Ionicons name="chevron-back" size={24} color="black" />
@@ -40,9 +98,9 @@ const AccountSettingsScreen = ({ navigation }) => {
         <View style={styles.infoContainer}>
           <Text style={styles.label}>
             Full Name {'\n'}
-            <Text style={styles.value}>{currentInfo.type === 'Full Name' ? currentInfo.value : 'Juan Dela Cruz'}</Text>
+            <Text style={styles.value}>{user?.fullName || 'Juan Dela Cruz'}</Text>
           </Text>
-          <TouchableOpacity onPress={() => handleChangePress('Full Name', 'Juan Dela Cruz')}>
+          <TouchableOpacity onPress={() => handleChangePress('Full Name', user?.fullName || 'Juan Dela Cruz')}>
             <Text style={styles.changeButton}>Change</Text>
           </TouchableOpacity>
         </View>
@@ -50,29 +108,19 @@ const AccountSettingsScreen = ({ navigation }) => {
         <View style={styles.infoContainer}>
           <Text style={styles.label}>
             Email Address {'\n'}
-            <Text style={styles.value}>{currentInfo.type === 'Email Address' ? currentInfo.value : 'juandelacruz@gmail.com'}</Text>
+            <Text style={styles.value}>{user?.email || 'juandelacruz@gmail.com'}</Text>
           </Text>
-          <TouchableOpacity onPress={() => handleChangePress('Email Address', 'juandelacruz@gmail.com')}>
+          <TouchableOpacity onPress={() => handleChangePress('Email Address', user?.email || 'juandelacruz@gmail.com')}>
             <Text style={styles.changeButton}>Change</Text>
           </TouchableOpacity>
         </View>
 
         <View style={styles.infoContainer}>
           <Text style={styles.label}>
-            Contact Number {'\n'}
-            <Text style={styles.value}>{currentInfo.type === 'Contact Number' ? currentInfo.value : '+63 912 245 6789'}</Text>
+            City / Municipality {'\n'}
+            <Text style={styles.value}>{user?.city || 'Lucena City'}</Text>
           </Text>
-          <TouchableOpacity onPress={() => handleChangePress('Contact Number', '+63 912 245 6789')}>
-            <Text style={styles.changeButton}>Change</Text>
-          </TouchableOpacity>
-        </View>
-
-        <View style={styles.infoContainer}>
-          <Text style={styles.label}>
-            Address {'\n'}
-            <Text style={styles.value}>{currentInfo.type === 'Address' ? currentInfo.value : 'Lucena City, Quezon'}</Text>
-          </Text>
-          <TouchableOpacity onPress={() => handleChangePress('Address', 'Lucena City, Quezon')}>
+          <TouchableOpacity onPress={() => handleChangePress('City / Municipality', user?.city || 'Lucena City')}>
             <Text style={styles.changeButton}>Change</Text>
           </TouchableOpacity>
         </View>
@@ -80,9 +128,9 @@ const AccountSettingsScreen = ({ navigation }) => {
         <View style={styles.infoContainer}>
           <Text style={styles.label}>
             Language {'\n'}
-            <Text style={styles.value}>{currentInfo.type === 'Language' ? currentInfo.value : 'English (US)'}</Text>
+            <Text style={styles.value}>{user?.language || 'English (US)'}</Text>
           </Text>
-          <TouchableOpacity onPress={() => handleChangePress('Language', 'English (US)')}>
+          <TouchableOpacity onPress={() => handleChangePress('Language', user?.language || 'English (US)')}>
             <Text style={styles.changeButton}>Change</Text>
           </TouchableOpacity>
         </View>
@@ -96,15 +144,27 @@ const AccountSettingsScreen = ({ navigation }) => {
           </TouchableOpacity>
         </View>
 
-        <ASDisplayModal
+        <UpdateModal
           visible={modalVisible}
           onClose={handleModalClose}
           onSubmit={handleModalSubmit}
           infoType={modalVisible ? currentInfo.type : ''}
           currentValue={modalVisible ? currentInfo.value : ''}
         />
+
+        <View style={{ marginTop: 10 }} />
+        <View style={styles.infoContainer}>
+          <Text style={styles.label}>Two-Factor Authentication</Text>
+          <TouchableOpacity
+            style={[styles.customSwitch, isTwoFactorEnabled ? styles.switchOn : styles.switchOff]}
+            onPress={handleTwoFactorToggle}
+          >
+            <View style={isTwoFactorEnabled ? styles.thumbOn : styles.thumbOff} />
+          </TouchableOpacity>
+        </View>
+
       </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 };
 
@@ -123,8 +183,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#F0F0F0',
     borderBottomWidth: 1,
     borderBottomColor: '#E0E0E0',
-    marginTop: 0,
-
+    paddingTop: 30,
   },
   titleContainer: {
     flex: 1,
@@ -167,7 +226,7 @@ const styles = StyleSheet.create({
     color: '#555',
     marginBottom: 5,
     flexWrap: 'wrap',
-    fontWeight: '400'
+    fontWeight: '400',
   },
   changeButton: {
     color: '#6FA542',
@@ -183,6 +242,34 @@ const styles = StyleSheet.create({
     height: 1,
     backgroundColor: '#ccc',
     marginVertical: 20,
+  },
+  customSwitch: {
+    width: 40,
+    height: 20,
+    borderRadius: 15,
+    justifyContent: 'center',
+    padding: 5,
+    borderWidth: .5,
+  },
+  switchOn: {
+    backgroundColor: '#90B74B',
+  },
+  switchOff: {
+    backgroundColor: 'white',
+  },
+  thumbOn: {
+    width: 15,
+    height: 15,
+    borderRadius: 12.5,
+    backgroundColor: 'white',
+    alignSelf: 'flex-end',
+  },
+  thumbOff: {
+    width: 15,
+    height: 15,
+    borderRadius: 12.5,
+    backgroundColor: 'gray',
+    alignSelf: 'flex-start',
   },
 });
 

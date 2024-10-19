@@ -2,24 +2,73 @@ import React, { useState, useContext } from 'react';
 import {
   StyleSheet, Text, View, TextInput, TouchableOpacity, Image, ActivityIndicator, ImageBackground, Alert, Keyboard
 } from 'react-native';
+import Ionicons from '@expo/vector-icons/Ionicons';
+import { WebView } from 'react-native-webview';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { AuthContext } from '../../../contexts/AuthContext';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import useLogin from '../../../hooks/useLogin';
 
 const LoginScreen = ({ navigation }) => {
-  const { login, loading } = useContext(AuthContext);
+  const { login, loading } = useLogin();
+  const { setUser } = useContext(AuthContext);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [showWebView, setShowWebView] = useState(false);
+  const [webViewLoading, setWebViewLoading] = useState(false);
 
   const handleLogin = async () => {
     try {
-      await login(email, password);
-
       Keyboard.dismiss();
-      navigation.navigate('Layout');
+      const response = await login(email, password);
+
+      if (response.status === '2fa') {
+        navigation.navigate('TwoFactorAuthOTP');
+      }
+
+      if (response.status === 'ok') {
+        navigation.navigate('Layout');
+      }
+
       setEmail('');
       setPassword('');
     } catch (error) {
       Alert.alert('Login Failed', 'Invalid credentials.');
+    }
+  };
+
+  const handleGoogleLogin = () => {
+    setShowWebView(true);
+  };
+
+  const handleWebViewNavigationStateChange = async (newNavState) => {
+    const { url } = newNavState;
+
+    if (url.includes('https://niyoghub-server.onrender.com/api/auth/google/callback')) {
+      setShowWebView(false);
+      setWebViewLoading(true);
+
+      try {
+        const tokenMatch = url.match(/token=([^&]+)/);
+        if (tokenMatch) {
+          const token = tokenMatch[1];
+
+          const response = await fetch('https://niyoghub-server.onrender.com/api/user', {
+            headers: { Authorization: `Bearer ${token}` }
+          });
+          const user = await response.json();
+
+          await AsyncStorage.setItem('userToken', token);
+          setUser(user);
+          navigation.navigate('Layout');
+        } else {
+          Alert.alert('Google Sign-In Failed', 'Unable to authenticate with Google.');
+        }
+      } catch (error) {
+        Alert.alert('Google Sign-In Failed', 'An error occurred during authentication.');
+      } finally {
+        setWebViewLoading(false);
+      }
     }
   };
 
@@ -41,16 +90,24 @@ const LoginScreen = ({ navigation }) => {
         />
 
         <Text style={styles.inputLabel}>Password</Text>
-        <TextInput
-          placeholder="Enter your password"
-          secureTextEntry
-          style={styles.input}
-          value={password}
-          onChangeText={setPassword}
-        />
- 
+        <View style={styles.passwordContainer}>
+          <TextInput
+            placeholder="Enter your password"
+            secureTextEntry={!showPassword}
+            style={styles.passwordInput}
+            value={password}
+            onChangeText={setPassword}
+          />
+          {password && password.length > 0 && (<TouchableOpacity
+            style={styles.eyeButton}
+            onPress={() => setShowPassword(!showPassword)}
+          >
+            <Ionicons name={showPassword ? 'eye' : 'eye-off'} size={20} color="#555" />
+          </TouchableOpacity>)}
+        </View>
+
         <View style={styles.actionRow}>
-          <TouchableOpacity onPress={() => navigation.navigate('ResetPasswordOTP')}>
+          <TouchableOpacity onPress={() => navigation.navigate('RequestPasswordReset')}>
             <Text style={styles.forgotPasswordLink}>Forgot password?</Text>
           </TouchableOpacity>
         </View>
@@ -59,11 +116,26 @@ const LoginScreen = ({ navigation }) => {
           {loading ? <ActivityIndicator color="#fff" /> : <Text style={styles.buttonText}>Sign In</Text>}
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.googleButton}>
-          <Text style={styles.buttonText}>
-            <FontAwesome name="google" size={18} color="#fff" /> Continue with Google
-          </Text>
+        <TouchableOpacity
+          style={styles.googleButton}
+          onPress={handleGoogleLogin}
+        >
+          {webViewLoading ? <ActivityIndicator color="#fff" /> : (
+            <Text style={styles.buttonText}>
+              <Image source={require('../../../assets/icons/google.png')} style={{ width: 18, height: 18 }} />   Continue with Google
+            </Text>
+          )}
         </TouchableOpacity>
+
+        {showWebView && (
+          <View style={styles.webViewContainer}>
+            <WebView
+              source={{ uri: 'https://niyoghub-server.onrender.com/api/auth/google' }}
+              onNavigationStateChange={handleWebViewNavigationStateChange}
+              style={styles.webView}
+            />
+          </View>
+        )}
 
         <View style={styles.signupRow}>
           <Text style={styles.signUpLink}>Don't have an account? </Text>
@@ -126,11 +198,29 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
     backgroundColor: "#fff",
   },
+  passwordContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderColor: '#ccc',
+    borderWidth: 1,
+    borderRadius: 5,
+    marginBottom: 15,
+    marginHorizontal: 20,
+    backgroundColor: '#fff',
+  },
+  passwordInput: {
+    flex: 1,
+    height: 50,
+    paddingHorizontal: 10,
+  },
+  eyeButton: {
+    padding: 10,
+  },
   actionRow: {
     flexDirection: "row",
-    justifyContent: "flex-end",  
+    justifyContent: "flex-end",
     marginBottom: 15,
-    marginRight: 20, 
+    marginRight: 20,
   },
   signUpLink: {
     color: "#000000",
@@ -171,5 +261,18 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontWeight: "bold",
     fontSize: 14,
+  },
+  webViewContainer: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'white',
+    zIndex: 10,
+  },
+  webView: {
+    flex: 1,
+    marginVertical: 50, marginHorizontal: 30
   },
 });

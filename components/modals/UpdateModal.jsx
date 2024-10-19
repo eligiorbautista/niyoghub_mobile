@@ -1,18 +1,80 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Modal, TextInput, TouchableOpacity } from 'react-native';
-import { Picker } from '@react-native-picker/picker'; // Import Picker for dropdown
+import { Picker } from '@react-native-picker/picker';
 
-const ASDisplayModal = ({ visible, onClose, onSubmit, infoType, currentValue }) => {
+const UpdateModal = ({ visible, onClose, onSubmit, infoType, currentValue }) => {
   const [newValue, setNewValue] = useState(currentValue);
+  const [currentPassword, setCurrentPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmNewPassword, setConfirmNewPassword] = useState('');
 
   useEffect(() => {
     setNewValue(currentValue);
+    setCurrentPassword('');
+    setNewPassword('');
+    setConfirmNewPassword('');
   }, [currentValue]);
 
   const handleSubmit = () => {
-    onSubmit(newValue);
+    if (infoType.toLowerCase() === 'password') {
+      if (!currentPassword || !newPassword || !confirmNewPassword) {
+        alert('Please fill in all password fields.');
+        return;
+      }
+      if (newPassword !== confirmNewPassword) {
+        alert('New password and confirmation do not match.');
+        return;
+      }
+      onSubmit({ currentPassword, newPassword, confirmNewPassword });
+    } else {
+      onSubmit(newValue);
+    }
     onClose();
   };
+
+  const quezonCitiesAndMunicipalities = [
+    "Lucena City",
+    "Tayabas City",
+    "Agdangan",
+    "Alabat",
+    "Atimonan",
+    "Buenavista",
+    "Burdeos",
+    "Calauag",
+    "Candelaria",
+    "Catanauan",
+    "Dolores",
+    "General Luna",
+    "General Nakar",
+    "Guinayangan",
+    "Gumaca",
+    "Infanta",
+    "Jomalig",
+    "Lopez",
+    "Lucban",
+    "Macalelon",
+    "Mauban",
+    "Mulanay",
+    "Padre Burgos",
+    "Pagbilao",
+    "Panukulan",
+    "Patnanungan",
+    "Perez",
+    "Pitogo",
+    "Plaridel",
+    "Polillo",
+    "Quezon",
+    "Real",
+    "Sampaloc",
+    "San Andres",
+    "San Antonio",
+    "San Francisco",
+    "San Narciso",
+    "Sariaya",
+    "Tagkawayan",
+    "Tiaong",
+    "Unisan"
+  ];
 
   return (
     <Modal
@@ -25,8 +87,34 @@ const ASDisplayModal = ({ visible, onClose, onSubmit, infoType, currentValue }) 
         <View style={styles.modalContent}>
           <Text style={styles.modalTitle}>Update {infoType}</Text>
 
-          {/* render a dropdown for language selection */}
-          {infoType.toLowerCase() === 'language' ? (
+          {infoType.toLowerCase() === 'password' ? (
+            <>
+              <TextInput
+                style={styles.input}
+                placeholder="Current Password"
+                value={currentPassword}
+                onChangeText={setCurrentPassword}
+                secureTextEntry
+                placeholderTextColor="#888"
+              />
+              <TextInput
+                style={styles.input}
+                placeholder="New Password"
+                value={newPassword}
+                onChangeText={setNewPassword}
+                secureTextEntry
+                placeholderTextColor="#888"
+              />
+              <TextInput
+                style={styles.input}
+                placeholder="Confirm New Password"
+                value={confirmNewPassword}
+                onChangeText={setConfirmNewPassword}
+                secureTextEntry
+                placeholderTextColor="#888"
+              />
+            </>
+          ) : infoType.toLowerCase() === 'language' ? (
             <View style={styles.pickerContainer}>
               <Picker
                 selectedValue={newValue}
@@ -35,6 +123,18 @@ const ASDisplayModal = ({ visible, onClose, onSubmit, infoType, currentValue }) 
               >
                 <Picker.Item label="English (US)" value="English (US)" />
                 <Picker.Item label="Filipino" value="Filipino" />
+              </Picker>
+            </View>
+          ) : infoType.toLowerCase() === 'city / municipality' ? (
+            <View style={styles.pickerContainer}>
+              <Picker
+                selectedValue={newValue}
+                onValueChange={(itemValue) => setNewValue(itemValue)}
+                style={styles.picker}
+              >
+                {quezonCitiesAndMunicipalities.map((city, index) => (
+                  <Picker.Item key={index} label={city} value={city} />
+                ))}
               </Picker>
             </View>
           ) : (
@@ -145,4 +245,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ASDisplayModal;
+export default UpdateModal;

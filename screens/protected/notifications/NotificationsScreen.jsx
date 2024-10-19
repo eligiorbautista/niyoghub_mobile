@@ -17,7 +17,7 @@ const fetchNotifications = async () => {
       id: "1",
       type: "price",
       title: "Copra Price Update",
-      createdAt: "2024-9-28T14:30:00Z",
+      createdAt: "2024-09-28T14:30:00Z", // Updated date
       icon: "time-outline",
       read: false,
       details: "The latest copra price has been updated.",
@@ -55,6 +55,7 @@ const fetchNotifications = async () => {
     },
   ];
 };
+
 
 const NotificationsScreen = ({ navigation }) => {
   const [notifications, setNotifications] = useState([]);
@@ -123,8 +124,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     backgroundColor: "#F0F0F0",
     borderBottomWidth: 1,
-    borderBottomColor: "#E0E0E0",
-    // paddingTop: 30,
+    borderBottomColor: "#E0E0E0", 
+    paddingTop: 30,
   },
   headerImage: {
     width: 150,

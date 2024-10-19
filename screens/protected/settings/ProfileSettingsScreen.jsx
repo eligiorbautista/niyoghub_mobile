@@ -1,130 +1,163 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Button, Image } from 'react-native';
+import React, { useState, useContext } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, SafeAreaView, Alert, Image, Button } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
-import PSDisplayNameModal from '../../../components/modals/ProfileSettingsModal';
+import UpdateModal from '../../../components/modals/UpdateModal';
+import { AuthContext } from '../../../contexts/AuthContext';
+import useUpdateUser from '../../../hooks/useUpdateUser';
 
 const ProfileSettingsScreen = ({ navigation }) => {
-  const [image, setImage] = useState(null);
-  const [displayName, setDisplayName] = useState('Juan Dela Cruz');
+  const { user } = useContext(AuthContext);
+  const { updateUser, loading, error } = useUpdateUser();
+
+  const [image, setImage] = useState(user?.profilePicture || null);
+  const [fullName, setFullName] = useState(user?.fullName || 'Juan Dela Cruz');
   const [modalVisible, setModalVisible] = useState(false);
 
-  // Handle image picking from the gallery
-  const pickImage = async () => {
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-    });
+  // Handle image picking from the gallery or camera
+  const onPickImage = async (source) => {
+    let result;
+    if (source === 'camera') {
+      result = await ImagePicker.launchCameraAsync({
+        allowsEditing: true,
+        aspect: [4, 3],
+        quality: 1,
+      });
+    } else {
+      result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.All,
+        allowsEditing: true,
+        aspect: [4, 3],
+        quality: 1,
+      });
+    }
 
     if (!result.canceled) {
       setImage(result.assets[0].uri);
+      const updatedUserData = { ...user, profilePicture: result.assets[0].uri };
+      await updateUser(updatedUserData);
+
+      if (error) {
+        Alert.alert('Update Failed', error);
+      } else {
+        Alert.alert('Success', 'Profile picture has been updated successfully.');
+      }
     }
   };
 
-  // Handle display name update
-  const handleSubmit = (newDisplayName) => {
-    setDisplayName(newDisplayName);
+  // Handle full name update
+  const handleSubmit = async (newFullName) => {
+    setFullName(newFullName);
+
+    const updatedUserData = { ...user, fullName: newFullName };
+    await updateUser(updatedUserData);
+
+    if (error) {
+      Alert.alert('Update Failed', error);
+    } else {
+      Alert.alert('Success', 'Full Name has been updated successfully.');
+    }
+
     setModalVisible(false);
   };
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <Ionicons name="chevron-back" size={24} color="black" />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>General Settings</Text>
+        <View style={styles.titleContainer}>
+          <Text style={styles.headerTitle}>General Settings</Text>
+        </View>
       </View>
 
-      {/* Profile Settings Section */}
-      <View style={styles.scrollContainer}>
-        <Text style={styles.sectionTitle}>Profile Settings</Text>
+      <ScrollView style={styles.scrollContainer}>
+        <Text style={styles.settingsTitle}>Profile Settings</Text>
         <Text style={styles.subSectionTitle}>Customize Profile</Text>
 
-        {/* Display Name Setting */}
-        <ProfileSettingItem
-          label="Display Name"
-          value={displayName}
-          onEdit={() => setModalVisible(true)}
-        />
+        {/* Full Name Setting */}
+        <View style={styles.itemContainer}>
+          <View style={styles.itemTextContainer}>
+            <Text style={styles.itemLabel}>Full name</Text>
+            <Text style={styles.itemValue}>{fullName}</Text>
+          </View>
+          <TouchableOpacity onPress={() => setModalVisible(!modalVisible)}>
+            <Text style={styles.changeButton}>Change</Text>
+          </TouchableOpacity>
+        </View>
 
-        {/* Display Name Modal */}
-        <PSDisplayNameModal
+        {/* Full Name Modal */}
+        <UpdateModal
           visible={modalVisible}
           onClose={() => setModalVisible(false)}
           onSubmit={handleSubmit}
+          infoType="Full Name"
+          currentValue={fullName}
         />
-
         {/* Profile Picture Upload */}
-        <ProfileImage
-          image={image}
-          onPickImage={pickImage}
-        />
-      </View>
-    </View>
+        <View style={styles.profileImageContainer}>
+          <Text style={styles.itemLabel}>Profile Picture</Text>
+          <Text style={styles.subtitle}>Update your profile picture</Text>
+          <View style={styles.profileImageWrapper}>
+            <Image
+              source={image ? { uri: image } : require('../../../assets/farmer.png')}
+              style={styles.profileImage}
+            />
+            <View style={styles.uploadOptions}>
+              <TouchableOpacity style={styles.uploadBox} onPress={() => onPickImage('camera')}>
+                <Ionicons name="camera" size={60} color="#6FA542" />
+                <Text style={styles.uploadText}>Take Picture</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.uploadBox} onPress={() => onPickImage('gallery')}>
+                <Ionicons name="image" size={60} color="#6FA542" />
+                <Text style={styles.uploadText}>Browse Gallery</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </ScrollView>
+    </SafeAreaView>
   );
 };
 
-// Reusable Component for Profile Settings Items
-const ProfileSettingItem = ({ label, value, onEdit }) => (
-  <View style={styles.itemContainer}>
-    <View style={styles.itemTextContainer}>
-      <Text style={styles.itemLabel}>{label}</Text>
-      <Text style={styles.itemValue}>{value}</Text>
-    </View>
-    <TouchableOpacity onPress={onEdit}>
-      <Text style={styles.editButton}>Set</Text>
-    </TouchableOpacity>
-  </View>
-);
-
-// Reusable Component for Profile Image
-const ProfileImage = ({ image, onPickImage }) => (
-  <View style={styles.profileImageContainer}>
-    <Text style={styles.sectionTitle}>Profile Picture</Text>
-    <Text style={styles.subtitle}>Update your profile picture</Text>
-    <View style={styles.profileImageWrapper}>
-      <Image
-        source={image ? { uri: image } : require('../../../assets/farmer.png')}
-        style={styles.profileImage}
-      />
-      <TouchableOpacity style={styles.uploadBox} onPress={onPickImage}>
-        <Ionicons name="image" size={60} color="#6FA542" />
-        <Button title="Browse" onPress={onPickImage} color="#6FA542" /> 
-      </TouchableOpacity>
-    </View>
-  </View>
-);
 
 // Styles
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     backgroundColor: '#fff',
-    padding: 20,
+    height: '100%',
+    flex: 1,
   },
   header: {
     flexDirection: 'row',
+    justifyContent: 'space-between',
     alignItems: 'center',
-    paddingBottom: 15,
+    paddingVertical: 8,
+    paddingHorizontal: 20,
+    backgroundColor: '#F0F0F0',
     borderBottomWidth: 1,
     borderBottomColor: '#E0E0E0',
+    paddingTop: 30,
+  },
+  titleContainer: {
+    flex: 1,
+    alignItems: 'center',
+    paddingVertical: 8,
   },
   headerTitle: {
-    flex: 1,
-    textAlign: 'center',
     fontSize: 20,
     fontWeight: 'bold',
   },
   scrollContainer: {
-    marginTop: 20,
+    paddingHorizontal: 20,
   },
-  sectionTitle: {
+  settingsTitle: {
     fontSize: 18,
     fontWeight: 'bold',
+    marginTop: 30,
+    marginBottom: 10,
   },
   subSectionTitle: {
     fontSize: 16,
@@ -132,40 +165,41 @@ const styles = StyleSheet.create({
     marginBottom: 15,
   },
   itemContainer: {
+    marginBottom: 16,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 20,
-    paddingVertical: 12,
-    borderBottomWidth: 1,
-    borderBottomColor: '#E0E0E0',
   },
   itemTextContainer: {
     flex: 1,
   },
   itemLabel: {
-    fontSize: 14,
+    fontSize: 16,
+    fontWeight: 'bold',
     color: '#777',
   },
   itemValue: {
     fontSize: 16,
     color: '#333',
+    marginBottom: 5,
   },
-  editButton: {
+  changeButton: {
     color: '#6FA542',
     borderWidth: 1,
     borderColor: '#6FA542',
     borderRadius: 25,
-    paddingHorizontal: 15,
-    paddingVertical: 4,
+    paddingVertical: 3,
+    paddingHorizontal: 10,
     textAlign: 'center',
+    fontSize: 14,
   },
   profileImageContainer: {
-    marginTop: 20,
+    marginTop: 10,
   },
   profileImageWrapper: {
     flexDirection: 'row',
-    alignItems: 'center',
+    alignItems: 'start',
+    flexWrap: 'wrap',
   },
   profileImage: {
     width: 150,
@@ -174,6 +208,10 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#ddd',
     marginRight: 20,
+    marginBottom: 20,
+  },
+  uploadOptions: {
+    flexDirection: 'row',
   },
   uploadBox: {
     justifyContent: 'center',
@@ -183,9 +221,15 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     padding: 10,
     backgroundColor: '#f9f9f9',
-    width: 150,
-    height: 150,
-  }, 
+    width: 130,
+    height: 130,
+    marginRight: 10,
+  },
+  uploadText: {
+    fontSize: 14,
+    color: '#6FA542',
+    marginTop: 8,
+  },
   subtitle: {
     fontSize: 14,
     color: '#666',

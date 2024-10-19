@@ -1,14 +1,14 @@
 
 
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
 import {
   ImageBackground, StyleSheet, Text, View, TextInput, TouchableOpacity, Alert, ScrollView, ActivityIndicator, Keyboard
 } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
-import { AuthContext } from '../../../contexts/AuthContext';
+import useRegister from '../../../hooks/useRegister';
 
 const RegistrationScreen = ({ navigation }) => {
-  const { register, loading } = useContext(AuthContext);
+  const { register, loading } = useRegister();
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
@@ -52,6 +52,51 @@ const RegistrationScreen = ({ navigation }) => {
       Alert.alert('Registration Failed', 'An error occurred during registration.');
     }
   };
+
+  const quezonCitiesAndMunicipalities = [
+    "Select city / municipality",
+    "Lucena City",
+    "Tayabas City",
+    "Agdangan",
+    "Alabat",
+    "Atimonan",
+    "Buenavista",
+    "Burdeos",
+    "Calauag",
+    "Candelaria",
+    "Catanauan",
+    "Dolores",
+    "General Luna",
+    "General Nakar",
+    "Guinayangan",
+    "Gumaca",
+    "Infanta",
+    "Jomalig",
+    "Lopez",
+    "Lucban",
+    "Macalelon",
+    "Mauban",
+    "Mulanay",
+    "Padre Burgos",
+    "Pagbilao",
+    "Panukulan",
+    "Patnanungan",
+    "Perez",
+    "Pitogo",
+    "Plaridel",
+    "Polillo",
+    "Quezon",
+    "Real",
+    "Sampaloc",
+    "San Andres",
+    "San Antonio",
+    "San Francisco",
+    "San Narciso",
+    "Sariaya",
+    "Tagkawayan",
+    "Tiaong",
+    "Unisan"
+  ];
 
   return (
     <ImageBackground source={require('../../../assets/background.png')} style={styles.background}>
@@ -100,7 +145,6 @@ const RegistrationScreen = ({ navigation }) => {
               onChangeText={setPassword}
             />
           </View>
-
           <View style={styles.inputGroup}>
             <Text style={styles.label}>Confirm password</Text>
             <TextInput
@@ -120,10 +164,9 @@ const RegistrationScreen = ({ navigation }) => {
                 onValueChange={(itemValue) => setCity(itemValue)}
                 style={styles.picker}
               >
-                <Picker.Item label="Select city / municipality" value="" />
-                <Picker.Item label="Lucena City" value="Lucena City" />
-                <Picker.Item label="Tayabas" value="Tayabas" />
-                <Picker.Item label="Lucban" value="Lucban" />
+                {quezonCitiesAndMunicipalities.map((city, index) => (
+                  <Picker.Item key={index} label={city} value={city} />
+                ))}
               </Picker>
             </View>
           </View>

@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
 import {
   createDrawerNavigator,
@@ -15,13 +15,32 @@ import AboutScreen from "../../screens/protected/about/AboutScreen";
 import LoginScreen from "../../screens/unprotected/login/LoginScreen";
 import SettingsScreen from "../../screens/protected/settings/SettingsScreen";
 import { AuthContext } from '../../contexts/AuthContext';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Drawer = createDrawerNavigator();
 
 const CustomDrawerContent = (props) => {
   const { user, logout } = useContext(AuthContext);
-
   const navigation = useNavigation();
+  const [token, setToken] = useState(null);
+
+  useEffect(() => {
+    const checkToken = async () => {
+      try {
+        const storedToken = await AsyncStorage.getItem("userToken");
+        setToken(storedToken);
+
+        // navigate to login if token doesn't exist
+        if (!storedToken) {
+          navigation.navigate("Login");
+        }
+      } catch (error) {
+        console.error("Failed to retrieve token", error);
+      }
+    };
+
+    checkToken();
+  }, [user]);
 
   return (
     <DrawerContentScrollView {...props} contentContainerStyle={{ flexGrow: 1 }}>

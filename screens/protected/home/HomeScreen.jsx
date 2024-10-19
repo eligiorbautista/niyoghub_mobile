@@ -1,8 +1,7 @@
-import { ScrollView, View, Text, TextInput, Image, TouchableOpacity, StyleSheet, Pressable } from 'react-native';
+import { FlatList, View, Text, TextInput, Image, TouchableOpacity, StyleSheet, Pressable, SafeAreaView } from 'react-native';
 import React, { useState, useContext } from 'react';
 import SDGModal from '../../../components/modals/SDGModals';
 import { Ionicons } from "@expo/vector-icons";
-import { SafeAreaView } from 'react-native';
 import ImageCarousel from './CarouselAnnouncement';
 import { AuthContext } from '../../../contexts/AuthContext';
 
@@ -18,30 +17,16 @@ const HomeScreen = ({ navigation }) => {
   ];
 
   const sdgs = [
-    {
-      id: 1,
-      title: 'REDUCING POVERTY',
-      description: 'NiyogHub aims to reduce poverty among coconut farmers by providing access to vital information, resources, and government support. To optimize resource utilization, and improve their livelihoods through the use of this platform.',
-      image: require('../../../assets/reducing_poverty.png')
-    },
-    {
-      id: 2,
-      title: 'SUSTAINABLE FARMING',
-      description: 'NiyogHub encourages coconut farmers to use sustainable farming methods to increase food security.',
-      image: require('../../../assets/sustainable_farming.png')
-    },
-    {
-      id: 3,
-      title: 'ECONOMIC GROWTH',
-      description: 'NiyogHub can promote economic growth by providing timely information, disease detection tools, and sustainable farming practices. It enables farmers to increase their yields and quality of produce, leading to higher incomes.',
-      image: require('../../../assets/economic_growth.png')
-    },
-    {
-      id: 4,
-      title: 'TECHNOLOGICAL INNOVATION',
-      description: 'NiyogHub introduces technological solutions to traditional agricultural practices. This platform empowers coconut farmers with innovative tools to enhance their farming techniques and decision-making processes. ',
-      image: require('../../../assets/tech_innovation.png')
-    }
+    { id: 1, title: 'REDUCING POVERTY', description: 'NiyogHub aims to reduce poverty among coconut farmers...', image: require('../../../assets/reducing_poverty.png') },
+    { id: 2, title: 'SUSTAINABLE FARMING', description: 'NiyogHub encourages coconut farmers to use sustainable farming methods...', image: require('../../../assets/sustainable_farming.png') },
+    { id: 3, title: 'ECONOMIC GROWTH', description: 'NiyogHub can promote economic growth by providing timely information...', image: require('../../../assets/economic_growth.png') },
+    { id: 4, title: 'TECHNOLOGICAL INNOVATION', description: 'NiyogHub introduces technological solutions to traditional agricultural practices...', image: require('../../../assets/tech_innovation.png') }
+  ];
+
+  const newsData = [
+    { id: 1, category: 'News & Programs', date: "April 10, 2024", description: "8.5 million coconut seedlings set to be planted...", image: require("../../../assets/newsprograms1.png") },
+    { id: 2, category: 'News & Programs', date: "April 8, 2024", description: "Updated Copra and wholenut prices in Region - IV.", image: require("../../../assets/newsprograms2.png") },
+    { id: 3, category: 'News & Programs', date: "April 3, 2023", description: "May Anak ka ba na Kolehiyo? Isali sa CoScho.", image: require("../../../assets/newsprograms3.png") }
   ];
 
   const handleSearch = (query) => {
@@ -55,48 +40,31 @@ const HomeScreen = ({ navigation }) => {
     setModalVisible(true);
   };
 
-  const handlePress = (cardText) => {
-    console.log(`${cardText} pressed!`);
-  };
-
-  // RECENT NEWS AND PROGRAMS
-  const newsData = [
-    {
-      id: 1,
-      category: 'News & Programs',
-      date: "April 10, 2024",
-      description: "8.5 million coconut seedlings set to be planted in 2024 under the PCA’s Massive Coconut Planting and Replanting Project",
-      image: require("../../../assets/newsprograms1.png"),
-    },
-    {
-      id: 2,
-      category: 'News & Programs',
-      date: "April 8, 2024",
-      description: "Updated Copra and wholenut prices in Region - IV.",
-      image: require("../../../assets/newsprograms2.png"),
-    },
-    {
-      id: 3,
-      category: 'News & Programs',
-      date: "April 3, 2023",
-      description: "May Anak ka ba na Kolehiyo? Isali sa CoScho.",
-      image: require("../../../assets/newsprograms3.png"),
-    },
-  ];
-
   const handleReadMore = (newsItem) => {
     navigation.navigate('ReadNewsPrograms', { newsItem });
   };
 
   const getCurrentDay = () => {
     const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-    const currentDay = new Date().getDay();  
-    return days[currentDay];  
+    const currentDay = new Date().getDay();
+    return days[currentDay];
   };
 
-  return (
-    <ScrollView style={styles.container}>
-      <Text style={styles.greeting}>Hello, {user?.fullName.split(' ')[0] || `first name`}</Text>
+  const renderNewsItem = ({ item }) => (
+    <Pressable onPress={() => handleReadMore(item)} style={styles.card}>
+      <Image source={item.image} style={styles.image} />
+      <Text style={styles.categoryText}>{item.category}</Text>
+      <Text style={styles.dateText}>{item.date}</Text>
+      <Text style={styles.descriptionText} numberOfLines={3}>{item.description}</Text>
+      <Pressable style={styles.readButton} onPress={() => handleReadMore(item)}>
+        <Text style={styles.readButtonText}>Read</Text>
+      </Pressable>
+    </Pressable>
+  );
+
+  const renderHeader = () => (
+    <View>
+      <Text style={styles.greeting}>Hello, {user?.fullName || 'Guest'}</Text>
       <Text style={styles.subGreeting}>Have a nice {getCurrentDay()}</Text>
 
       <TextInput
@@ -106,43 +74,78 @@ const HomeScreen = ({ navigation }) => {
         onChangeText={handleSearch}
       />
 
-      {/* RECENT ARTICLE SECTION */}
-      <Text style={styles.recentPost}>Recent post</Text>
-      {filteredContent.length > 0 ? (
-        filteredContent.map(item => (
-          <Pressable style={[]}
-            onPress={() => navigation.navigate('Article')}>
-            <View key={item.id} style={styles.postContainer}>
-              <Image source={require('../../../assets/post.png')} style={styles.postImage} />
-              <Text style={styles.postCategory}>{item.category}</Text>
-              <Text style={styles.postTitle}>{item.title}</Text>
-              <Text style={styles.postMeta}>{`${item.date} - ${item.time}`}</Text>
-            </View>
-          </Pressable>
-        ))
-      ) : (
-        <Pressable style={[]}
-          onPress={() => navigation.navigate('Article')}>
-          <View style={styles.postContainer}>
-            <Image source={require('../../../assets/post.png')} style={styles.postImage} />
-            <Text style={styles.postCategory}>News & Programs</Text>
-            <Text style={styles.postTitle}>PCA Embraces Culture of Excellence, Undergoes ISO 9001:2015 Reorientation</Text>
-            <Text style={styles.postMeta}>April 24, 2024 - 3 min read</Text>
-          </View>
-        </Pressable>
-      )}
+      {/* Newest Posts Section */}
+      <Text style={styles.sectionTitle}>Newest Posts</Text>
+    </View>
+  );
 
-      {/* SDG BUTTONS SECTION */}
-      <Text style={styles.sdgTitle}>Four Global SDG's</Text>
-      <View style={styles.sdgContainer}>
-        {sdgs.map(sdg => (
-          <TouchableOpacity key={sdg.id} style={styles.sdgButton} onPress={() => openModal(sdg)}>
+  const renderFooter = () => (
+    <View>
+      {/* SDG Buttons Section */}
+      <Text style={styles.sectionTitle}>Four Global SDGs</Text>
+      <FlatList
+        data={sdgs}
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        keyExtractor={(item) => item.id.toString()}
+        renderItem={({ item }) => (
+          <TouchableOpacity style={styles.sdgButton} onPress={() => openModal(item)}>
             <View style={styles.sdgCard}>
-              <Image source={sdg.image} style={styles.sdgImage} />
-              <Text style={styles.sdgText}>{sdg.title}</Text>
+              <Image source={item.image} style={styles.sdgImage} />
+              <Text style={styles.sdgText}>{item.title}</Text>
             </View>
           </TouchableOpacity>
-        ))}
+        )}
+      />
+
+      {/* Announcement Section */}
+      <Text style={styles.sectionTitle}>Announcements</Text>
+      <ImageCarousel />
+
+      {/* News and Programs Section */}
+      <View style={styles.headerNewsPrograms}>
+        <Text style={styles.sectionTitle}>News & Programs</Text>
+        <Pressable onPress={() => navigation.navigate('SeeAllNewsPrograms', { newsData })}>
+          <View style={{ flex: 1, flexDirection: 'row', marginTop: 32 }} >
+            <Text style={styles.seeAllText}>See all</Text>
+            <Ionicons
+              style={{ marginTop: 2 }}
+              name="chevron-forward-outline"
+              size={18}
+              color='rgba(83, 127, 25, 0.8)'
+            />
+          </View>
+        </Pressable>
+      </View>
+      <FlatList
+        data={newsData}
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        keyExtractor={(item) => item.id.toString()}
+        renderItem={renderNewsItem}
+      />
+
+      {/* Updates Section */}
+      <Text style={styles.sectionTitle}>Updates</Text>
+      <View style={styles.updatesContainer}>
+        <Pressable style={[styles.updateCard, styles.intercroppingCard]} onPress={() => navigation.navigate('Intercropping')}>
+          <Image source={require('../../../assets/intercropping.png')} style={styles.intercroppingImage} />
+          <Text style={styles.title}>Coconut Intercropping</Text>
+          <Text style={styles.description}>A multiple cropping practice involving growing two or more crops.</Text>
+          <Pressable style={styles.knowMoreButton}>
+            <Text style={styles.knowMoreText}>Know more</Text>
+            <Ionicons name="arrow-forward-outline" size={16} color="black" />
+          </Pressable>
+        </Pressable>
+        <Pressable style={[styles.updateCard, styles.priceWatchCard]} onPress={() => navigation.navigate('CopraPrice')}>
+          <Image source={require('../../../assets/copra.png')} style={styles.copraImage} />
+          <Text style={styles.title}>Copra Price Watch</Text>
+          <Text style={styles.description}>Track the daily update of copra and wholenut prices.</Text>
+          <Pressable style={styles.knowMoreButton}>
+            <Text style={styles.knowMoreText}>Know more</Text>
+            <Ionicons name="arrow-forward-outline" size={16} color="black" />
+          </Pressable>
+        </Pressable>
       </View>
 
       {modalVisible && (
@@ -152,81 +155,27 @@ const HomeScreen = ({ navigation }) => {
           selectedSDG={selectedSDG}
         />
       )}
+    </View>
+  );
 
-      {/* ANNOUNCEMENT SECTION */}
-      <Text style={styles.announcement}>Announcements</Text>
-      <SafeAreaView>
-        <ImageCarousel />
-      </SafeAreaView>
-
-      {/* NEWS AND PROGRAMS */}
-      <View style={styles.headerNewsPrograms}>
-        <Text style={styles.recentTitle}>Recent News & Programs</Text>
-        <Pressable
-          style={styles.seeAllButton}
-          onPress={() => navigation.navigate('SeeAllNewsPrograms', { newsData })}
-        >
-          <Text style={styles.seeAllText}>See all news & programs</Text>
-        </Pressable>
-      </View>
-      <View style={styles.containerNewsPrograms}>
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={styles.scrollContainer}
-        >
-          {newsData.map((news, index) => (
-            <View key={index} style={styles.card}>
-              <Image source={news.image} style={styles.image} />
-              <Text style={styles.categoryText}>{news.category}</Text>
-              <Text style={styles.dateText}>{news.date}</Text>
-              <Text style={styles.descriptionText} numberOfLines={3}>{news.description}</Text>
-              <Pressable style={styles.readButton}
-                onPress={() => handleReadMore(news)}>
-                <Text style={styles.readButtonText}>Read</Text>
-              </Pressable>
-            </View>
-          ))}
-        </ScrollView>
-      </View>
-
-      {/* UPDATES SECTION */}
-      <Text style={styles.updates}>Updates</Text>
-      <View style={styles.updatesContainer}>
-        <View style={styles.row}>
-          <Pressable
-            style={[styles.item, styles.intercroppingCard]}
-            onPress={() => navigation.navigate('Intercropping')}
-          >
-            <Image source={require('../../../assets/intercropping.png')} style={styles.intercroppingImage} />
-            <Text style={styles.title}>Coconut Intercropping</Text>
-            <Text style={styles.description}>
-              A multiple cropping practice involving growing two or more crops.
-            </Text>
-            <Pressable style={styles.knowMoreButton} onPress={() => navigation.navigate('Intercropping')}>
-              <Text style={styles.knowMoreText}>Know more</Text>
-              <Ionicons name="arrow-forward-outline" size={16} color="black" />
-            </Pressable>
+  return (
+    <SafeAreaView style={styles.container}>
+      <FlatList
+        showsVerticalScrollIndicator={false}
+        data={filteredContent.length > 0 ? filteredContent : content}
+        keyExtractor={(item) => item.id.toString()}
+        renderItem={({ item }) => (
+          <Pressable style={styles.postContainer} onPress={() => navigation.navigate('Article')}>
+            <Image source={require('../../../assets/post.png')} style={styles.postImage} />
+            <Text style={styles.postCategory}>{item.category}</Text>
+            <Text style={styles.postTitle}>{item.title}</Text>
+            <Text style={styles.postMeta}>{`${item.date} - ${item.time}`}</Text>
           </Pressable>
-
-          <Pressable
-            style={[styles.item, styles.priceWatchCard]}
-            onPress={() => navigation.navigate('CopraPrice')}
-          >
-            <Image source={require('../../../assets/copra.png')} style={styles.copraImage} />
-            <Text style={styles.title}>Copra Price Watch</Text>
-            <Text style={styles.description}>
-              Track the daily update of copra and wholenut prices.
-            </Text>
-            <Pressable style={styles.knowMoreButton} onPress={() => navigation.navigate('CopraPrice')}>
-              <Text style={styles.knowMoreText}>Know more</Text>
-              <Ionicons name="arrow-forward-outline" size={16} color="black" />
-            </Pressable>
-          </Pressable>
-        </View>
-      </View>
-
-    </ScrollView>
+        )}
+        ListHeaderComponent={renderHeader}
+        ListFooterComponent={renderFooter}
+      />
+    </SafeAreaView>
   );
 };
 
@@ -235,16 +184,16 @@ export default HomeScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#fff',
     padding: 20,
-    backgroundColor: '#fff'
   },
   greeting: {
     fontSize: 24,
-    fontWeight: 'bold'
+    fontWeight: 'bold',
   },
   subGreeting: {
     fontSize: 16,
-    color: '#777'
+    color: '#777',
   },
   searchInput: {
     marginTop: 20,
@@ -252,20 +201,20 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#ccc',
     borderRadius: 8,
-    fontSize: 16
+    fontSize: 16,
   },
-  recentPost: {
-    marginTop: 20,
+  sectionTitle: {
+    marginTop: 30,
+    marginBottom: 12,
     fontSize: 18,
-    fontWeight: 'bold'
+    fontWeight: 'bold',
   },
   postContainer: {
     marginTop: 10,
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 8,
-    padding: 10,
-    paddingVertical: 10,
+    padding: 15,
+    borderRadius: 10,
+    backgroundColor: '#f8f8f8',
+    marginBottom: 20,
   },
   postImage: {
     width: '100%',
@@ -275,188 +224,81 @@ const styles = StyleSheet.create({
   postCategory: {
     marginTop: 5,
     fontSize: 14,
-    color: '#777'
+    color: '#777',
   },
   postTitle: {
     fontSize: 16,
-    fontWeight: 'bold'
+    fontWeight: 'bold',
   },
   postMeta: {
     fontSize: 12,
-    color: '#aaa'
-  },
-  sdgTitle: {
-    marginTop: 30,
-    fontSize: 18,
-    fontWeight: 'bold'
-  },
-  sdgContainer: {
-    flexDirection: 'row',
-    width: '100%',
-    marginTop: 10,
+    color: '#aaa',
   },
   sdgButton: {
-    flex: 1,
-    marginHorizontal: 4,
+    marginHorizontal: 5,
   },
   sdgCard: {
+    width: 150,
+    padding: 20,
     borderRadius: 10,
-    paddingVertical: 14,
+    backgroundColor: '#f8f8f8',
     alignItems: 'center',
-    borderWidth: 2,
-    borderColor: '#ddd',
-    height: 150,
   },
   sdgImage: {
     width: 60,
     height: 60,
     marginBottom: 10,
-    borderRadius: 5,
   },
   sdgText: {
-    fontSize: 13,
-    fontWeight: 'bold',
-    color: '#537F19',
-    textAlign: 'center',
-  },
-  announcement: {
-    marginTop: 30,
-    fontSize: 18,
-    fontWeight: 'bold'
-  },
-  updates: {
-    marginTop: 30,
-    fontSize: 18,
-    fontWeight: 'bold'
-  },
-  updatesContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  row: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: '100%',
-    marginBottom: 40,
-  },
-  item: {
-    flex: 1,
-    borderRadius: 10,
-    padding: 20,
-    marginVertical: 10,
-    alignItems: 'flex-start',
-    marginHorizontal: 5,
-  },
-  intercroppingCard: {
-    backgroundColor: '#6F9B35',
-  },
-  priceWatchCard: {
-    backgroundColor: '#D2D792',
-  },
-  icon: {
-    marginBottom: 15,
-  },
-  title: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: 'black',
-  },
-  description: {
     fontSize: 14,
-    color: 'black',
-    marginBottom: 20,
-  },
-  knowMoreButton: {
-    flexDirection: 'row',
-    alignItems: 'start',
-    backgroundColor: '#F0F0F0',
-    paddingVertical: 8,
-    paddingHorizontal: 10,
-    borderRadius: 20,
-    alignSelf: 'flex-start',
-  },
-  knowMoreText: {
-    color: '#2C2C2C',
     fontWeight: 'bold',
-    marginRight: 5,
-  },
-  intercroppingImage: {
-    width: 60,
-    height: 60,
-    marginBottom: 10,
-    marginTop: 15,
-  },
-  copraImage: {
-    width: 60,
-    height: 60,
-    marginBottom: 10,
-    marginTop: 15,
+    textAlign: 'center',
+    color: '#699F21',
   },
   headerNewsPrograms: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-  },
-  recentTitle: {
-    marginTop: 30,
-    fontSize: 18,
-    fontWeight: 'bold'
-  },
-  seeAllButton: {
-    paddingVertical: 5,
-    flexShrink: 1,
+    marginTop: 20,
   },
   seeAllText: {
-    color: 'black',
-    fontSize: 12,
-    marginTop: 30,
-  },
-  containerNewsPrograms: {
-    flex: 1,
-    justifyContent: 'center',
-    paddingTop: 10,
-  },
-  scrollContainer: {
-    paddingVertical: 10,
-    paddingHorizontal: 5,
+    fontSize: 16,
+    color: '#699F21',
+    fontWeight: 'bold'
   },
   card: {
     width: 220,
-    backgroundColor: 'white',
+    backgroundColor: '#f8f8f8',
     borderRadius: 10,
     marginRight: 15,
     padding: 10,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.8,
+    shadowOpacity: 0.2,
     shadowRadius: 5,
-    elevation: 3,
-    justifyContent: 'space-between',
   },
   image: {
     width: '100%',
     height: 100,
     borderRadius: 8,
-    marginBottom: 10,
   },
   categoryText: {
     fontSize: 12,
     color: '#666',
+    marginTop: 5,
   },
   dateText: {
     fontSize: 12,
-    color: '#666',
+    color: '#aaa',
     marginBottom: 5,
   },
   descriptionText: {
     fontSize: 14,
     color: '#333',
-    marginBottom: 10,
-    fontWeight: 'bold'
+    fontWeight: 'bold',
   },
   readButton: {
-    backgroundColor: '#537F19',
+    backgroundColor: '#699F21',
     borderRadius: 5,
     paddingVertical: 8,
     paddingHorizontal: 20,
@@ -464,8 +306,60 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   readButtonText: {
-    color: 'white',
+    color: '#fff',
     fontSize: 14,
     fontWeight: 'bold',
+  },
+  updatesContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  updateCard: {
+    flex: 1,
+    borderRadius: 10,
+    padding: 20,
+    marginHorizontal: 5,
+    alignItems: 'center',
+  },
+  intercroppingCard: {
+    backgroundColor: '#6F9B35',
+  },
+  priceWatchCard: {
+    backgroundColor: '#D2D792',
+  },
+  intercroppingImage: {
+    width: 60,
+    height: 60,
+    marginBottom: 10,
+  },
+  copraImage: {
+    width: 60,
+    height: 60,
+    marginBottom: 10,
+  },
+  title: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#fff',
+    textAlign: 'center',
+  },
+  description: {
+    fontSize: 14,
+    color: '#fff',
+    textAlign: 'center',
+    marginVertical: 10,
+  },
+  knowMoreButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#fff',
+    paddingVertical: 8,
+    paddingHorizontal: 15,
+    borderRadius: 20,
+  },
+  knowMoreText: {
+    color: '#699F21',
+    fontWeight: 'bold',
+    marginRight: 5,
   },
 });

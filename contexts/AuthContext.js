@@ -12,7 +12,7 @@ export const AuthProvider = ({ children }) => {
     setLoading(true);
     try {
       const response = await axios.post(
-        "http://192.168.1.9:3000/api/auth/login",
+        "https://niyoghub-server.onrender.com/api/auth/login",
         {
           email,
           password,
@@ -43,8 +43,9 @@ export const AuthProvider = ({ children }) => {
     setLoading(true);
     try {
       const response = await axios.post(
-        "http://192.168.1.9:3000/api/auth/register",
-        userDetails
+        "https://niyoghub-server.onrender.com/api/auth/register",
+        userDetails,
+        { headers: { "Content-Type": "application/json" } }
       );
       console.log(`STATUS ON REGISTRATION: ${JSON.stringify(response.status)}`);
       const userData = response.data;
@@ -64,11 +65,22 @@ export const AuthProvider = ({ children }) => {
   };
 
   const logout = async () => {
-    setLoading(true);
-    setUser(null);
-    await AsyncStorage.removeItem("user");
-    setLoading(false);
-    console.log(`USER SUCCESSFULLY LOGGED OUT`);
+    try {
+      const response = await axios.post(
+        "https://niyoghub-server.onrender.com/api/auth/logout"
+      );
+
+      if (response.status === 200) {
+        setLoading(true);
+        setUser(null);
+        await AsyncStorage.removeItem("user");
+        setLoading(false);
+        console.log(`USER SUCCESSFULLY LOGGED OUT`);
+      }
+    } catch (error) {
+      console.log("Logout error:", error.message);
+      throw new Error("Logout failed");
+    }
   };
 
   const isLoggedIn = async () => {
@@ -90,7 +102,9 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, loading, login, register, logout }}>
+    <AuthContext.Provider
+      value={{ user, setUser, loading, login, register, logout }}
+    >
       {children}
     </AuthContext.Provider>
   );
