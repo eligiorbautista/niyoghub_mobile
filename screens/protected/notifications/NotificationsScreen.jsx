@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -6,77 +6,44 @@ import {
   FlatList,
   TouchableOpacity,
   Image,
+  ActivityIndicator,
   Alert,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import NotificationItem from "../../../components/notifications/NotificationItem";
-
-const fetchNotifications = async () => {
-  return [
-    {
-      id: "1",
-      type: "price",
-      title: "Copra Price Update",
-      createdAt: "2024-09-28T14:30:00Z", // Updated date
-      icon: "time-outline",
-      read: false,
-      details: "The latest copra price has been updated.",
-      actionUrl: "CopraPrice",
-    },
-    {
-      id: "2",
-      type: "message",
-      title: "Reply from PCA",
-      createdAt: "2024-08-28T14:00:00Z",
-      icon: "mail-outline",
-      read: true,
-      details: "You have a new reply from PCA.",
-      actionUrl: "MessageDetails",
-    },
-    {
-      id: "3",
-      type: "update",
-      title: "App Version 1.1 Released",
-      createdAt: "2024-04-28T12:00:00Z",
-      icon: "cloud-download-outline",
-      read: false,
-      details: "A new version of the app is available for download.",
-      actionUrl: "UpdateDetails",
-    },
-    {
-      id: "4",
-      type: "message",
-      title: "Reply from PCA",
-      createdAt: "2023-08-28T14:00:00Z",
-      icon: "mail-outline",
-      read: true,
-      details: "You have a new reply from PCA.",
-      actionUrl: "MessageDetails",
-    },
-  ];
-};
-
+import useNotifications from "../../../hooks/useNotifications";
+import useMarkAllNotificationsAsRead from "../../../hooks/useMarkAllNotificationsAsRead";
 
 const NotificationsScreen = ({ navigation }) => {
-  const [notifications, setNotifications] = useState([]);
+  const { notifications, loading, error, fetchNotifications } =
+    useNotifications();
+  const {
+    markAllAsRead,
+    loading: markingLoading,
+    error: markingError,
+  } = useMarkAllNotificationsAsRead();
+  const [hasMarkedAsRead, setHasMarkedAsRead] = useState(false);
 
-  useEffect(() => {
-    const loadNotifications = async () => {
-      const data = await fetchNotifications();
-      setNotifications(data);
-    };
-    loadNotifications();
-  }, []);
+  // Function to detect if the user has seen all notifications
+  const handleEndReached = () => {
+    if (!hasMarkedAsRead) {
+      markAllAsRead();
+      setHasMarkedAsRead(true);
+    }
+  };
 
   const handleNotificationPress = (item) => {
-    Alert.alert(item.title, item.details);
+    Alert.alert(item.type, item.message);
   };
 
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Ionicons name="chevron-back" size={24} color="black" />
+        <TouchableOpacity
+          onPress={() => navigation.goBack()}
+          style={styles.headerButton}
+        >
+          <Ionicons name="chevron-back" size={24} color="#4CAF50" />
         </TouchableOpacity>
 
         <Image
@@ -86,25 +53,45 @@ const NotificationsScreen = ({ navigation }) => {
 
         <TouchableOpacity
           onPress={() => navigation.navigate("NotificationSettings")}
+          style={styles.headerButton}
         >
-          <Ionicons name="settings-outline" size={24} color="black" />
+          <Ionicons name="settings-outline" size={24} color="#4CAF50" />
         </TouchableOpacity>
       </View>
 
       <Text style={styles.title}>Notifications</Text>
 
-      <FlatList
-        data={notifications}
-        keyExtractor={(item) => item.id}
-        // renderItem={({ item }) => <NotificationItem notification={item} onPress={() => navigation.navigate(item.actionUrl)} />}
-        renderItem={({ item }) => (
-          <NotificationItem
-            notification={item}
-            onPress={() => handleNotificationPress(item)}
+      {loading || markingLoading ? (
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color="#4CAF50" />
+          <Text style={styles.loadingText}>Loading notifications...</Text>
+        </View>
+      ) : error || markingError ? (
+        <Text style={styles.error}>{error || markingError}</Text>
+      ) : notifications.length === 0 ? (
+        <View style={styles.emptyContainer}>
+          <Ionicons
+            name="notifications-off-outline"
+            size={48}
+            color="#B0B0B0"
           />
-        )}
-        contentContainerStyle={styles.notificationList}
-      />
+          <Text style={styles.emptyText}>No notifications available</Text>
+        </View>
+      ) : (
+        <FlatList
+          data={[...notifications].reverse()} // Reverse the notifications array
+          keyExtractor={(item) => item._id}
+          renderItem={({ item }) => (
+            <NotificationItem
+              notification={item}
+              onPress={() => handleNotificationPress(item)}
+            />
+          )}
+          contentContainerStyle={styles.notificationList}
+          onEndReached={handleEndReached} // Mark as read when the user reaches the end
+          onEndReachedThreshold={0.1} // Trigger when the user is 10% away from the end
+        />
+      )}
     </View>
   );
 };
@@ -114,7 +101,7 @@ export default NotificationsScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#FFFFFF",
+    backgroundColor: "#F5F5F5",
   },
   header: {
     flexDirection: "row",
@@ -122,26 +109,54 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingVertical: 8,
     paddingHorizontal: 20,
-    backgroundColor: "#F0F0F0",
+    backgroundColor: "#FFFFFF",
     borderBottomWidth: 1,
-    borderBottomColor: "#E0E0E0", 
-    paddingTop: 30,
+    borderBottomColor: "#E0E0E0",
+    paddingTop: 40,
   },
   headerImage: {
-    width: 150,
+    width: 160,
     height: 50,
     resizeMode: "contain",
   },
+  headerButton: {
+    padding: 8,
+  },
   title: {
-    fontSize: 22,
+    fontSize: 24,
     fontWeight: "bold",
-    color: "#000",
+    color: "#333",
     marginTop: 20,
-    marginBottom: 20,
-    marginLeft: 20,
-    textAlign: "start",
+    marginBottom: 10,
+    paddingHorizontal: 20,
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  loadingText: {
+    marginTop: 10,
+    fontSize: 16,
+    color: "#555",
+  },
+  error: {
+    color: "red",
+    textAlign: "center",
+    marginTop: 20,
+  },
+  emptyContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  emptyText: {
+    marginTop: 10,
+    fontSize: 16,
+    color: "#B0B0B0",
   },
   notificationList: {
-    paddingHorizontal: 20,
+    paddingBottom: 20,
+    paddingHorizontal: 10,
   },
 });
