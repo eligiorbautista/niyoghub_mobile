@@ -3,7 +3,7 @@ import React from 'react';
 import { Ionicons } from "@expo/vector-icons";
 
 const SeeAllNewsProgramsScreen = ({ navigation, route }) => {
-  const { newsData } = route.params; 
+  const { newsData } = route.params;
 
   const renderHeader = () => (
     <View style={styles.header}>
@@ -21,28 +21,32 @@ const SeeAllNewsProgramsScreen = ({ navigation, route }) => {
   );
 
   const renderItem = ({ item }) => (
-    <View style={styles.postContainer}>
+    <Pressable
+      style={styles.postContainer}
+      onPress={() => navigation.navigate('ReadNewsPrograms', { newsItem: item })}
+    >
       <Image source={item.image} style={styles.newsImage} />
-      <Text style={styles.categoryText}>{item.category}</Text>
-      <Text style={styles.dateText}>{item.date}</Text>
-      <Text style={styles.descriptionText}>{item.description}</Text>
-      <Pressable 
-        style={styles.readButton}
-        onPress={() => navigation.navigate('ReadNewsPrograms', { newsItem: item })} // Pass the item here
-      >
-        <Text style={styles.readButtonText}>Read</Text>
-      </Pressable>
-    </View>
+      <View style={styles.textContainer}>
+        <Text style={styles.categoryText}>{item.category}</Text>
+        <Text style={styles.dateText}>{item.date}</Text>
+        <Text style={styles.descriptionText} numberOfLines={3}>
+          {item.description}
+        </Text>
+        <Pressable style={styles.readButton} onPress={() => navigation.navigate('ReadNewsPrograms', { newsItem: item })}>
+          <Text style={styles.readButtonText}>Read More</Text>
+          <Ionicons name="arrow-forward" size={16} color="#537F19" style={styles.readButtonIcon} />
+        </Pressable>
+      </View>
+    </Pressable>
   );
-  
 
   return (
     <FlatList
       data={newsData}
-      keyExtractor={(item) => item.id.toString()} // Ensure unique key
+      keyExtractor={(item) => item.id.toString()}
       renderItem={renderItem}
-      ListHeaderComponent={renderHeader} 
-      contentContainerStyle={styles.container} 
+      ListHeaderComponent={renderHeader}
+      contentContainerStyle={styles.container}
     />
   );
 };
@@ -52,17 +56,18 @@ export default SeeAllNewsProgramsScreen;
 const styles = StyleSheet.create({
   container: {
     backgroundColor: '#fff',
+    paddingBottom: 20,
   },
-    header: {
+  header: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    paddingVertical: 8,
+    paddingVertical: 10,
     paddingHorizontal: 20,
-    backgroundColor: "#F0F0F0",
+    backgroundColor: "#F7F7F7",
     borderBottomWidth: 1,
     borderBottomColor: "#E0E0E0",
-    marginTop: 35,
+    paddingTop: 40,
   },
   headerImage: {
     width: 150,
@@ -70,51 +75,62 @@ const styles = StyleSheet.create({
     resizeMode: "contain",
   },
   postContainer: {
-    padding: 10,
-    width: '90%',
-    backgroundColor: 'white',
+    flexDirection: 'row',
+    backgroundColor: '#fff',
     borderRadius: 10,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.8,
-    shadowRadius: 5,
-    elevation: 3,
-    justifyContent: 'space-between',
-
     marginHorizontal: 20,
     marginTop: 20,
-    borderWidth: 1,
-    borderColor: '#ccc',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 3,
+    overflow: 'hidden',
   },
   newsImage: {
-    width: '100%',
-    height: 200,
-    borderRadius: 10,
+    width: 100,
+    height: '100%',
+    borderTopLeftRadius: 10,
+    borderBottomLeftRadius: 10,
+  },
+  textContainer: {
+    flex: 1,
+    padding: 10,
+    justifyContent: 'space-between',
   },
   categoryText: {
-    fontSize: 14,
-    color: 'black',
-    marginTop: 8,
+    fontSize: 12,
+    fontWeight: 'bold',
+    color: '#537F19',
+    marginBottom: 5,
   },
   dateText: {
-    fontSize: 14,
+    fontSize: 12,
     color: '#666',
+    marginBottom: 8,
   },
   descriptionText: {
-    fontSize: 16,
-    marginTop: 5,
+    fontSize: 14,
+    color: '#333',
+    marginBottom: 10,
   },
   readButton: {
-    backgroundColor: '#537F19', 
-    borderRadius: 5,
-    paddingVertical: 8,
-    paddingHorizontal: 20,
+    flexDirection: 'row',
     alignItems: 'center',
-    marginTop: 20, 
+    alignSelf: 'start',
+    backgroundColor: 'transparent',
+    borderRadius: 25,
+    paddingVertical: 8,
+    marginLeft: 5,
+    marginTop: 10,
   },
   readButtonText: {
-    color: 'white',
+    color: '#537F19',
     fontSize: 14,
     fontWeight: 'bold',
+    marginRight: 5,
+  },
+  readButtonIcon: {
+    marginLeft: 5,
   },
 });

@@ -156,16 +156,15 @@ const styles = StyleSheet.create({
   settingsTitle: {
     fontSize: 18,
     fontWeight: 'bold',
-    marginTop: 30,
-    marginBottom: 10,
+    marginTop: 20,
+    marginBottom: 5,
   },
   subSectionTitle: {
-    fontSize: 16,
-    fontWeight: '600',
+    fontSize: 14,
     marginBottom: 15,
+    color: '#555',
   },
-  itemContainer: {
-    marginBottom: 16,
+  itemContainer: { 
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
@@ -174,9 +173,8 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   itemLabel: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: '#777',
+    fontSize: 16,  
+    fontWeight: '600',
   },
   itemValue: {
     fontSize: 16,

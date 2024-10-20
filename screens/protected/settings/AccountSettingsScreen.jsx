@@ -42,27 +42,29 @@ const AccountSettingsScreen = ({ navigation }) => {
         Alert.alert('Failed', passwordError || 'Password change failed.');
       }
     } else {
-      const fieldToUpdate = currentInfo.type === 'Full Name' ? 'fullName' :
-        currentInfo.type === 'Email Address' ? 'email' :
-          currentInfo.type === 'City / Municipality' ? 'city' :
-            currentInfo.type === 'Language' ? 'language' : '';
+      const fieldToUpdate = currentInfo.type === 'Email Address' ? 'email' :
+        currentInfo.type === 'City / Municipality' ? 'city' :
+          currentInfo.type === 'Language' ? 'language' : '';
 
       if (!fieldToUpdate) {
         Alert.alert('Error', 'Unable to update the selected field.');
         return;
       }
-
+      console.log(fieldToUpdate);
       // Merge the existing user data with the new updated field
       const updatedUserData = { ...user, [fieldToUpdate]: newValue };
       await updateUser(updatedUserData);
 
       if (error) {
         Alert.alert('Update Failed', error);
+      } else {
+        Alert.alert('Success', `${currentInfo.type} updated successfully.`);
       }
     }
 
     setModalVisible(false);
   };
+
 
 
   const handleTwoFactorToggle = async () => {
@@ -95,16 +97,6 @@ const AccountSettingsScreen = ({ navigation }) => {
         <Text style={styles.sectionTitle1}>USER PREFERENCES</Text>
 
         {/* User Info sections */}
-        <View style={styles.infoContainer}>
-          <Text style={styles.label}>
-            Full Name {'\n'}
-            <Text style={styles.value}>{user?.fullName || 'Juan Dela Cruz'}</Text>
-          </Text>
-          <TouchableOpacity onPress={() => handleChangePress('Full Name', user?.fullName || 'Juan Dela Cruz')}>
-            <Text style={styles.changeButton}>Change</Text>
-          </TouchableOpacity>
-        </View>
-
         <View style={styles.infoContainer}>
           <Text style={styles.label}>
             Email Address {'\n'}
@@ -200,7 +192,7 @@ const styles = StyleSheet.create({
   settingsTitle: {
     fontSize: 18,
     fontWeight: 'bold',
-    marginTop: 30,
+    marginTop: 20,
     marginBottom: 10,
   },
   sectionTitle1: {
@@ -216,7 +208,6 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 16,
-    fontWeight: 'bold',
     flex: 1,
     flexWrap: 'wrap',
     fontWeight: '600',

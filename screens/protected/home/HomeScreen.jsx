@@ -26,7 +26,13 @@ const HomeScreen = ({ navigation }) => {
   const newsData = [
     { id: 1, category: 'News & Programs', date: "April 10, 2024", description: "8.5 million coconut seedlings set to be planted...", image: require("../../../assets/newsprograms1.png") },
     { id: 2, category: 'News & Programs', date: "April 8, 2024", description: "Updated Copra and wholenut prices in Region - IV.", image: require("../../../assets/newsprograms2.png") },
-    { id: 3, category: 'News & Programs', date: "April 3, 2023", description: "May Anak ka ba na Kolehiyo? Isali sa CoScho.", image: require("../../../assets/newsprograms3.png") }
+    { id: 3, category: 'News & Programs', date: "April 3, 2023", description: "May Anak ka ba na Kolehiyo? Isali sa CoScho.", image: require("../../../assets/newsprograms3.png") },
+    { id: 4, category: 'News & Programs', date: "April 10, 2024", description: "8.5 million coconut seedlings set to be planted...", image: require("../../../assets/newsprograms1.png") },
+    { id: 5, category: 'News & Programs', date: "April 8, 2024", description: "Updated Copra and wholenut prices in Region - IV.", image: require("../../../assets/newsprograms2.png") },
+    { id: 6, category: 'News & Programs', date: "April 3, 2023", description: "May Anak ka ba na Kolehiyo? Isali sa CoScho.", image: require("../../../assets/newsprograms3.png") },
+    { id: 7, category: 'News & Programs', date: "April 10, 2024", description: "8.5 million coconut seedlings set to be planted...", image: require("../../../assets/newsprograms1.png") },
+    { id: 8, category: 'News & Programs', date: "April 8, 2024", description: "Updated Copra and wholenut prices in Region - IV.", image: require("../../../assets/newsprograms2.png") },
+    { id: 9, category: 'News & Programs', date: "April 3, 2023", description: "May Anak ka ba na Kolehiyo? Isali sa CoScho.", image: require("../../../assets/newsprograms3.png") }
   ];
 
   const handleSearch = (query) => {
@@ -56,8 +62,10 @@ const HomeScreen = ({ navigation }) => {
       <Text style={styles.categoryText}>{item.category}</Text>
       <Text style={styles.dateText}>{item.date}</Text>
       <Text style={styles.descriptionText} numberOfLines={3}>{item.description}</Text>
+
       <Pressable style={styles.readButton} onPress={() => handleReadMore(item)}>
-        <Text style={styles.readButtonText}>Read</Text>
+        <Text style={styles.readButtonText}>Read More</Text>
+        <Ionicons name="arrow-forward" size={16} color="#537F19" style={styles.readButtonIcon} />
       </Pressable>
     </Pressable>
   );
@@ -134,7 +142,7 @@ const HomeScreen = ({ navigation }) => {
           <Text style={styles.description}>A multiple cropping practice involving growing two or more crops.</Text>
           <Pressable style={styles.knowMoreButton}>
             <Text style={styles.knowMoreText}>Know more</Text>
-            <Ionicons name="arrow-forward-outline" size={16} color="black" />
+            <Ionicons name="arrow-forward-outline" size={16} color="#537F19" />
           </Pressable>
         </Pressable>
         <Pressable style={[styles.updateCard, styles.priceWatchCard]} onPress={() => navigation.navigate('CopraPrice')}>
@@ -143,7 +151,7 @@ const HomeScreen = ({ navigation }) => {
           <Text style={styles.description}>Track the daily update of copra and wholenut prices.</Text>
           <Pressable style={styles.knowMoreButton}>
             <Text style={styles.knowMoreText}>Know more</Text>
-            <Ionicons name="arrow-forward-outline" size={16} color="black" />
+            <Ionicons name="arrow-forward-outline" size={16} color="#537F19" />
           </Pressable>
         </Pressable>
       </View>
@@ -298,17 +306,23 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   readButton: {
-    backgroundColor: '#699F21',
-    borderRadius: 5,
-    paddingVertical: 8,
-    paddingHorizontal: 20,
+    flexDirection: 'row',
     alignItems: 'center',
-    marginTop: 20,
+    alignSelf: 'start',
+    backgroundColor: 'transparent',
+    borderRadius: 25,
+    paddingVertical: 8,
+    marginLeft: 5,
+    marginTop: 10,
   },
   readButtonText: {
-    color: '#fff',
+    color: '#537F19',
     fontSize: 14,
     fontWeight: 'bold',
+    marginRight: 5,
+  },
+  readButtonIcon: {
+    marginLeft: 5,
   },
   updatesContainer: {
     flexDirection: 'row',

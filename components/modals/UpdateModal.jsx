@@ -121,7 +121,7 @@ const UpdateModal = ({ visible, onClose, onSubmit, infoType, currentValue }) => 
                 onValueChange={(itemValue) => setNewValue(itemValue)}
                 style={styles.picker}
               >
-                <Picker.Item label="English (US)" value="English (US)" />
+                <Picker.Item label="English" value="English" />
                 <Picker.Item label="Filipino" value="Filipino" />
               </Picker>
             </View>

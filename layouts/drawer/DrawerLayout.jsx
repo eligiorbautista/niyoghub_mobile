@@ -5,7 +5,7 @@ import {
   DrawerContentScrollView,
   DrawerItemList,
 } from "@react-navigation/drawer";
-import { Ionicons } from "@expo/vector-icons"; // Retained Ionicons
+import { Ionicons } from "@expo/vector-icons";
 import TabsLayout from "../tabs/TabsLayout";
 import { useNavigation } from "@react-navigation/native";
 import ProfileScreen from "../../screens/protected/profile/ProfileScreen";
@@ -14,8 +14,9 @@ import FAQScreen from "../../screens/protected/faq/FAQScreen";
 import AboutScreen from "../../screens/protected/about/AboutScreen";
 import LoginScreen from "../../screens/unprotected/login/LoginScreen";
 import SettingsScreen from "../../screens/protected/settings/SettingsScreen";
-import { AuthContext } from '../../contexts/AuthContext';
+import { AuthContext } from "../../contexts/AuthContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import useUnreadNotifications from "../../hooks/useUnreadNotifications"; // Custom hook
 
 const Drawer = createDrawerNavigator();
 
@@ -30,7 +31,7 @@ const CustomDrawerContent = (props) => {
         const storedToken = await AsyncStorage.getItem("userToken");
         setToken(storedToken);
 
-        // navigate to login if token doesn't exist
+        // Navigate to login if token doesn't exist
         if (!storedToken) {
           navigation.navigate("Login");
         }
@@ -62,7 +63,7 @@ const CustomDrawerContent = (props) => {
         <Text style={styles.username}>{user?.fullName || `full name`}</Text>
       </View>
 
-      {/* drawer items */}
+      {/* Drawer items */}
       <DrawerItemList {...props} />
 
       <View style={styles.logoutContainer}>
@@ -82,7 +83,9 @@ const CustomDrawerContent = (props) => {
 };
 
 const DrawerLayout = () => {
+  const { user } = useContext(AuthContext);
   const navigation = useNavigation();
+  const unreadCount = useUnreadNotifications(user?._id); // Fetch unread count
 
   return (
     <Drawer.Navigator
@@ -125,6 +128,7 @@ const DrawerLayout = () => {
         headerRight: () => (
           <TouchableOpacity
             onPress={() => navigation.navigate("Notifications")}
+            style={styles.notificationButton}
           >
             <Ionicons
               name="notifications-outline"
@@ -132,11 +136,16 @@ const DrawerLayout = () => {
               color="gray"
               style={{ marginRight: 15 }}
             />
+            {unreadCount > 0 && (
+              <View style={styles.badge}>
+                <Text style={styles.badgeText}>{unreadCount}</Text>
+              </View>
+            )}
           </TouchableOpacity>
         ),
       })}
     >
-      <Drawer.Screen
+       <Drawer.Screen
         name="HomeTabs"
         component={TabsLayout}
         options={{ title: "Home", headerTitle: "", drawerItemStyle: { display: 'none' } }}
@@ -170,7 +179,7 @@ const DrawerLayout = () => {
         name="Settings"
         component={SettingsScreen}
         options={{ title: "Settings", headerShown: false }}
-      />
+      /> 
     </Drawer.Navigator>
   );
 };
@@ -217,5 +226,25 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: "gray",
     marginLeft: 10,
+  },
+  notificationButton: {
+    position: "relative",
+    marginRight: 5
+  },
+  badge: {
+    position: "absolute",
+    right: 5,
+    top: -5,
+    backgroundColor: "red",
+    borderRadius: 8,
+    width: 16,
+    height: 16,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  badgeText: {
+    color: "white",
+    fontSize: 10,
+    fontWeight: "bold",
   },
 });

@@ -43,7 +43,7 @@ const NotificationsScreen = ({ navigation }) => {
           onPress={() => navigation.goBack()}
           style={styles.headerButton}
         >
-          <Ionicons name="chevron-back" size={24} color="#4CAF50" />
+          <Ionicons name="chevron-back" size={24} color="#000000" />
         </TouchableOpacity>
 
         <Image
@@ -55,7 +55,7 @@ const NotificationsScreen = ({ navigation }) => {
           onPress={() => navigation.navigate("NotificationSettings")}
           style={styles.headerButton}
         >
-          <Ionicons name="settings-outline" size={24} color="#4CAF50" />
+          <Ionicons name="settings-outline" size={24} color="#000000" />
         </TouchableOpacity>
       </View>
 
@@ -108,8 +108,8 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     paddingVertical: 8,
-    paddingHorizontal: 20,
-    backgroundColor: "#FFFFFF",
+    paddingHorizontal: 10,
+    backgroundColor: "#F0F0F0",
     borderBottomWidth: 1,
     borderBottomColor: "#E0E0E0",
     paddingTop: 40,
@@ -126,9 +126,9 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: "bold",
     color: "#333",
-    marginTop: 20,
+    marginTop: 12,
     marginBottom: 10,
-    paddingHorizontal: 20,
+    paddingHorizontal: 12,
   },
   loadingContainer: {
     flex: 1,
@@ -157,6 +157,6 @@ const styles = StyleSheet.create({
   },
   notificationList: {
     paddingBottom: 20,
-    paddingHorizontal: 10,
+    paddingHorizontal: 12,
   },
 });

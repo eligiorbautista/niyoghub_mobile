@@ -19,7 +19,9 @@ const useUpdateUser = () => {
         setLoading(false);
         return;
       }
-
+      console.log(
+        JSON.stringify(`UPDATE FIELDS : ${JSON.stringify(updatedFields)}`)
+      );
       const response = await axios.put(
         "https://niyoghub-server.onrender.com/api/user/profile",
         updatedFields,

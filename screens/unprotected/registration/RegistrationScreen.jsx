@@ -180,8 +180,8 @@ const RegistrationScreen = ({ navigation }) => {
                 style={styles.picker}
               >
                 <Picker.Item label="Select language" value="" />
-                <Picker.Item label="English" value="english" />
-                <Picker.Item label="Filipino" value="filipino" />
+                <Picker.Item label="English" value="English" />
+                <Picker.Item label="Filipino" value="Filipino" />
               </Picker>
             </View>
           </View>
