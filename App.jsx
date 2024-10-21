@@ -19,11 +19,13 @@ import ProfileSettingsScreen from "./screens/protected/settings/ProfileSettingsS
 import NotificationSettingsScreen from "./screens/protected/settings/NotificationSettingsScreen";
 import HomeScreen from "./screens/protected/home/HomeScreen";
 import IntercroppingScreen from "./screens/protected/home/IntercroppingScreen";
-import CopraPriceScreen from "./screens/protected/home/CopraPriceScreen"; 
+import CopraPriceScreen from "./screens/protected/home/CopraPriceScreen";
 import SeeAllNewsProgramsScreen from "./screens/protected/home/SeeAllNewsPrograms";
 import ReadNewsProgramsScreen from "./screens/protected/home/ReadNewsPrograms";
 import ChatAssistantScreen from "./screens/protected/virtual_ai_assistant/ChatAssistantScreen";
 import VoiceAssistantScreen from "./screens/protected/virtual_ai_assistant/VoiceAssistantScreen";
+import DiagnoseScreen from "./screens/protected/identification/Diagnose";
+import DiagnosedResultScreen from "./screens/protected/identification/DiagnosedResult";
 
 
 const Stack = createNativeStackNavigator();
@@ -90,7 +92,7 @@ const App = () => {
 
   return (
     <AuthProvider>
-      <NavigationContainer  ref={navigationRef}>
+      <NavigationContainer ref={navigationRef}>
         <Stack.Navigator screenOptions={{ headerShown: false }}>
           {/* --------------- UNPROTECTED SCREENS --------------- */}
           <Stack.Screen
@@ -135,7 +137,7 @@ const App = () => {
           <Stack.Screen name="Intercropping" component={IntercroppingScreen} />
           <Stack.Screen name="CopraPrice" component={CopraPriceScreen} />
 
-          {/* article-related screens under home */} 
+          {/* article-related screens under home */}
           <Stack.Screen
             name="SeeAllNewsPrograms"
             component={SeeAllNewsProgramsScreen}
@@ -144,6 +146,11 @@ const App = () => {
             name="ReadNewsPrograms"
             component={ReadNewsProgramsScreen}
           />
+
+
+          <Stack.Screen name="DiagnoseScreen" component={DiagnoseScreen} />
+          <Stack.Screen name="DiagnosedResultScreen" component={DiagnosedResultScreen} />
+
         </Stack.Navigator>
       </NavigationContainer>
     </AuthProvider>

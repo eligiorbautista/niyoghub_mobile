@@ -1,86 +1,79 @@
-import { StyleSheet, Text, View, TouchableOpacity, Image, } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, Image, Button } from 'react-native';
 import React, { useState } from 'react';
 import DiseaseIdentification from '../../../components/modals/IdentificationModal';
-import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import * as ImagePicker from 'expo-image-picker';
+import { useNavigation } from '@react-navigation/native'; 
 
 const IdentificationScreen = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [imageUri, setImageUri] = useState(null);
+  const navigation = useNavigation(); 
 
   const toggleModal = () => {
     setIsModalVisible(!isModalVisible);
   };
 
-  const [imageUri, setImageUri] = useState(null);
-
-  const handleCaptureImage = async () => {
-    try {
-      const result = await launchCamera({ mediaType: 'photo' });
-      if (result.assets && result.assets.length > 0) {
-        setImageUri(result.assets[0].uri);
-      }
-    } catch (error) {
-      console.error('Error capturing image:', error);
+  const captureImage = async () => {
+    let result = await ImagePicker.launchCameraAsync({
+      cameraType: ImagePicker.CameraType.front,
+      allowsEditing: true,
+      aspect: [4, 4],
+      quality: 1,
+    });
+  
+    if (!result.canceled) {
+      setImageUri(result.assets[0].uri);
+      navigation.navigate('DiagnoseScreen', { imageUri: result.assets[0].uri }); 
     }
   };
-
-  const handleUploadImage = async () => {
-    try {
-      const result = await launchImageLibrary({ mediaType: 'photo' });
-      if (result.assets && result.assets.length > 0) {
-        setImageUri(result.assets[0].uri);
-      }
-    } catch (error) {
-      console.error('Error uploading image:', error);
+  
+  const pickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 4],
+      quality: 1,
+    });
+  
+    if (!result.canceled) {
+      setImageUri(result.assets[0].uri);
+      navigation.navigate('DiagnoseScreen', { imageUri: result.assets[0].uri }); 
     }
   };
-
-
+  
 
   return (
     <View style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.headerText}>Disease Identification</Text>
         <TouchableOpacity onPress={toggleModal}>
-
-          <Ionicons
-            name="information-circle-outline"
-            size={24}
-            color="gray"
-          />
+          <Ionicons name="information-circle-outline" size={24} color="gray" />
         </TouchableOpacity>
       </View>
       <View style={styles.divider} />
 
-      <Text style={styles.instructionText}>To learn how to use NiyogHub's Disease Identification feature, click the help button.</Text>
+      <Text style={styles.instructionText}>
+        To learn how to use NiyogHub's Disease Identification feature, click the help button.
+      </Text>
       <View style={styles.uploadBodyContainer}>
         <View style={styles.imageContainer}>
-          {imageUri ? (
-            <Image source={{ uri: imageUri }} style={styles.image} />
-          ) : (
             <View style={styles.placeholder}>
               <Ionicons name="camera" size={60} color="#6FA542" />
-              <TouchableOpacity onPress={handleCaptureImage} style={styles.captureButton}>
-                <Text style={styles.captureButtonText}>Capture Image</Text>
+              <TouchableOpacity style={styles.uploadBox} onPress={captureImage}>
+                <Button title="Capture" onPress={captureImage} color="#6FA542" />
               </TouchableOpacity>
               <Text style={styles.title}>Upload an image using your camera.</Text>
             </View>
-          )}
         </View>
 
-        <TouchableOpacity style={styles.uploadButton} onPress={handleUploadImage}>
+        <TouchableOpacity style={styles.uploadButton} onPress={pickImage}>
           <Ionicons name="image-outline" size={24} color="#6FA542" />
           <Text style={styles.uploadButtonText}>Upload Image</Text>
         </TouchableOpacity>
-
       </View>
 
-
-
-      <DiseaseIdentification
-        visible={isModalVisible}
-        onClose={toggleModal}
-      />
+      <DiseaseIdentification visible={isModalVisible} onClose={toggleModal} />
     </View>
   );
 };
