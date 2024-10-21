@@ -5,15 +5,15 @@ import {
   TouchableOpacity,
   Image,
   ScrollView,
-  SafeAreaView
+  SafeAreaView,
 } from "react-native";
-import React, { useEffect, useContext } from "react";
+import React, { useEffect, useContext, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
-import { AuthContext } from '../../../contexts/AuthContext';
-import useLogout from '../../../hooks/useLogout'
+import { AuthContext } from "../../../contexts/AuthContext";
+import useLogout from "../../../hooks/useLogout";
 
-// mock user data
+// Mock user data
 const mockUser = {
   fullName: "Juan Dela Cruz",
   email: "juandelacruz@gmail.com",
@@ -27,14 +27,21 @@ const mockUser = {
 const ProfileScreen = () => {
   const navigation = useNavigation();
   const { user } = useContext(AuthContext);
-
   const { logout } = useLogout();
 
-
+  const [profilePicture, setProfilePicture] = useState("");
+ 
+  useEffect(() => {
+    if (user?.profilePicture?.includes("https://ui-avatars.com/api/?name=")) {
+      setProfilePicture(user.profilePicture);
+    } else {
+      setProfilePicture(`https://niyoghub-server.onrender.com/${user?.profilePicture}`);
+    }
+  }, [user?.profilePicture]);
 
   return (
     <View style={styles.container}>
-      {/* header */}
+      {/* Header */}
       <View style={styles.headerContainer}>
         <View style={styles.header}>
           <TouchableOpacity onPress={() => navigation.goBack()}>
@@ -46,41 +53,30 @@ const ProfileScreen = () => {
             style={styles.headerImage}
           />
 
-          <Ionicons
-            name="information-circle-outline"
-            size={24}
-            color="#F0F0F0"
-          />
+          <Ionicons name="information-circle-outline" size={24} color="#F0F0F0" />
         </View>
       </View>
 
-      <ScrollView
-        style={styles.scrollView}
-        showsVerticalScrollIndicator={false}
-      >
-        {/* profile section */}
+      <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
+        {/* Profile Section */}
         <View style={styles.profileContainer}>
           <Image
-            source={{ uri: user?.profilePicture || `https://www.pngarts.com/files/10/Default-Profile-Picture-Download-PNG-Image.png` }}
+            source={{ uri: profilePicture || `https://www.pngarts.com/files/10/Default-Profile-Picture-Download-PNG-Image.png` }}
             style={styles.profilePicture}
           />
-          <Text style={styles.fullName}>
-            {user?.fullName || mockUser.fullName}
-          </Text>
-          <Text style={styles.email}>
-            {user?.email || mockUser.email}
-          </Text>
+          <Text style={styles.fullName}>{user?.fullName || mockUser.fullName}</Text>
+          <Text style={styles.email}>{user?.email || mockUser.email}</Text>
 
           <TouchableOpacity
             style={styles.editButton}
             onPress={() => navigation.navigate("ProfileSettings")}
           >
-            <Ionicons name="create-outline" size={18} color='rgba(83, 127, 25, 0.8)' />
+            <Ionicons name="create-outline" size={18} color="rgba(83, 127, 25, 0.8)" />
             <Text style={styles.editButtonText}>Edit Profile</Text>
           </TouchableOpacity>
         </View>
 
-        {/* card */}
+        {/* Information Card */}
         <View style={styles.infoCard}>
           {mockUser?.address && (
             <View style={styles.infoRow}>
@@ -110,7 +106,7 @@ const ProfileScreen = () => {
           </View>
         </View>
 
-        {/* card */}
+        {/* Settings Card */}
         <View style={styles.settingsCard}>
           <TouchableOpacity
             style={styles.settingsOption}
@@ -124,7 +120,7 @@ const ProfileScreen = () => {
             style={styles.logoutButton}
             onPress={() => {
               logout();
-              navigation.navigate("Login")
+              navigation.navigate("Login");
             }}
           >
             <Ionicons name="log-out-outline" size={20} color="white" />
@@ -153,7 +149,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#F0F0F0",
     borderBottomWidth: 1,
     borderBottomColor: "#E0E0E0",
-    paddingTop: 30,
+    paddingTop: 40,
     marginBottom: 10,
   },
   headerImage: {
@@ -187,7 +183,7 @@ const styles = StyleSheet.create({
   editButton: {
     flexDirection: "row",
     alignItems: "center",
-    borderColor: 'rgba(83, 127, 25, 0.8)',
+    borderColor: "rgba(83, 127, 25, 0.8)",
     borderWidth: 1.3,
     paddingVertical: 6,
     paddingHorizontal: 15,
@@ -196,7 +192,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   editButtonText: {
-    color: 'rgba(83, 127, 25, 0.8)',
+    color: "rgba(83, 127, 25, 0.8)",
     fontSize: 14,
     marginLeft: 5,
     fontWeight: "500",
@@ -220,7 +216,6 @@ const styles = StyleSheet.create({
     marginLeft: 10,
     color: "#444",
   },
-
   settingsCard: {
     backgroundColor: "#FFF",
     padding: 20,
@@ -242,7 +237,7 @@ const styles = StyleSheet.create({
   logoutButton: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: 'rgba(83, 127, 25, 0.8)',
+    backgroundColor: "rgba(83, 127, 25, 0.8)",
     paddingVertical: 12,
     paddingHorizontal: 20,
     borderRadius: 25,

@@ -140,7 +140,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#F0F0F0",
     borderBottomWidth: 1,
     borderBottomColor: "#E0E0E0",
-    paddingTop: 30,
+    paddingTop: 40,
   },
   headerImage: {
     width: 150,

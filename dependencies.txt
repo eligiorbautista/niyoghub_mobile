@@ -1,4 +1,10 @@
 npm install react-native-ratings@latest
+
+npm install react-native-render-html
+
+npm install react-native-htmlview
+
+
 npm install -g eas-cl
 
 npx expo-doctor

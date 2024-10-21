@@ -25,6 +25,16 @@ const CustomDrawerContent = (props) => {
   const navigation = useNavigation();
   const [token, setToken] = useState(null);
 
+  const [profilePicture, setProfilePicture] = useState("");
+
+  useEffect(() => {
+    if (user?.profilePicture?.includes("https://ui-avatars.com/api/?name=")) {
+      setProfilePicture(user.profilePicture);
+    } else {
+      setProfilePicture(`https://niyoghub-server.onrender.com/${user?.profilePicture}`);
+    }
+  }, [user?.profilePicture]);
+
   useEffect(() => {
     const checkToken = async () => {
       try {
@@ -56,7 +66,7 @@ const CustomDrawerContent = (props) => {
       <View style={styles.headerContainer}>
         <Image
           source={{
-            uri: user?.profilePicture || `https://www.pngarts.com/files/10/Default-Profile-Picture-Download-PNG-Image.png`,
+            uri: profilePicture || `https://www.pngarts.com/files/10/Default-Profile-Picture-Download-PNG-Image.png`,
           }}
           style={styles.profileImage}
         />
@@ -145,7 +155,7 @@ const DrawerLayout = () => {
         ),
       })}
     >
-       <Drawer.Screen
+      <Drawer.Screen
         name="HomeTabs"
         component={TabsLayout}
         options={{ title: "Home", headerTitle: "", drawerItemStyle: { display: 'none' } }}
@@ -179,7 +189,7 @@ const DrawerLayout = () => {
         name="Settings"
         component={SettingsScreen}
         options={{ title: "Settings", headerShown: false }}
-      /> 
+      />
     </Drawer.Navigator>
   );
 };

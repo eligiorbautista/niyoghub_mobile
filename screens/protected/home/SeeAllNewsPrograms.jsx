@@ -1,21 +1,21 @@
 import { StyleSheet, Text, View, TouchableOpacity, Image, FlatList, Pressable } from 'react-native';
 import React from 'react';
 import { Ionicons } from "@expo/vector-icons";
+import useArticles from '../../../hooks/useArticles';
+import moment from 'moment';
 
-const SeeAllNewsProgramsScreen = ({ navigation, route }) => {
-  const { newsData } = route.params;
+const SeeAllNewsProgramsScreen = ({ navigation }) => {
+  const { articles, loading, error, fetchArticles } = useArticles();
 
   const renderHeader = () => (
     <View style={styles.header}>
       <TouchableOpacity onPress={() => navigation.goBack()}>
         <Ionicons name="chevron-back" size={24} color="black" />
       </TouchableOpacity>
-
       <Image
         source={require("../../../assets/niyoghub_banner_1.png")}
         style={styles.headerImage}
       />
-
       <Ionicons name="settings-outline" size={24} color="transparent" />
     </View>
   );
@@ -25,16 +25,21 @@ const SeeAllNewsProgramsScreen = ({ navigation, route }) => {
       style={styles.postContainer}
       onPress={() => navigation.navigate('ReadNewsPrograms', { newsItem: item })}
     >
-      <Image source={item.image} style={styles.newsImage} />
+      <Image
+        source={{ uri: `https://niyoghub-server.onrender.com/uploads/images/${item.image}` }}
+        style={styles.newsImage}
+      />
       <View style={styles.textContainer}>
-        <Text style={styles.categoryText}>{item.category}</Text>
-        <Text style={styles.dateText}>{item.date}</Text>
+
+      <Text style={styles.categoryText}>News & Programs</Text>
+        <Text style={styles.titleText} numberOfLines={2}>{item.title}</Text>
         <Text style={styles.descriptionText} numberOfLines={3}>
-          {item.description}
+          {item.subtitle}
         </Text>
+        <Text style={styles.dateText}>{moment(item.createdAt).format('MMMM D, YYYY')}</Text>
         <Pressable style={styles.readButton} onPress={() => navigation.navigate('ReadNewsPrograms', { newsItem: item })}>
           <Text style={styles.readButtonText}>Read More</Text>
-          <Ionicons name="arrow-forward" size={16} color="#537F19" style={styles.readButtonIcon} />
+          <Ionicons name="arrow-forward-circle-outline" size={16} color="#537F19" style={styles.readButtonIcon} />
         </Pressable>
       </View>
     </Pressable>
@@ -42,11 +47,12 @@ const SeeAllNewsProgramsScreen = ({ navigation, route }) => {
 
   return (
     <FlatList
-      data={newsData}
-      keyExtractor={(item) => item.id.toString()}
+      data={articles}
+      keyExtractor={(item) => item._id}
       renderItem={renderItem}
       ListHeaderComponent={renderHeader}
       contentContainerStyle={styles.container}
+      ListEmptyComponent={!loading && !articles.length && <Text style={styles.emptyText}>No articles available.</Text>}
     />
   );
 };
@@ -88,8 +94,8 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   newsImage: {
-    width: 100,
-    height: '100%',
+    width: 130,
+    height: "auto",
     borderTopLeftRadius: 10,
     borderBottomLeftRadius: 10,
   },
@@ -117,11 +123,9 @@ const styles = StyleSheet.create({
   readButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    alignSelf: 'start',
     backgroundColor: 'transparent',
     borderRadius: 25,
     paddingVertical: 8,
-    marginLeft: 5,
     marginTop: 10,
   },
   readButtonText: {
@@ -132,5 +136,16 @@ const styles = StyleSheet.create({
   },
   readButtonIcon: {
     marginLeft: 5,
+  },
+  emptyText: {
+    textAlign: 'center',
+    color: '#888',
+    fontSize: 16,
+    marginTop: 20,
+  }, titleText: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#333',
+    marginBottom: 5,
   },
 });

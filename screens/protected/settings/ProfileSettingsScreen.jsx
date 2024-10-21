@@ -1,5 +1,5 @@
-import React, { useState, useContext } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView, SafeAreaView, Alert, Image, Button } from 'react-native';
+import React, { useState, useContext, useEffect } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, SafeAreaView, Alert, Image } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
 import UpdateModal from '../../../components/modals/UpdateModal';
@@ -14,10 +14,19 @@ const ProfileSettingsScreen = ({ navigation }) => {
   const [fullName, setFullName] = useState(user?.fullName || 'Juan Dela Cruz');
   const [modalVisible, setModalVisible] = useState(false);
 
-  // Handle image picking from the gallery or camera
+  // Set the profile picture state
+  useEffect(() => {
+    if (user?.image?.includes("https://ui-avatars.com/api/?name=")) {
+      setImage(user.profilePicture);
+    } else {
+      setImage(`https://niyoghub-server.onrender.com/${user?.profilePicture}`);
+    }
+  }, [user?.profilePicture]);
+
+
   const onPickImage = async (source) => {
     let result;
-    if (source === 'camera') {
+    if (source === "camera") {
       result = await ImagePicker.launchCameraAsync({
         allowsEditing: true,
         aspect: [4, 3],
@@ -33,17 +42,20 @@ const ProfileSettingsScreen = ({ navigation }) => {
     }
 
     if (!result.canceled) {
-      setImage(result.assets[0].uri);
-      const updatedUserData = { ...user, profilePicture: result.assets[0].uri };
-      await updateUser(updatedUserData);
+      const imageUri = result.assets[0].uri;
+      setImage(imageUri);
+
+      const updatedUserData = { ...user, fullName };
+      await updateUser(updatedUserData, imageUri);
 
       if (error) {
-        Alert.alert('Update Failed', error);
+        Alert.alert("Update Failed", error);
       } else {
-        Alert.alert('Success', 'Profile picture has been updated successfully.');
+        Alert.alert("Success", "Profile picture has been updated successfully.");
       }
     }
   };
+
 
   // Handle full name update
   const handleSubmit = async (newFullName) => {
@@ -96,6 +108,7 @@ const ProfileSettingsScreen = ({ navigation }) => {
           infoType="Full Name"
           currentValue={fullName}
         />
+
         {/* Profile Picture Upload */}
         <View style={styles.profileImageContainer}>
           <Text style={styles.itemLabel}>Profile Picture</Text>
@@ -122,7 +135,6 @@ const ProfileSettingsScreen = ({ navigation }) => {
   );
 };
 
-
 // Styles
 const styles = StyleSheet.create({
   container: {
@@ -139,7 +151,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#F0F0F0',
     borderBottomWidth: 1,
     borderBottomColor: '#E0E0E0',
-    paddingTop: 30,
+    paddingTop: 40,
   },
   titleContainer: {
     flex: 1,

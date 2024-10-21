@@ -8,7 +8,7 @@ const useUpdateUser = () => {
   const [error, setError] = useState(null);
   const { setUser } = useContext(AuthContext);
 
-  const updateUser = async (updatedFields) => {
+  const updateUser = async (updatedFields, imageUri) => {
     setLoading(true);
     setError(null);
     try {
@@ -19,15 +19,33 @@ const useUpdateUser = () => {
         setLoading(false);
         return;
       }
-      console.log(
-        JSON.stringify(`UPDATE FIELDS : ${JSON.stringify(updatedFields)}`)
-      );
+
+      // Create a FormData object
+      const formData = new FormData();
+
+      // Append the updated fields to the FormData
+      for (const key in updatedFields) {
+        formData.append(key, updatedFields[key]);
+      }
+
+      // If an image URI is provided, add it to the FormData
+      if (imageUri) {
+        const uriParts = imageUri.split(".");
+        const fileType = uriParts[uriParts.length - 1];
+
+        formData.append("profilePicture", {
+          uri: imageUri,
+          name: `profile.${fileType}`,
+          type: `image/${fileType}`,
+        });
+      }
+
       const response = await axios.put(
         "https://niyoghub-server.onrender.com/api/user/profile",
-        updatedFields,
+        formData,
         {
           headers: {
-            "Content-Type": "application/json",
+            "Content-Type": "multipart/form-data",
             Authorization: `Bearer ${token}`,
           },
         }

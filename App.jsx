@@ -19,8 +19,7 @@ import ProfileSettingsScreen from "./screens/protected/settings/ProfileSettingsS
 import NotificationSettingsScreen from "./screens/protected/settings/NotificationSettingsScreen";
 import HomeScreen from "./screens/protected/home/HomeScreen";
 import IntercroppingScreen from "./screens/protected/home/IntercroppingScreen";
-import CopraPriceScreen from "./screens/protected/home/CopraPriceScreen";
-import ArticleScreen from "./screens/protected/home/ArticleScreen";
+import CopraPriceScreen from "./screens/protected/home/CopraPriceScreen"; 
 import SeeAllNewsProgramsScreen from "./screens/protected/home/SeeAllNewsPrograms";
 import ReadNewsProgramsScreen from "./screens/protected/home/ReadNewsPrograms";
 import ChatAssistantScreen from "./screens/protected/virtual_ai_assistant/ChatAssistantScreen";
@@ -136,12 +135,7 @@ const App = () => {
           <Stack.Screen name="Intercropping" component={IntercroppingScreen} />
           <Stack.Screen name="CopraPrice" component={CopraPriceScreen} />
 
-          {/* article-related screens under home */}
-          <Stack.Screen name="Article" component={ArticleScreen} />
-          <Stack.Screen
-            name="SeeAllNewsPrograms"
-            component={SeeAllNewsProgramsScreen}
-          />
+          {/* article-related screens under home */} 
           <Stack.Screen
             name="ReadNewsPrograms"
             component={ReadNewsProgramsScreen}
