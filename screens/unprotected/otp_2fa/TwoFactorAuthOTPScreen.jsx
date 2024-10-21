@@ -87,10 +87,10 @@ const TwoFactorAuthOTPScreen = ({ navigation }) => {
 
     if (email) {
       const response = await verifyTwoFactorOTP(email, enteredOtp);
- 
+
       if (response.status === 200) {
         navigation.navigate("Layout");
-      } else { 
+      } else {
         console.log("OTP verification failed:", error);
       }
     }
@@ -118,7 +118,7 @@ const TwoFactorAuthOTPScreen = ({ navigation }) => {
   useFocusEffect(
     React.useCallback(() => {
       const onBackPress = () => {
-        navigation.navigate('Login'); // Navigate to Login screen
+        navigation.navigate('Login');
         return true; // Prevent default behavior
       };
 
@@ -142,7 +142,7 @@ const TwoFactorAuthOTPScreen = ({ navigation }) => {
       >
         <View style={styles.header}>
           <TouchableOpacity onPress={() => navigation.navigate('Login')}>
-            <Ionicons name="arrow-back" size={24} color="black" />
+            <Ionicons name="chevron-back" size={24} color="black" />
           </TouchableOpacity>
 
           <Image
@@ -154,7 +154,7 @@ const TwoFactorAuthOTPScreen = ({ navigation }) => {
             <Ionicons
               name="information-circle-outline"
               size={24}
-              color="black"
+              color="gray"
             />
           </TouchableOpacity>
         </View>
@@ -232,7 +232,8 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    paddingVertical: 10,
+    paddingTop: 20,
+    paddingBottom: 10
   },
   headerImage: {
     width: 120,

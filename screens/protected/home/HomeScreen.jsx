@@ -15,7 +15,7 @@ const HomeScreen = ({ navigation }) => {
   const { user } = useContext(AuthContext);
   const { articles, loading, error } = useArticles();
 
-  const latestArticle = articles.length ? articles[0] : null;
+  const latestArticle = articles.length ? articles[articles.length - 1] : null;
 
   useEffect(() => {
     if (searchQuery) {
@@ -63,7 +63,7 @@ const HomeScreen = ({ navigation }) => {
 
   const renderHeader = () => (
     <View>
-      <Text style={styles.greeting}>Hello, {user?.fullName.split(" ")[0] || 'Guest'}</Text>
+      <Text style={styles.greeting}>Hello, {user && (user?.fullName.split(' ')[0] || 'Guest')}</Text>
       <Text style={styles.subGreeting}>Have a nice {getCurrentDay()}</Text>
 
       <TextInput
@@ -141,7 +141,7 @@ const HomeScreen = ({ navigation }) => {
 
         {articles.length > 0 ? (
           <FlatList
-            data={articles}
+            data={[...articles].reverse()}
             horizontal
             showsHorizontalScrollIndicator={false}
             keyExtractor={(item) => item._id}

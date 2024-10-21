@@ -12,7 +12,7 @@ const AccountSettingsScreen = ({ navigation }) => {
   const [passwordInput, setPasswordInput] = useState('');
   const [isTwoFactorEnabled, setIsTwoFactorEnabled] = useState(false);
 
-  const { user } = useContext(AuthContext);
+  const { user, setUser } = useContext(AuthContext);
   const { updateUser, loading, error } = useUpdateUser();
   const { changePassword, loading: passwordLoading, error: passwordError } = useChangePassword(); // Destructure the custom hook
 
@@ -33,32 +33,32 @@ const AccountSettingsScreen = ({ navigation }) => {
   };
 
   const handleModalSubmit = async (newValue) => {
-    if (currentInfo.type === 'Password') {
+    if (currentInfo.type === "Password") {
       // Handle password change separately
       const response = await changePassword(newValue);
       if (response?.success) {
-        Alert.alert('Success', response.message);
+        Alert.alert("Success", response.message);
       } else {
-        Alert.alert('Failed', passwordError || 'Password change failed.');
+        Alert.alert("Failed", passwordError || "Password change failed.");
       }
     } else {
-      const fieldToUpdate = currentInfo.type === 'Email Address' ? 'email' :
-        currentInfo.type === 'City / Municipality' ? 'city' :
-          currentInfo.type === 'Language' ? 'language' : '';
+      const fieldToUpdate = currentInfo.type === "Email Address" ? "email" :
+        currentInfo.type === "City / Municipality" ? "city" :
+          currentInfo.type === "Language" ? "language" : "";
 
       if (!fieldToUpdate) {
-        Alert.alert('Error', 'Unable to update the selected field.');
+        Alert.alert("Error", "Unable to update the selected field.");
         return;
       }
-      console.log(fieldToUpdate);
-      // Merge the existing user data with the new updated field
-      const updatedUserData = { ...user, [fieldToUpdate]: newValue };
-      await updateUser(updatedUserData);
 
-      if (error) {
-        Alert.alert('Update Failed', error);
+      // Only pass the specific field to updateUser
+      const response = await updateUser({ [fieldToUpdate]: newValue });
+
+      if (response && !error) {
+        setUser({ ...user, [fieldToUpdate]: newValue });
+        Alert.alert("Success", `${currentInfo.type} updated successfully.`);
       } else {
-        Alert.alert('Success', `${currentInfo.type} updated successfully.`);
+        Alert.alert("Update Failed", error || "An error occurred while updating the profile.");
       }
     }
 
@@ -67,19 +67,24 @@ const AccountSettingsScreen = ({ navigation }) => {
 
 
 
+
   const handleTwoFactorToggle = async () => {
     const newTwoFactorStatus = !isTwoFactorEnabled;
     setIsTwoFactorEnabled(newTwoFactorStatus);
 
-    // Merge the existing user data with the new two-factor authentication status
-    const updatedUserData = { ...user, isTwoFactorEnabled: newTwoFactorStatus };
-    await updateUser(updatedUserData);
+    // Only send the isTwoFactorEnabled field
+    const response = await updateUser({ isTwoFactorEnabled: newTwoFactorStatus });
 
-    if (error) {
-      Alert.alert('Update Failed', error);
-      setIsTwoFactorEnabled(!newTwoFactorStatus); // revert back on error
+    if (response && !error) {
+      // Update the user context if the request was successful
+      setUser({ ...user, isTwoFactorEnabled: newTwoFactorStatus });
+      Alert.alert("Success", "Two-Factor Authentication updated successfully.");
+    } else {
+      Alert.alert("Update Failed", error || "An error occurred while updating Two-Factor Authentication.");
+      setIsTwoFactorEnabled(!newTwoFactorStatus); // Revert back on error
     }
   };
+
 
   return (
     <SafeAreaView style={styles.container}>

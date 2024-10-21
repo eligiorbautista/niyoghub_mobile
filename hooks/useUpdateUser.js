@@ -9,6 +9,7 @@ const useUpdateUser = () => {
   const { setUser } = useContext(AuthContext);
 
   const updateUser = async (updatedFields, imageUri) => {
+    console.log(updatedFields);
     setLoading(true);
     setError(null);
     try {
@@ -17,29 +18,30 @@ const useUpdateUser = () => {
       if (!token) {
         setError("Authorization token not found.");
         setLoading(false);
-        return;
+        return null;
       }
 
-      // Create a FormData object
-      const formData = new FormData();
-
-      // Append the updated fields to the FormData
-      for (const key in updatedFields) {
-        formData.append(key, updatedFields[key]);
-      }
-
-      // If an image URI is provided, add it to the FormData
+      // Create a FormData object to handle the fields that need to be updated
+      let formData = new FormData();
       if (imageUri) {
-        const uriParts = imageUri.split(".");
-        const fileType = uriParts[uriParts.length - 1];
-
         formData.append("profilePicture", {
           uri: imageUri,
-          name: `profile.${fileType}`,
-          type: `image/${fileType}`,
+          type: "image/jpeg",
+          name: "profile.jpg",
         });
       }
 
+      // Append only the fields provided in updatedFields to FormData
+      Object.keys(updatedFields).forEach((key) => {
+        // Check if the field is an object (e.g., notifications) and convert it to a JSON string
+        if (typeof updatedFields[key] === "object") {
+          formData.append(key, JSON.stringify(updatedFields[key]));
+        } else {
+          formData.append(key, updatedFields[key]);
+        }
+      });
+
+      // Make the API request to update the user profile
       const response = await axios.put(
         "https://niyoghub-server.onrender.com/api/user/profile",
         formData,
@@ -52,12 +54,20 @@ const useUpdateUser = () => {
       );
 
       if (response.status === 200) {
+        // Update the user context with the new data
         setUser(response.data.user);
+        return response.data; // Return the response data to the caller
       } else {
         setError("Failed to update profile.");
+        return null;
       }
     } catch (err) {
-      setError("An error occurred while updating the profile.");
+      setError(
+        err.response?.data?.message ||
+        "An error occurred while updating the profile."
+      );
+      console.error("Error updating user profile:", err.response?.data || err);
+      return null;
     } finally {
       setLoading(false);
     }

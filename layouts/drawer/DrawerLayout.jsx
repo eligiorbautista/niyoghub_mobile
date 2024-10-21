@@ -45,6 +45,7 @@ const CustomDrawerContent = (props) => {
         if (!storedToken) {
           navigation.navigate("Login");
         }
+        
       } catch (error) {
         console.error("Failed to retrieve token", error);
       }
@@ -243,18 +244,18 @@ const styles = StyleSheet.create({
   },
   badge: {
     position: "absolute",
-    right: 5,
-    top: -5,
+    right: 13,
+    top: -3,
     backgroundColor: "red",
     borderRadius: 8,
-    width: 16,
-    height: 16,
+    width: 14,
+    height: 14,
     justifyContent: "center",
     alignItems: "center",
   },
   badgeText: {
     color: "white",
-    fontSize: 10,
+    fontSize: 8,
     fontWeight: "bold",
   },
 });

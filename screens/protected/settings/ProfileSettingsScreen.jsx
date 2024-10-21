@@ -7,7 +7,7 @@ import { AuthContext } from '../../../contexts/AuthContext';
 import useUpdateUser from '../../../hooks/useUpdateUser';
 
 const ProfileSettingsScreen = ({ navigation }) => {
-  const { user } = useContext(AuthContext);
+  const { user, setUser } = useContext(AuthContext);
   const { updateUser, loading, error } = useUpdateUser();
 
   const [image, setImage] = useState(user?.profilePicture || null);
@@ -16,12 +16,18 @@ const ProfileSettingsScreen = ({ navigation }) => {
 
   // Set the profile picture state
   useEffect(() => {
-    if (user?.image?.includes("https://ui-avatars.com/api/?name=")) {
+    if (user.profilePicture?.includes("ui-avatars")) {
       setImage(user.profilePicture);
     } else {
-      setImage(`https://niyoghub-server.onrender.com/${user?.profilePicture}`);
+      const updatedProfilePicture = `https://niyoghub-server.onrender.com/${user?.profilePicture}`;
+      if (image !== updatedProfilePicture) {
+        setImage(updatedProfilePicture);
+      }
+      // Avoid updating setUser here to prevent infinite loops
     }
   }, [user?.profilePicture]);
+
+
 
 
   const onPickImage = async (source) => {
@@ -45,33 +51,33 @@ const ProfileSettingsScreen = ({ navigation }) => {
       const imageUri = result.assets[0].uri;
       setImage(imageUri);
 
-      const updatedUserData = { ...user, fullName };
-      await updateUser(updatedUserData, imageUri);
+      // Only pass the updated fields to updateUser
+      const response = await updateUser({}, imageUri);
 
-      if (error) {
-        Alert.alert("Update Failed", error);
-      } else {
+      if (response && !error) {
+        setUser(response.user);
         Alert.alert("Success", "Profile picture has been updated successfully.");
+      } else {
+        Alert.alert("Update Failed", error || "An error occurred while updating the profile picture.");
       }
     }
   };
 
-
-  // Handle full name update
   const handleSubmit = async (newFullName) => {
     setFullName(newFullName);
 
-    const updatedUserData = { ...user, fullName: newFullName };
-    await updateUser(updatedUserData);
+    // Only send the fullName field
+    const response = await updateUser({ fullName: newFullName });
 
-    if (error) {
-      Alert.alert('Update Failed', error);
+    if (response && !error) {
+      Alert.alert("Success", "Full Name has been updated successfully.");
     } else {
-      Alert.alert('Success', 'Full Name has been updated successfully.');
+      Alert.alert("Update Failed", error);
     }
 
     setModalVisible(false);
   };
+
 
   return (
     <SafeAreaView style={styles.container}>

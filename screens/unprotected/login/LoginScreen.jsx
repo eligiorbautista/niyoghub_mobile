@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import {
   StyleSheet, Text, View, TextInput, TouchableOpacity, Image, ActivityIndicator, ImageBackground, Alert, Keyboard
 } from 'react-native';
@@ -10,12 +10,28 @@ import useLogin from '../../../hooks/useLogin';
 
 const LoginScreen = ({ navigation }) => {
   const { login, loading } = useLogin();
-  const { setUser } = useContext(AuthContext);
+  const { user, setUser } = useContext(AuthContext);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [showWebView, setShowWebView] = useState(false);
   const [webViewLoading, setWebViewLoading] = useState(false);
+
+  // Check for token and redirect to the Layout if token exists
+  useEffect(() => {
+    const checkToken = async () => {
+      try {
+        const storedToken = await AsyncStorage.getItem('userToken');
+        if (storedToken && user?._id) {
+          navigation.navigate('Layout');
+        }
+      } catch (error) {
+        console.error('Failed to check token', error);
+      }
+    };
+
+    checkToken();
+  }, []);
 
   const handleLogin = async () => {
     try {
@@ -60,7 +76,6 @@ const LoginScreen = ({ navigation }) => {
 
           await AsyncStorage.setItem('userToken', token);
           setUser(user);
-          navigation.navigate('Layout');
         } else {
           Alert.alert('Google Sign-In Failed', 'Unable to authenticate with Google.');
         }

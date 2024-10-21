@@ -8,18 +8,23 @@ const NotificationSettingsScreen = ({ navigation }) => {
   const { user } = useContext(AuthContext);
   const { updateUser, error } = useUpdateUser();
 
+  // Initialize notifications state from the user's data
+  const [notifications, setNotifications] = useState({
+    announcements: user?.notifications?.announcements || true,
+    events: user?.notifications?.events || true,
+    newsAndPrograms: user?.notifications?.newsAndPrograms || true,
+    chatMessages: user?.notifications?.chatMessages || true,
+  });
+
   const [isNotificationsEnabled, setIsNotificationsEnabled] = useState(true);
-  const [isAnnouncementsEnabled, setIsAnnouncementsEnabled] = useState(user?.notifications?.announcements || true);
-  const [isEventsEnabled, setIsEventsEnabled] = useState(user?.notifications?.events || true);
-  const [isNewsProgramsEnabled, setIsNewsProgramsEnabled] = useState(user?.notifications?.newsAndPrograms || true);
-  const [isChatMessagesEnabled, setIsChatMessagesEnabled] = useState(user?.notifications?.chatMessages || true);
 
   const updateNotificationSettings = async (updatedNotifications) => {
-    const updatedUserData = { ...user, notifications: updatedNotifications };
+    // Update only the notifications field
+    const response = await updateUser({ notifications: updatedNotifications });
 
-    await updateUser(updatedUserData);
-
-    if (error) {
+    if (response && !error) {
+      Alert.alert('Success', 'Notification settings updated successfully.');
+    } else {
       Alert.alert('Update Failed', 'An error occurred while updating notification settings.');
     }
   };
@@ -31,76 +36,35 @@ const NotificationSettingsScreen = ({ navigation }) => {
 
     if (!newStatus) {
       // If disabling notifications, turn all specific notifications off
-      setIsAnnouncementsEnabled(false);
-      setIsEventsEnabled(false);
-      setIsNewsProgramsEnabled(false);
-      setIsChatMessagesEnabled(false);
-
-      updateNotificationSettings({
+      const updatedNotifications = {
         announcements: false,
         events: false,
         newsAndPrograms: false,
         chatMessages: false,
-      });
+      };
+      setNotifications(updatedNotifications);
+      updateNotificationSettings(updatedNotifications);
     } else {
       // If enabling notifications, revert to the previous state or enable all
-      setIsAnnouncementsEnabled(true);
-      setIsEventsEnabled(true);
-      setIsNewsProgramsEnabled(true);
-      setIsChatMessagesEnabled(true);
-
-      updateNotificationSettings({
+      const updatedNotifications = {
         announcements: true,
         events: true,
         newsAndPrograms: true,
         chatMessages: true,
-      });
+      };
+      setNotifications(updatedNotifications);
+      updateNotificationSettings(updatedNotifications);
     }
   };
 
-  // Toggle notification settings and update in the backend
-  const toggleAnnouncements = () => {
-    const newStatus = !isAnnouncementsEnabled;
-    setIsAnnouncementsEnabled(newStatus);
-    updateNotificationSettings({
-      announcements: newStatus,
-      events: isEventsEnabled,
-      newsAndPrograms: isNewsProgramsEnabled,
-      chatMessages: isChatMessagesEnabled
-    });
-  };
-
-  const toggleEvents = () => {
-    const newStatus = !isEventsEnabled;
-    setIsEventsEnabled(newStatus);
-    updateNotificationSettings({
-      announcements: isAnnouncementsEnabled,
-      events: newStatus,
-      newsAndPrograms: isNewsProgramsEnabled,
-      chatMessages: isChatMessagesEnabled
-    });
-  };
-
-  const toggleNewsPrograms = () => {
-    const newStatus = !isNewsProgramsEnabled;
-    setIsNewsProgramsEnabled(newStatus);
-    updateNotificationSettings({
-      announcements: isAnnouncementsEnabled,
-      events: isEventsEnabled,
-      newsAndPrograms: newStatus,
-      chatMessages: isChatMessagesEnabled
-    });
-  };
-
-  const toggleChatMessages = () => {
-    const newStatus = !isChatMessagesEnabled;
-    setIsChatMessagesEnabled(newStatus);
-    updateNotificationSettings({
-      announcements: isAnnouncementsEnabled,
-      events: isEventsEnabled,
-      newsAndPrograms: isNewsProgramsEnabled,
-      chatMessages: newStatus
-    });
+  // Generic toggle function for individual notification settings
+  const toggleNotificationSetting = (key) => {
+    const updatedNotifications = {
+      ...notifications,
+      [key]: !notifications[key],
+    };
+    setNotifications(updatedNotifications);
+    updateNotificationSettings(updatedNotifications);
   };
 
   return (
@@ -134,28 +98,28 @@ const NotificationSettingsScreen = ({ navigation }) => {
             <View style={styles.item}>
               <Text style={styles.itemText}>Announcements</Text>
               <TouchableOpacity
-                style={[styles.customSwitch, isAnnouncementsEnabled ? styles.switchOn : styles.switchOff]}
-                onPress={toggleAnnouncements}
+                style={[styles.customSwitch, notifications.announcements ? styles.switchOn : styles.switchOff]}
+                onPress={() => toggleNotificationSetting('announcements')}
               >
-                <View style={isAnnouncementsEnabled ? styles.thumbOn : styles.thumbOff} />
+                <View style={notifications.announcements ? styles.thumbOn : styles.thumbOff} />
               </TouchableOpacity>
             </View>
             <View style={styles.item}>
               <Text style={styles.itemText}>Events</Text>
               <TouchableOpacity
-                style={[styles.customSwitch, isEventsEnabled ? styles.switchOn : styles.switchOff]}
-                onPress={toggleEvents}
+                style={[styles.customSwitch, notifications.events ? styles.switchOn : styles.switchOff]}
+                onPress={() => toggleNotificationSetting('events')}
               >
-                <View style={isEventsEnabled ? styles.thumbOn : styles.thumbOff} />
+                <View style={notifications.events ? styles.thumbOn : styles.thumbOff} />
               </TouchableOpacity>
             </View>
             <View style={styles.item}>
               <Text style={styles.itemText}>News & Programs</Text>
               <TouchableOpacity
-                style={[styles.customSwitch, isNewsProgramsEnabled ? styles.switchOn : styles.switchOff]}
-                onPress={toggleNewsPrograms}
+                style={[styles.customSwitch, notifications.newsAndPrograms ? styles.switchOn : styles.switchOff]}
+                onPress={() => toggleNotificationSetting('newsAndPrograms')}
               >
-                <View style={isNewsProgramsEnabled ? styles.thumbOn : styles.thumbOff} />
+                <View style={notifications.newsAndPrograms ? styles.thumbOn : styles.thumbOff} />
               </TouchableOpacity>
             </View>
 
@@ -163,10 +127,10 @@ const NotificationSettingsScreen = ({ navigation }) => {
             <View style={styles.item}>
               <Text style={styles.itemText}>Chat Messages</Text>
               <TouchableOpacity
-                style={[styles.customSwitch, isChatMessagesEnabled ? styles.switchOn : styles.switchOff]}
-                onPress={toggleChatMessages}
+                style={[styles.customSwitch, notifications.chatMessages ? styles.switchOn : styles.switchOff]}
+                onPress={() => toggleNotificationSetting('chatMessages')}
               >
-                <View style={isChatMessagesEnabled ? styles.thumbOn : styles.thumbOff} />
+                <View style={notifications.chatMessages ? styles.thumbOn : styles.thumbOff} />
               </TouchableOpacity>
             </View>
           </>

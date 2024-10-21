@@ -137,6 +137,10 @@ const App = () => {
 
           {/* article-related screens under home */} 
           <Stack.Screen
+            name="SeeAllNewsPrograms"
+            component={SeeAllNewsProgramsScreen}
+          />
+          <Stack.Screen
             name="ReadNewsPrograms"
             component={ReadNewsProgramsScreen}
           />

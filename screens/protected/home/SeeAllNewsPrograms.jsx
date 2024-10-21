@@ -47,7 +47,7 @@ const SeeAllNewsProgramsScreen = ({ navigation }) => {
 
   return (
     <FlatList
-      data={articles}
+      data={[...articles].reverse()}
       keyExtractor={(item) => item._id}
       renderItem={renderItem}
       ListHeaderComponent={renderHeader}
@@ -92,6 +92,7 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 3,
     overflow: 'hidden',
+    height : 140,
   },
   newsImage: {
     width: 130,
@@ -105,18 +106,18 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   categoryText: {
-    fontSize: 12,
+    fontSize: 10,
     fontWeight: 'bold',
     color: '#537F19',
     marginBottom: 5,
   },
   dateText: {
-    fontSize: 12,
+    fontSize: 10,
     color: '#666',
     marginBottom: 8,
   },
   descriptionText: {
-    fontSize: 14,
+    fontSize: 12,
     color: '#333',
     marginBottom: 10,
   },
@@ -130,7 +131,7 @@ const styles = StyleSheet.create({
   },
   readButtonText: {
     color: '#537F19',
-    fontSize: 14,
+    fontSize: 12,
     fontWeight: 'bold',
     marginRight: 5,
   },
@@ -140,7 +141,7 @@ const styles = StyleSheet.create({
   emptyText: {
     textAlign: 'center',
     color: '#888',
-    fontSize: 16,
+    fontSize: 14,
     marginTop: 20,
   }, titleText: {
     fontSize: 16,
