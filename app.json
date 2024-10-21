@@ -16,7 +16,6 @@
       "supportsTablet": true,
       "bundleIdentifier": "com.example.niyoghub"
     },
-    
     "android": {
       "package": "com.example.niyoghub",
       "adaptiveIcon": {
@@ -44,6 +43,11 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "e4fae7e9-77e6-4e91-8b29-07afa8372c00"
+      }
     }
   }
 }

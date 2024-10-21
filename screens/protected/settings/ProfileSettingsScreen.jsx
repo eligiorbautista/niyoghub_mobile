@@ -102,7 +102,7 @@ const ProfileSettingsScreen = ({ navigation }) => {
           <Text style={styles.subtitle}>Update your profile picture</Text>
           <View style={styles.profileImageWrapper}>
             <Image
-              source={image ? { uri: image } : require('../../../assets/farmer.png')}
+              source={{ uri: image || `https://www.pngarts.com/files/10/Default-Profile-Picture-Download-PNG-Image.png` }}
               style={styles.profileImage}
             />
             <View style={styles.uploadOptions}>
@@ -164,7 +164,7 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     color: '#555',
   },
-  itemContainer: { 
+  itemContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
@@ -173,7 +173,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   itemLabel: {
-    fontSize: 16,  
+    fontSize: 16,
     fontWeight: '600',
   },
   itemValue: {

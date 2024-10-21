@@ -19,7 +19,7 @@ const mockUser = {
   email: "juandelacruz@gmail.com",
   address: "Lucena City, Quezon",
   language: "English (US)",
-  profilePicture: "../../../assets/farmer.png",
+  profilePicture: `https://www.pngarts.com/files/10/Default-Profile-Picture-Download-PNG-Image.png`,
   accountType: "local",
   isTwoFactorEnabled: false,
 };
