@@ -63,7 +63,7 @@ const HomeScreen = ({ navigation }) => {
 
   const renderHeader = () => (
     <View>
-      <Text style={styles.greeting}>Hello, {user && (user?.fullName.split(' ')[0] || 'Guest')}</Text>
+      <Text style={styles.greeting}>Hello, {user && (user?.fullName || 'Guest')}</Text>
       <Text style={styles.subGreeting}>Have a nice {getCurrentDay()}</Text>
 
       <TextInput

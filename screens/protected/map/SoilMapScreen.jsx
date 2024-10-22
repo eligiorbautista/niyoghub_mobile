@@ -225,12 +225,10 @@ const SoilMapScreen = () => {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity style={styles.backButton}>
-          <Ionicons name="arrow-back" size={28} color="white" />
-        </TouchableOpacity>
+          <Ionicons name="arrow-back" size={28} color="transparent" />
         <Text style={styles.title}>Suitability Map</Text>
         <TouchableOpacity style={styles.helpButton} onPress={toggleHelpModal}>
-          <MaterialIcons name="help-outline" size={28} color="white" />
+        <Ionicons name="information-circle-outline" size={24} color="white" />
         </TouchableOpacity>
       </View>
 
@@ -508,7 +506,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     padding: 10,
     zIndex: 10,
-    backgroundColor: "rgba(128, 128, 128, 0.2)",
+    backgroundColor: "rgba(128, 128, 128, 0.50)",
   },
   title: {
     fontSize: 20,
@@ -525,7 +523,7 @@ const styles = StyleSheet.create({
   },
   menuButton: {
     position: "absolute",
-    top: 100,
+    top: 95,
     left: 10,
     padding: 10,
     borderRadius: 50,
