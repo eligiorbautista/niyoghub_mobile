@@ -24,7 +24,7 @@ const NotificationsScreen = ({ navigation }) => {
   } = useMarkAllNotificationsAsRead();
   const [hasMarkedAsRead, setHasMarkedAsRead] = useState(false);
 
-  // Function to detect if the user has seen all notifications
+  // check if user read all notifications
   const handleEndReached = () => {
     if (!hasMarkedAsRead) {
       markAllAsRead();
@@ -79,7 +79,7 @@ const NotificationsScreen = ({ navigation }) => {
         </View>
       ) : (
         <FlatList
-          data={[...notifications].reverse()} // Reverse the notifications array
+          data={[...notifications].reverse()}
           keyExtractor={(item) => item._id}
           renderItem={({ item }) => (
             <NotificationItem
@@ -88,8 +88,8 @@ const NotificationsScreen = ({ navigation }) => {
             />
           )}
           contentContainerStyle={styles.notificationList}
-          onEndReached={handleEndReached} // Mark as read when the user reaches the end
-          onEndReachedThreshold={0.1} // Trigger when the user is 10% away from the end
+          onEndReached={handleEndReached} // mark as read when the user reaches the end
+          onEndReachedThreshold={0.1} // trigger when the user is 10% away from the end
         />
       )}
     </View>

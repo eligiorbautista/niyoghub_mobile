@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { Linking, Alert } from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Linking, Alert } from "react-native"; 
 import { AuthProvider } from "./contexts/AuthContext";
 import SplashScreen from "./screens/unprotected/splashscreen/SplashScreen";
 import OnboardingScreen from "./screens/unprotected/onboarding/OnboardingScreen";

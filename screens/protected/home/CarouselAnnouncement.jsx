@@ -48,8 +48,7 @@ const styles = StyleSheet.create({
   },
   carouselWrapper: {
     alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: 10,
+    justifyContent: 'center', 
   },
   slide: {
     justifyContent: 'center',

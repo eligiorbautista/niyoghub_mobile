@@ -6,6 +6,8 @@ import ImageCarousel from './CarouselAnnouncement';
 import { AuthContext } from '../../../contexts/AuthContext';
 import useArticles from '../../../hooks/useArticles';
 import moment from 'moment';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { scale } from 'react-native-size-matters';
 
 const HomeScreen = ({ navigation }) => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -14,8 +16,11 @@ const HomeScreen = ({ navigation }) => {
   const [selectedSDG, setSelectedSDG] = useState(null);
   const { user } = useContext(AuthContext);
   const { articles, loading, error } = useArticles();
+  const token = AsyncStorage.getItem('userToken');
 
   const latestArticle = articles.length ? articles[articles.length - 1] : null;
+  const renderArticles = [...articles].reverse().slice(0, 5);
+
 
   useEffect(() => {
     if (searchQuery) {
@@ -50,10 +55,11 @@ const HomeScreen = ({ navigation }) => {
   const renderNewsItem = ({ item }) => (
     <Pressable onPress={() => handleReadMore(item)} style={styles.card}>
       <Image source={{ uri: `https://niyoghub-server.onrender.com/uploads/images/${item.image}` }} style={styles.image} />
-      <Text style={styles.categoryText}>News & Programs</Text>
-      <Text style={styles.dateText}>{moment(item.createdAt).format('MMMM D, YYYY')}</Text>
-      <Text style={styles.descriptionText} numberOfLines={3}>{item.subtitle}</Text>
+      <Text style={styles.articleCategory}>News & Programs</Text>
+      <Text style={styles.articleTitle} numberOfLines={2} ellipsizeMode="tail">{item.title}</Text>
+      <Text style={styles.articleSubtitle} numberOfLines={2} ellipsizeMode="tail">{item.subtitle}</Text>
 
+      <Text style={styles.articleDate}>{moment(item.createdAt).format('MMMM D, YYYY')}</Text>
       <Pressable style={styles.readButton} onPress={() => handleReadMore(item)}>
         <Text style={styles.readButtonText}>Read More</Text>
         <Ionicons name="arrow-forward-circle-outline" size={16} color="#537F19" style={styles.readButtonIcon} />
@@ -63,19 +69,23 @@ const HomeScreen = ({ navigation }) => {
 
   const renderHeader = () => (
     <View>
-      <Text style={styles.greeting}>Hello, {user && (user?.fullName || 'Guest')}</Text>
+      <Text style={styles.greeting}>Hello, {token && (user?.fullName.split(' ')[0] || 'Guest')}</Text>
       <Text style={styles.subGreeting}>Have a nice {getCurrentDay()}</Text>
 
-      <TextInput
-        style={styles.searchInput}
-        placeholder="Search"
-        value={searchQuery}
-        onChangeText={handleSearch}
-        autoCorrect={false}
-        autoCapitalize="none"
-        returnKeyType="done"
-        blurOnSubmit={false}
-      />
+      <View style={styles.searchContainer}>
+        <Ionicons name="search-outline" size={20} color="#777" style={styles.searchIcon} />
+        <TextInput
+          style={styles.searchInput}
+          placeholder="Search"
+          value={searchQuery}
+          onChangeText={handleSearch}
+          autoCorrect={false}
+          autoCapitalize="none"
+          returnKeyType="done"
+          blurOnSubmit={false}
+        />
+      </View>
+
 
       {/* Newest Post Section */}
       {!searchQuery && latestArticle && (
@@ -85,7 +95,7 @@ const HomeScreen = ({ navigation }) => {
             <Image source={{ uri: `https://niyoghub-server.onrender.com/uploads/images/${latestArticle.image}` }} style={styles.postImage} />
             <Text style={styles.postCategory}>News & Programs</Text>
             <Text style={styles.postTitle}>{latestArticle.title}</Text>
-            <Text style={styles.postMeta}>{moment(latestArticle.createdAt).format('MMMM D, YYYY')}</Text>
+            <Text style={styles.postDate}>{moment(latestArticle.createdAt).format('MMMM D, YYYY')}</Text>
           </Pressable>
         </View>
       )}
@@ -93,7 +103,7 @@ const HomeScreen = ({ navigation }) => {
   );
 
   const renderFooter = () => {
-    if (searchQuery) return null; // Hide footer when searching
+    if (searchQuery) return null;
 
     return (
       <View>
@@ -127,7 +137,7 @@ const HomeScreen = ({ navigation }) => {
         <View style={styles.headerNewsPrograms}>
           <Text style={styles.sectionTitle}>News & Programs</Text>
           <Pressable onPress={() => navigation.navigate('SeeAllNewsPrograms')}>
-            <View style={{ flex: 1, flexDirection: 'row', marginTop: 32 }}>
+            <View style={{ flex: 1, flexDirection: 'row', marginTop: 22 }}>
               <Text style={styles.seeAllText}>See all</Text>
               <Ionicons
                 style={{ marginTop: 2 }}
@@ -139,9 +149,9 @@ const HomeScreen = ({ navigation }) => {
           </Pressable>
         </View>
 
-        {articles.length > 0 ? (
+        {renderArticles.length > 0 ? (
           <FlatList
-            data={[...articles].reverse()}
+            data={renderArticles}
             horizontal
             showsHorizontalScrollIndicator={false}
             keyExtractor={(item) => item._id}
@@ -216,16 +226,28 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#777',
   },
-  searchInput: {
+  searchContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
     marginTop: 20,
-    padding: 10,
+    paddingHorizontal: 10,
     borderWidth: 1,
     borderColor: '#ccc',
     borderRadius: 8,
-    fontSize: 16,
+    backgroundColor: '#fff',
+    height: 40,
   },
+  searchIcon: {
+    marginRight: 10,
+  },
+  searchInput: {
+    flex: 1,
+    fontSize: 16,
+    paddingVertical: 0,
+  },
+
   sectionTitle: {
-    marginTop: 30,
+    marginTop: 20,
     marginBottom: 12,
     fontSize: 18,
     fontWeight: 'bold',
@@ -234,11 +256,9 @@ const styles = StyleSheet.create({
     marginTop: 0,
   },
   postContainer: {
-    marginTop: 10,
     padding: 15,
     borderRadius: 10,
     backgroundColor: '#f8f8f8',
-    marginBottom: 20,
     borderWidth: 1,
     borderColor: '#e0e0e0',
     shadowColor: '#000',
@@ -252,15 +272,17 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   postCategory: {
-    marginTop: 5,
+    marginVertical: 5,
     fontSize: 14,
-    color: '#777',
+    color: '#537F19',
+    fontWeight: '600'
   },
   postTitle: {
     fontSize: 16,
     fontWeight: 'bold',
+    marginBottom: 5,
   },
-  postMeta: {
+  postDate: {
     fontSize: 12,
     color: '#aaa',
   },
@@ -315,6 +337,7 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 0 },
     shadowOpacity: 0.3,
     shadowRadius: 10,
+    height: scale(280),
   },
 
   image: {
@@ -322,20 +345,29 @@ const styles = StyleSheet.create({
     height: 100,
     borderRadius: 8,
   },
-  categoryText: {
-    fontSize: 12,
-    color: '#666',
+
+  articleDate: {
+    fontSize: 11,
+    color: '#aaa',
     marginTop: 5,
   },
-  dateText: {
+  articleCategory: {
     fontSize: 12,
-    color: '#aaa',
-    marginBottom: 5,
+    color: '#537F19',
+    marginTop: 5,
+    fontWeight: '600',
   },
-  descriptionText: {
-    fontSize: 14,
-    color: '#333',
+  articleTitle: {
+    fontSize: 16,
     fontWeight: 'bold',
+    color: '#333',
+    marginTop: 5,
+  },
+  articleSubtitle: {
+    fontSize: 14,
+    color: '#666',
+    marginTop: 5,
+    lineHeight: 20,
   },
   readButton: {
     flexDirection: 'row',
