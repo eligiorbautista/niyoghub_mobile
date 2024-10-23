@@ -28,16 +28,17 @@ const ProfileScreen = () => {
   const navigation = useNavigation();
   const { user } = useContext(AuthContext);
   const { logout } = useLogout();
-
   const [profilePicture, setProfilePicture] = useState("");
- 
+
+  const userAuth = AsyncStorage.getItem('userAuth');
+
   useEffect(() => {
-    if (user?.profilePicture?.includes("https://ui-avatars.com/api/?name=")) {
-      setProfilePicture(user.profilePicture);
+    if (userAuth?.profilePicture?.includes("https://ui-avatars.com/api/?name=")) {
+      setProfilePicture(userAuth.profilePicture);
     } else {
-      setProfilePicture(`https://niyoghub-server.onrender.com/${user?.profilePicture}`);
+      setProfilePicture(`https://niyoghub-server.onrender.com/${userAuth?.profilePicture}`);
     }
-  }, [user?.profilePicture]);
+  }, [userAuth?.profilePicture]);
 
   return (
     <View style={styles.container}>
@@ -64,8 +65,8 @@ const ProfileScreen = () => {
             source={{ uri: profilePicture || `https://www.pngarts.com/files/10/Default-Profile-Picture-Download-PNG-Image.png` }}
             style={styles.profilePicture}
           />
-          <Text style={styles.fullName}>{user?.fullName || mockUser.fullName}</Text>
-          <Text style={styles.email}>{user?.email || mockUser.email}</Text>
+          <Text style={styles.fullName}>{userAuth?.fullName || mockUser.fullName}</Text>
+          <Text style={styles.email}>{userAuth?.email || mockUser.email}</Text>
 
           <TouchableOpacity
             style={styles.editButton}
@@ -81,27 +82,27 @@ const ProfileScreen = () => {
           {mockUser?.address && (
             <View style={styles.infoRow}>
               <Ionicons name="location-outline" size={20} color="#444" />
-              <Text style={styles.infoText}>{user?.city || mockUser?.address}</Text>
+              <Text style={styles.infoText}>{userAuth?.city || mockUser?.address}</Text>
             </View>
           )}
 
           <View style={styles.infoRow}>
             <Ionicons name="language-outline" size={20} color="#444" />
-            <Text style={styles.infoText}>Language: {user?.language || mockUser?.language}</Text>
+            <Text style={styles.infoText}>Language: {userAuth?.language || mockUser?.language}</Text>
           </View>
 
           <View style={styles.infoRow}>
             <Ionicons name="shield-checkmark-outline" size={20} color="#444" />
             <Text style={styles.infoText}>
               Two-Factor Authentication:{" "}
-              {user?.isTwoFactorEnabled || mockUser?.isTwoFactorEnabled ? "Enabled" : "Disabled"}
+              {userAuth?.isTwoFactorEnabled || mockUser?.isTwoFactorEnabled ? "Enabled" : "Disabled"}
             </Text>
           </View>
 
           <View style={styles.infoRow}>
             <Ionicons name="key-outline" size={20} color="#444" />
             <Text style={styles.infoText}>
-              Account Type: {user?.accountType || mockUser?.accountType}
+              Account Type: {userAuth?.accountType || mockUser?.accountType}
             </Text>
           </View>
         </View>

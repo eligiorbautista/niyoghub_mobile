@@ -21,6 +21,7 @@ const useLogout = () => {
 
       if (response.status === 200) {
         await AsyncStorage.removeItem("userToken");
+        await AsyncStorage.removeItem("userAuth");
         setUser(null);
       } else {
         setError("Failed to log out.");

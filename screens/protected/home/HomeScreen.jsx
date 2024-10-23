@@ -54,7 +54,7 @@ const HomeScreen = ({ navigation }) => {
 
   const renderNewsItem = ({ item }) => (
     <Pressable onPress={() => handleReadMore(item)} style={styles.card}>
-      <Image source={{ uri: `https://niyoghub-server.onrender.com/uploads/images/${item.image}` }} style={styles.image} />
+      <Image source={{ uri: `https://niyoghub-server.onrender.com/uploads/images/articles/${item.image}` }} style={styles.image} />
       <Text style={styles.articleCategory}>News & Programs</Text>
       <Text style={styles.articleTitle} numberOfLines={2} ellipsizeMode="tail">{item.title}</Text>
       <Text style={styles.articleSubtitle} numberOfLines={2} ellipsizeMode="tail">{item.subtitle}</Text>
@@ -69,7 +69,7 @@ const HomeScreen = ({ navigation }) => {
 
   const renderHeader = () => (
     <View>
-      <Text style={styles.greeting}>Hello, {token && (user?.fullName.split(' ')[0] || 'Guest')}</Text>
+      <Text style={styles.greeting}>Hello, {token &&  user && (user?.fullName.split(' ')[0] || 'Guest')}</Text>
       <Text style={styles.subGreeting}>Have a nice {getCurrentDay()}</Text>
 
       <View style={styles.searchContainer}>
@@ -92,7 +92,7 @@ const HomeScreen = ({ navigation }) => {
         <View style={styles.latestPostContainer}>
           <Text style={styles.sectionTitle}>Newest Post</Text>
           <Pressable style={styles.postContainer} onPress={() => handleReadMore(latestArticle)}>
-            <Image source={{ uri: `https://niyoghub-server.onrender.com/uploads/images/${latestArticle.image}` }} style={styles.postImage} />
+            <Image source={{ uri: `https://niyoghub-server.onrender.com/uploads/images/articles/${latestArticle.image}` }} style={styles.postImage} />
             <Text style={styles.postCategory}>News & Programs</Text>
             <Text style={styles.postTitle}>{latestArticle.title}</Text>
             <Text style={styles.postDate}>{moment(latestArticle.createdAt).format('MMMM D, YYYY')}</Text>

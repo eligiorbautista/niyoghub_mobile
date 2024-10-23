@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { Linking, Alert } from "react-native"; 
 import { AuthProvider } from "./contexts/AuthContext";
 import SplashScreen from "./screens/unprotected/splashscreen/SplashScreen";
 import OnboardingScreen from "./screens/unprotected/onboarding/OnboardingScreen";
@@ -25,81 +24,44 @@ import ChatAssistantScreen from "./screens/protected/virtual_ai_assistant/ChatAs
 import VoiceAssistantScreen from "./screens/protected/virtual_ai_assistant/VoiceAssistantScreen";
 import DiagnoseScreen from "./screens/protected/identification/Diagnose";
 import DiagnosedResultScreen from "./screens/protected/identification/DiagnosedResult";
-
+import { user } from './contexts/AuthContext'
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Stack = createNativeStackNavigator();
 const navigationRef = React.createRef();
 
 const App = () => {
   const [isShowSplash, setIsShowSplash] = useState(true);
-  const [isUserLoggedIn, setIsUserLoggedIn] = useState(null);
+  const token = AsyncStorage.getItem('userToken');
 
   useEffect(() => {
-    // Hide splash screen after a few seconds
     setTimeout(() => {
       setIsShowSplash(false);
     }, 3000);
   }, []);
 
-  // Deep linking handler
-  useEffect(() => {
-    const handleDeepLink = (event) => {
-      const url = event.url;
-      let token = null;
-
-      // Parse the URL based on the scheme
-      if (url.startsWith("niyoghub://")) {
-        const path = url.split("niyoghub://")[1];
-        if (path && path.startsWith("ChangePassword/")) {
-          token = path.split("ChangePassword/")[1];
-        }
-      }
-
-      if (token) {
-        // Navigate to ChangePassword screen with the resetToken parameter
-        navigationRef.current?.navigate("ChangePassword", { resetToken: token });
-      }
-    };
-
-    // Listen for deep linking events
-    Linking.addEventListener("url", handleDeepLink);
-
-    // Handle initial URL when the app starts
-    Linking.getInitialURL().then((url) => {
-      if (url) {
-        handleDeepLink({ url });
-      }
-    });
-
-    // Cleanup listener
-    return () => {
-      Linking.removeEventListener("url", handleDeepLink);
-    };
-  }, []);
-
-
   const getInitialScreen = () => {
-    if (isUserLoggedIn && isUserLoggedIn._id) {
-      if (isUserLoggedIn.isTwoFactorEnabled) {
-        return isShowSplash ? SplashScreen : TwoFactorAuthOTPScreen;
-      }
-      return isShowSplash ? SplashScreen : DrawerLayout;
-    } else {
-      return isShowSplash ? SplashScreen : OnboardingScreen;
+    if (isShowSplash) {
+      return SplashScreen;
     }
+
+    return token ? DrawerLayout : OnboardingScreen;
   };
 
   return (
     <AuthProvider>
       <NavigationContainer ref={navigationRef}>
-        <Stack.Navigator screenOptions={{ headerShown: false }}>
-          {/* --------------- UNPROTECTED SCREENS --------------- */}
+        <Stack.Navigator
+          initialRouteName="Login"
+          screenOptions={{ headerShown: false }}
+        >
           <Stack.Screen
-            name="Onboarding"
+            name="InitialScreen"
             component={getInitialScreen()}
           />
+          {/* Other screens */}
           <Stack.Screen name="Registration" component={RegistrationScreen} />
-          <Stack.Screen name="Login" component={LoginScreen} />
+          <Stack.Screen name="Login" component={LoginScreen} /> 
           <Stack.Screen
             name="TwoFactorAuthOTP"
             component={TwoFactorAuthOTPScreen}

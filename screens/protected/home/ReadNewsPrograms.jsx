@@ -20,7 +20,7 @@ const ReadNewsProgramsScreen = ({ navigation, route }) => {
     try {
       await Share.share({
         message: `Check out this article on NiyogHub: ${newsItem.title}`,
-        url: `https://niyoghub-server.onrender.com/uploads/images/${newsItem.image}`,
+        url: `https://niyoghub-server.onrender.com/uploads/images/articles/${newsItem.image}`,
         title: newsItem.title,
       });
     } catch (error) {
@@ -167,7 +167,7 @@ const ReadNewsProgramsScreen = ({ navigation, route }) => {
       <ScrollView style={styles.container}>
         <View style={styles.postContainer}>
           <Image
-            source={{ uri: `https://niyoghub-server.onrender.com/uploads/images/${newsItem.image}` }}
+            source={{ uri: `https://niyoghub-server.onrender.com/uploads/images/articles/${newsItem.image}` }}
             style={styles.newsImage}
           />
           <Text style={styles.categoryText}>News & Programs</Text>

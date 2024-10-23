@@ -57,7 +57,7 @@ const SeeAllNewsProgramsScreen = ({ navigation }) => {
       onPress={() => navigation.navigate('ReadNewsPrograms', { newsItem: item })}
     >
       <Image
-        source={{ uri: `https://niyoghub-server.onrender.com/uploads/images/${item.image}` }}
+        source={{ uri: `https://niyoghub-server.onrender.com/uploads/images/articles/${item.image}` }}
         style={styles.newsImage}
       />
       <View style={styles.textContainer}>

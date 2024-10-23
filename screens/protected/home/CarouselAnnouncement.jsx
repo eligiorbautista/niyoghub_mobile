@@ -1,37 +1,40 @@
 import React, { useRef, useState } from 'react';
-import { View, Dimensions, Image, StyleSheet, ScrollView } from 'react-native';
+import { View, Dimensions, Image, StyleSheet, ScrollView, ActivityIndicator, Text } from 'react-native';
 import Carousel from "react-native-reanimated-carousel";
+import useAnnouncements from "../../../hooks/useAnnouncements";
 
 const { width } = Dimensions.get("window");
 
-const data = [
-  {image: require("../../../assets/announcement.png"),},
-  {image: require("../../../assets/post.png"),},
-  {image: require("../../../assets/announcement.png"),},
-  {image: require("../../../assets/post.png"),},
-];
-
 const ImageCarousel = () => {
+  const { announcements, loading, error } = useAnnouncements();
   const [currentIndex, setCurrentIndex] = useState(0);
-  const carouselRef = useRef(null); 
+  const carouselRef = useRef(null);
+ 
+  const displayAnnouncements = announcements.slice(0, 3).reverse();
 
   return (
     <ScrollView contentContainerStyle={styles.scrollViewContent}>
       <View style={styles.carouselSection}>
         <View style={styles.carouselWrapper}>
-          <Carousel
-            ref={carouselRef} 
-            width={width}
-            height={110} 
-            data={data}
-            scrollAnimationDuration={1000}
-            onSnapToItem={(index) => setCurrentIndex(index)}
-            renderItem={({ index }) => (
-              <View style={styles.slide}>
-                <Image source={data[index].image} style={styles.image} />
-              </View>
-            )}
-          />
+          {loading ? (
+            <ActivityIndicator size="large" color="#0000ff" />
+          ) : error ? (
+            <Text style={styles.errorText}>{error}</Text>
+          ) : (
+            <Carousel
+              ref={carouselRef}
+              width={width}
+              height={110}
+              data={displayAnnouncements}
+              scrollAnimationDuration={1000}
+              onSnapToItem={(index) => setCurrentIndex(index)}
+              renderItem={({ item }) => (
+                <View style={styles.slide}>
+                  <Image source={{ uri: `https://niyoghub-server.onrender.com/uploads/images/announcements/${item.image}` }} style={styles.image} />
+                </View>
+              )}
+            />
+          )}
         </View>
       </View>
     </ScrollView>
@@ -48,7 +51,7 @@ const styles = StyleSheet.create({
   },
   carouselWrapper: {
     alignItems: 'center',
-    justifyContent: 'center', 
+    justifyContent: 'center',
   },
   slide: {
     justifyContent: 'center',
@@ -62,12 +65,15 @@ const styles = StyleSheet.create({
     elevation: 3,
   },
   image: {
-    width: width, 
-    height: 110,   
+    width: width,
+    height: 150,
     borderRadius: 0,
+  },
+  errorText: {
+    color: 'red',
+    textAlign: 'center',
+    marginTop: 20,
   },
 });
 
 export default ImageCarousel;
-
-
