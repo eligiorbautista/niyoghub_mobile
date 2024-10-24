@@ -9,7 +9,8 @@ const SeeAllNewsProgramsScreen = ({ navigation }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState('');
   const articlesPerPage = 10;
- 
+
+  
   const filteredArticles = articles.filter(article =>
     article.title.toLowerCase().includes(searchQuery.toLowerCase())
   );
@@ -100,10 +101,10 @@ const SeeAllNewsProgramsScreen = ({ navigation }) => {
             <Text style={styles.loadingText}>Loading articles...</Text>
           </View>
         ) : paginatedArticles.length ? (
-          paginatedArticles.map((item) => renderItem(item))
+          paginatedArticles.reverse().map((item) => renderItem(item))
         ) : (
           <Text style={styles.emptyText}>No articles available.</Text>
-        )} 
+        )}
         {/* pagination */}
         {filteredArticles.length > articlesPerPage && (
           <View style={styles.paginationContainer}>
@@ -140,6 +141,7 @@ const styles = StyleSheet.create({
   },
   scrollViewContent: {
     paddingBottom: 0,
+    paddingBottom: 10,
   },
   header: {
     flexDirection: "row",

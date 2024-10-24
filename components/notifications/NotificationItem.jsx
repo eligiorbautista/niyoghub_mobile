@@ -19,7 +19,7 @@ const NotificationItem = ({ notification, onPress }) => {
         return 'chatbubble-ellipses-outline';
       case 'App Update':
         return 'cloud-download-outline';
-      case 'Posts':
+      case 'New Article':
         return 'document-text-outline';
       case 'Two Factor Enabled':
         return 'shield-checkmark-outline';
