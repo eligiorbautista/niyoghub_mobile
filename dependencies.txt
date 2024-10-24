@@ -10,3 +10,5 @@ npm install -g eas-cl
 npx expo-doctor
 
 npx expo install --check
+
+

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   StyleSheet,
   View,
@@ -10,6 +10,12 @@ import {
 import { Picker } from "@react-native-picker/picker";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import MapComponent from "../../../components/map/MapComponent";
+import * as Location from "expo-location";
+import { Alert } from "react-native";
+import haversine from 'haversine';
+
+
+
 
 const localImage = require("../../../assets/niyoghub_logo_2.png");
 
@@ -26,6 +32,44 @@ const CustomCheckbox = ({ isChecked, onChange, label }) => {
       <Text>{label}</Text>
     </View>
   );
+};
+
+const municipalities = {
+  "Lucban": { latitude: 14.1131, longitude: 121.5511 },
+  "Sariaya": { latitude: 13.9644, longitude: 121.5261 },
+  "Mulanay": { latitude: 13.5261, longitude: 122.3994 },
+  "San Francisco": { latitude: 13.5800, longitude: 122.4801 },
+  "San Andres": { latitude: 13.5031, longitude: 122.6803 },
+  "San Narciso": { latitude: 13.4814, longitude: 122.4958 },
+  "Lopez": { latitude: 13.8809, longitude: 122.2594 },
+  "Buenavista": { latitude: 13.8283, longitude: 121.8126 },
+  "Guinayangan": { latitude: 13.9123, longitude: 122.4311 },
+  "Gumaca": { latitude: 13.8541, longitude: 122.0972 },
+  "General Luna": { latitude: 13.6961, longitude: 122.1657 },
+  "Lucena City": { latitude: 13.9373, longitude: 121.6170 },
+  "Tayabas City": { latitude: 14.0269, longitude: 121.5945 },
+  "Mauban": { latitude: 14.1916, longitude: 121.7304 },
+  "Atimonan": { latitude: 14.0027, longitude: 121.9216 },
+  "Macalelon": { latitude: 13.7421, longitude: 122.1815 },
+  "Pitogo": { latitude: 13.7833, longitude: 122.1277 },
+  "Catanauan": { latitude: 13.5929, longitude: 122.3188 },
+  "Unisan": { latitude: 13.8324, longitude: 122.0618 },
+  "Padre Burgos": { latitude: 13.8690, longitude: 121.8123 },
+  "Pagbilao": { latitude: 13.9673, longitude: 121.6912 },
+  "Infanta": { latitude: 14.7510, longitude: 121.6522 },
+  "Real": { latitude: 14.6637, longitude: 121.6074 },
+  "Polillo": { latitude: 14.7168, longitude: 121.9242 },
+  "Panukulan": { latitude: 14.8082, longitude: 121.7420 },
+  "Patnanungan": { latitude: 14.6700, longitude: 122.3084 },
+  "General Nakar": { latitude: 14.7678, longitude: 121.4894 },
+  "Calauag": { latitude: 13.9606, longitude: 122.2875 },
+  "Plaridel": { latitude: 13.9894, longitude: 122.1226 },
+  "Tagkawayan": { latitude: 14.0759, longitude: 122.4453 },
+  "Quezon": { latitude: 13.9240, longitude: 122.2072 },
+  "Alabat": { latitude: 14.1072, longitude: 122.0111 },
+  "Perez": { latitude: 14.0227, longitude: 121.8137 },
+  "Jomalig": { latitude: 14.7200, longitude: 122.4328 },
+  "Burdeos": { latitude: 14.8484, longitude: 121.9250 },
 };
 
 const municipalityData = {
@@ -185,7 +229,7 @@ const SoilMapScreen = () => {
   const [cacaoSelected, setCacaoSelected] = useState(false);
   const [bananaSelected, setBananaSelected] = useState(false);
   const [cornSelected, setCornSelected] = useState(false);
-  const [selectedMunicipality, setSelectedMunicipality] = useState("Lucban");
+  const [selectedMunicipality, setSelectedMunicipality] = useState("Lucena City");
   const [showIntercroppingOptions, setShowIntercroppingOptions] =
     useState(false);
   const [suitabilityModalVisible, setSuitabilityModalVisible] = useState(false);
@@ -219,16 +263,67 @@ const SoilMapScreen = () => {
     return false;
   };
 
-  //Sort the municipalities alphabetically
+  // sort municipalities  
   const sortedMunicipalities = Object.keys(municipalityData).sort();
+
+  const getUserLocation = async () => {
+    // request permission to access location
+    const { status } = await Location.requestForegroundPermissionsAsync();
+    if (status !== "granted") {
+      Alert.alert("Permission Denied", "Location permission is required.");
+      setSelectedMunicipality("Lucena City");
+      return;
+    }
+
+    // Get the current location
+    const location = await Location.getCurrentPositionAsync({});
+    const { latitude, longitude } = location.coords;
+
+    let nearestMunicipality = null;
+    let minDistance = Infinity;
+
+    // find the closest one
+    for (const municipality in municipalities) {
+      const muniCoords = municipalities[municipality];
+
+      // calculate the haversine distance
+      const distance = haversine(
+        { latitude, longitude },
+        { latitude: muniCoords.latitude, longitude: muniCoords.longitude }
+      );
+
+      // update nearest municipality if this one is closer
+      if (distance < minDistance) {
+        minDistance = distance;
+        nearestMunicipality = municipality;
+      }
+    }
+
+    // set the nearest municipality if found
+    if (nearestMunicipality) {
+      setSelectedMunicipality(nearestMunicipality);
+    } else {
+      Alert.alert(
+        "Location Not Supported",
+        "Your current location is not within the available municipalities."
+      );
+      setSelectedMunicipality("Lucena City");
+    }
+  };
+
+
+  useEffect(() => {
+    getUserLocation();
+  }, []);
+
 
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-          <Ionicons name="arrow-back" size={28} color="transparent" />
+        <Ionicons name="arrow-back" size={28} color="transparent" />
         <Text style={styles.title}>Suitability Map</Text>
         <TouchableOpacity style={styles.helpButton} onPress={toggleHelpModal}>
-        <Ionicons name="information-circle-outline" size={24} color="white" />
+          <Ionicons name="information-circle-outline" size={24} color="white" />
         </TouchableOpacity>
       </View>
 

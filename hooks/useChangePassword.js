@@ -12,8 +12,7 @@ const useChangePassword = () => {
 
     console.log(`Password Data: ${JSON.stringify(passwordData)}`);
 
-    try {
-      // Get the authorization token from AsyncStorage
+    try { 
       const token = await AsyncStorage.getItem("userToken");
 
       if (!token) {

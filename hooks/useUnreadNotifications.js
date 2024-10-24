@@ -24,16 +24,21 @@ const useUnreadNotifications = (userId) => {
     fetchUnreadCount();
 
     if (userId) {
-      // Join the user's room to receive real-time updates
       socket.emit("join", userId);
 
-      // Listen for new notifications
       socket.on("newNotification", () => {
         setUnreadCount((prevCount) => prevCount + 1);
       });
+
+      socket.on("notificationRead", () => {
+        setUnreadCount((prevCount) => Math.max(prevCount - 1, 0));
+      });
+
+      socket.on("allNotificationsRead", () => {
+        setUnreadCount(0);
+      });
     }
 
-    // Clean up the socket connection
     return () => {
       if (userId) {
         socket.emit("leave", userId);

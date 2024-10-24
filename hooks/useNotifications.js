@@ -42,19 +42,19 @@ const useNotifications = () => {
 
   useEffect(() => {
     fetchNotifications();
-
-    // Initialize socket connection
+ 
     const newSocket = io("https://niyoghub-server.onrender.com");
     setSocket(newSocket);
-
-    // Join the user's room
+ 
     if (user && user._id) {
       newSocket.emit("join", user._id);
     }
-
-    // Listen for new notifications
+ 
     newSocket.on("newNotification", (notification) => {
-      setNotifications((prevNotifications) => [notification, ...prevNotifications]);
+      setNotifications((prevNotifications) => [
+        notification,
+        ...prevNotifications,
+      ]);
     });
 
     newSocket.on("notificationRead", (notification) => {
@@ -76,8 +76,7 @@ const useNotifications = () => {
         prevNotifications.filter((n) => n._id !== notificationId)
       );
     });
-
-    // Clean up the socket connection
+ 
     return () => {
       newSocket.disconnect();
     };
