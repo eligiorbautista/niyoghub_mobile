@@ -57,7 +57,7 @@ const DiagnosedResultScreen = ({ route }) => {
         method: "POST",
         url: "https://detect.roboflow.com/niyoghub/2",
         params: {
-          api_key: "zxo5ISsmlDjsnYJo36jv",
+          api_key: process.env.EXPO_PUBLIC_ROBOFLOW_API_KEY,
         },
         data: base64Image,
         headers: {

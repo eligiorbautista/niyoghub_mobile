@@ -6,7 +6,7 @@ import { AuthContext } from "../contexts/AuthContext";
 const useLogin = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const { setUser } = useContext(AuthContext);
+  const { setUser, setAdmin } = useContext(AuthContext);
 
   const login = async (email, password) => {
     setLoading(true);
@@ -18,18 +18,21 @@ const useLogin = () => {
         { headers: { "Content-Type": "application/json" } }
       );
 
-      const { message, token, user } = response.data;
+      const { message, token, user, adminID } = response.data;
       const userDetails = user;
 
       if (response.status === 200) {
         if (message === "OTP sent to your email.") {
           // Handle 2FA case
           setUser({ email: email, isTwoFactorEnabled: true });
+          setAdmin(adminID);
           return { status: "2fa" };
         } else {
           // Save token and user data
           await AsyncStorage.setItem("userToken", token);
           setUser(userDetails);
+          setAdmin(adminID);
+          console.log(adminID);
           return { status: "ok" };
         }
       } else {

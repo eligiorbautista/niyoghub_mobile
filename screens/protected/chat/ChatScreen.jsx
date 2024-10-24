@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useContext } from 'react';
 import {
   StyleSheet,
   Text,
@@ -23,18 +23,20 @@ import ImageViewer from 'react-native-image-zoom-viewer';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Video } from 'expo-av';
 import { Audio } from 'expo-av';
+import { AuthContext } from '../../../contexts/AuthContext';
 
-const adminId = `67196b4bd10dbbc6de80e1cb`;
 
 export default function ChatScreen({ navigation }) {
-  const { messages, isLoading, sendMessage, fetchMessages } = useChat(adminId);
+ 
+  const {admin} = useContext(AuthContext) 
+  const { messages, isLoading, sendMessage, fetchMessages } = useChat(admin);
   const [inputMessage, setInputMessage] = useState('');
   const [selectedAttachment, setSelectedAttachment] = useState(null);
   const [attachmentSuccessMessage, setAttachmentSuccessMessage] = useState('');
   const [isSendingMessage, setIsSendingMessage] = useState(false);
   const [isImageModalVisible, setIsImageModalVisible] = useState(false);
   const [currentImageUrl, setCurrentImageUrl] = useState('');
-  const [isRefreshing, setIsRefreshing] = useState(false); 
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const scrollViewRef = useRef();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [sound, setSound] = useState(null);
@@ -116,7 +118,7 @@ export default function ChatScreen({ navigation }) {
     }
   };
 
-  const renderAttachment = (attachment) => {
+  const renderAttachment = (attachment) => { 
     const fileUrl = `https://niyoghub-server.onrender.com/uploads/chat/${attachment}`;
     const fileExtension = attachment.split('.').pop().toLowerCase();
     const fileName = attachment.split('/').pop();
@@ -124,7 +126,7 @@ export default function ChatScreen({ navigation }) {
     if (['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp'].includes(fileExtension)) {
       return (
         <TouchableOpacity onPress={() => handleImageClick(fileUrl)}>
-          <Image source={{ uri: fileUrl }} style={styles.attachmentImage} />
+          <Image source={fileUrl ? { uri: fileUrl } : require('../../../assets/image_placeholder.png')} style={styles.attachmentImage} />
         </TouchableOpacity>
       );
     } else if (['mp4', 'mov', 'avi', 'mkv', 'webm'].includes(fileExtension)) {
@@ -157,7 +159,7 @@ export default function ChatScreen({ navigation }) {
 
     const bubbleStyle = [
       styles.messageBubble,
-      message.senderId === adminId ? styles.adminMessage : styles.userMessage,
+      message.senderId === admin ? styles.adminMessage : styles.userMessage,
       !hasMessageText && hasAttachment ? { paddingVertical: 5 } : {},
     ];
 
@@ -166,7 +168,7 @@ export default function ChatScreen({ navigation }) {
         {hasMessageText && (
           <Text
             selectable
-            style={[styles.messageText, message.senderId === adminId ? styles.adminText : styles.userText]}
+            style={[styles.messageText, message.senderId === admin ? styles.adminText : styles.userText]}
           >
             {message.message}
           </Text>
@@ -239,9 +241,9 @@ export default function ChatScreen({ navigation }) {
           messages.map((message, index) => (
             <View
               key={index}
-              style={[styles.messageContainer, message.senderId === adminId ? styles.adminContainer : styles.userContainer]}
+              style={[styles.messageContainer, message.senderId === admin ? styles.adminContainer : styles.userContainer]}
             >
-              {message.senderId === adminId && (
+              {message.senderId === admin && (
                 <Image
                   source={require('../../../assets/niyoghub_logo_2.png')}
                   style={styles.chatImage}

@@ -12,6 +12,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { AuthContext } from "../../../contexts/AuthContext";
 import useLogout from "../../../hooks/useLogout";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 // Mock user data
 const mockUser = {
@@ -33,10 +34,10 @@ const ProfileScreen = () => {
   const userAuth = AsyncStorage.getItem('userAuth');
 
   useEffect(() => {
-    if (userAuth?.profilePicture?.includes("https://ui-avatars.com/api/?name=")) {
-      setProfilePicture(userAuth.profilePicture);
+    if (user?.profilePicture?.includes("https://ui-avatars.com/api/?name=")) {
+      setProfilePicture(user.profilePicture);
     } else {
-      setProfilePicture(`https://niyoghub-server.onrender.com/${userAuth?.profilePicture}`);
+      setProfilePicture(`https://niyoghub-server.onrender.com/${user?.profilePicture}`);
     }
   }, [userAuth?.profilePicture]);
 

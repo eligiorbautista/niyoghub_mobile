@@ -5,7 +5,7 @@ import { AuthContext } from "../contexts/AuthContext";
 const useRegister = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const { user, setUser } = useContext(AuthContext);
+  const { setUser, setAdmin } = useContext(AuthContext);
 
   const register = async (userDetails) => {
     setLoading(true);
@@ -16,12 +16,13 @@ const useRegister = () => {
         userDetails
       );
 
-      const { token, user } = response.data;
+      const { token, user, adminID } = response.data;
 
       if (response.status === 201) {
         const userDetails = user;
         await AsyncStorage.setItem("userToken", token);
         setUser(userDetails);
+        setAdmin(adminID);
       } else {
         setError("Registration failed. Email may already exist.");
       }

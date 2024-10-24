@@ -69,7 +69,7 @@ const HomeScreen = ({ navigation }) => {
 
   const renderHeader = () => (
     <View>
-      <Text style={styles.greeting}>Hello, {token &&  user && (user?.fullName.split(' ')[0] || 'Guest')}</Text>
+      <Text style={styles.greeting}>Hello, {token && user && (user?.fullName.split(' ')[0] || 'Guest')}</Text>
       <Text style={styles.subGreeting}>Have a nice {getCurrentDay()}</Text>
 
       <View style={styles.searchContainer}>
@@ -92,7 +92,7 @@ const HomeScreen = ({ navigation }) => {
         <View style={styles.latestPostContainer}>
           <Text style={styles.sectionTitle}>Newest Post</Text>
           <Pressable style={styles.postContainer} onPress={() => handleReadMore(latestArticle)}>
-            <Image source={{ uri: `https://niyoghub-server.onrender.com/uploads/images/articles/${latestArticle.image}` }} style={styles.postImage} />
+            <Image source={latestArticle.image ? { uri: `https://niyoghub-server.onrender.com/uploads/images/articles/${latestArticle.image}` } : require('../../../assets/image_placeholder.png')} style={styles.postImage} />
             <Text style={styles.postCategory}>News & Programs</Text>
             <Text style={styles.postTitle}>{latestArticle.title}</Text>
             <Text style={styles.postDate}>{moment(latestArticle.createdAt).format('MMMM D, YYYY')}</Text>
@@ -104,7 +104,9 @@ const HomeScreen = ({ navigation }) => {
 
   const renderFooter = () => {
     if (searchQuery) return null;
-
+  
+    const hasAnnouncements = renderArticles.length > 0;  
+  
     return (
       <View>
         {/* SDG Buttons Section */}
@@ -128,11 +130,15 @@ const HomeScreen = ({ navigation }) => {
             </TouchableOpacity>
           )}
         />
-
+  
         {/* Announcement Section */}
         <Text style={styles.sectionTitle}>Announcements</Text>
-        <ImageCarousel />
-
+        {hasAnnouncements ? (
+          <ImageCarousel />
+        ) : (
+          <Text style={styles.emptyText}>No announcements available.</Text>
+        )}
+  
         {/* News and Programs Section */}
         <View style={styles.headerNewsPrograms}>
           <Text style={styles.sectionTitle}>News & Programs</Text>
@@ -148,7 +154,7 @@ const HomeScreen = ({ navigation }) => {
             </View>
           </Pressable>
         </View>
-
+  
         {renderArticles.length > 0 ? (
           <FlatList
             data={renderArticles}
@@ -158,9 +164,9 @@ const HomeScreen = ({ navigation }) => {
             renderItem={renderNewsItem}
           />
         ) : (
-          <Text style={styles.noArticlesText}>No articles available.</Text>
+          <Text style={styles.emptyText}>No articles available.</Text>
         )}
-
+  
         {/* Updates Section */}
         <Text style={styles.sectionTitle}>Updates</Text>
         <View style={styles.updatesContainer}>
@@ -183,7 +189,7 @@ const HomeScreen = ({ navigation }) => {
             </Pressable>
           </Pressable>
         </View>
-
+  
         {modalVisible && (
           <SDGModal
             visible={modalVisible}
@@ -444,5 +450,5 @@ const styles = StyleSheet.create({
     color: '#888',
     fontSize: 16,
     marginTop: 20,
-  },
+  }, 
 });

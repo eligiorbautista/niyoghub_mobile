@@ -4,7 +4,8 @@ import { AuthContext } from "../contexts/AuthContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { io } from "socket.io-client";
 
-const useChat = (adminId) => {
+const useChat = (admin) => {
+  console.log(`ADMIN ID: ${admin}`);
   const { user } = useContext(AuthContext);
   const [messages, setMessages] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -15,7 +16,7 @@ const useChat = (adminId) => {
       setIsLoading(true);
       const token = await AsyncStorage.getItem("userToken");
       const response = await axios.get(
-        `https://niyoghub-server.onrender.com/api/messages/${adminId}`,
+        `https://niyoghub-server.onrender.com/api/messages/${admin}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -52,7 +53,7 @@ const useChat = (adminId) => {
       const token = await AsyncStorage.getItem("userToken");
 
       const response = await axios.post(
-        `https://niyoghub-server.onrender.com/api/messages/send/${adminId}`,
+        `https://niyoghub-server.onrender.com/api/messages/send/${admin}`,
         formData,
         {
           headers: {

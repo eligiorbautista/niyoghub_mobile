@@ -16,12 +16,14 @@ import LoginScreen from "../../screens/unprotected/login/LoginScreen";
 import SettingsScreen from "../../screens/protected/settings/SettingsScreen";
 import { AuthContext } from "../../contexts/AuthContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import useUnreadNotifications from "../../hooks/useUnreadNotifications"; // Custom hook
+import useUnreadNotifications from "../../hooks/useUnreadNotifications";
+import useLogout from "../../hooks/useLogout";
 
 const Drawer = createDrawerNavigator();
 
 const CustomDrawerContent = (props) => {
-  const { user, logout } = useContext(AuthContext);
+  const { user } = useContext(AuthContext);
+  const { logout } = useLogout();
   const navigation = useNavigation();
   const [token, setToken] = useState(null);
 
@@ -45,7 +47,7 @@ const CustomDrawerContent = (props) => {
         if (!storedToken) {
           navigation.navigate("Login");
         }
-        
+
       } catch (error) {
         console.error("Failed to retrieve token", error);
       }

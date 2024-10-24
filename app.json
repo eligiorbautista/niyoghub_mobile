@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "niyoghub",
+    "name": "NiyogHub",
     "slug": "niyoghub",
-    "scheme": "niyoghub",
+    "scheme": "NiyogHub",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -14,10 +14,10 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.example.niyoghub"
+      "bundleIdentifier": "com.example.NiyogHub"
     },
     "android": {
-      "package": "com.example.niyoghub",
+      "package": "com.example.NiyogHub",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
@@ -28,10 +28,10 @@
           "data": [
             {
               "scheme": "https",
-              "host": "niyoghub.com"
+              "host": "NiyogHub.com"
             },
             {
-              "scheme": "niyoghub"
+              "scheme": "NiyogHub"
             }
           ],
           "category": [
@@ -46,8 +46,9 @@
     },
     "extra": {
       "eas": {
-        "projectId": "e4fae7e9-77e6-4e91-8b29-07afa8372c00"
+        "projectId": "654e8cd1-379e-4de2-a528-1a38053cff77"
       }
-    }
+    },
+    "owner": "giotrndev"
   }
 }

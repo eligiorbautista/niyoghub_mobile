@@ -5,7 +5,7 @@ import {
   ImageBackground, StyleSheet, Text, View, TextInput, TouchableOpacity, Alert, ScrollView, ActivityIndicator, Keyboard
 } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
-import useRegister from '../../../hooks/useRegister';
+import useRegister from '../../../hooks/useRegister'; 
 
 const RegistrationScreen = ({ navigation }) => {
   const { register, loading } = useRegister();
