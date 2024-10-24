@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
   StyleSheet,
   Text,
@@ -10,87 +10,197 @@ import {
   KeyboardAvoidingView,
   ActivityIndicator,
   Keyboard,
+  Linking,
+  Modal,
+  RefreshControl,
 } from 'react-native';
 import { scale } from "react-native-size-matters";
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
-import ChatModal from '../../../components/modals/ChatModal'
+import * as DocumentPicker from 'expo-document-picker';
+import ChatModal from '../../../components/modals/ChatModal';
+import useChat from '../../../hooks/useChat';
+import ImageViewer from 'react-native-image-zoom-viewer';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Video } from 'expo-av';
+import { Audio } from 'expo-av';
+
+const adminId = `67196b4bd10dbbc6de80e1cb`;
 
 export default function ChatScreen({ navigation }) {
-  const [messages, setMessages] = useState([]);
+  const { messages, isLoading, sendMessage, fetchMessages } = useChat(adminId);
   const [inputMessage, setInputMessage] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
+  const [selectedAttachment, setSelectedAttachment] = useState(null);
+  const [attachmentSuccessMessage, setAttachmentSuccessMessage] = useState('');
+  const [isSendingMessage, setIsSendingMessage] = useState(false);
+  const [isImageModalVisible, setIsImageModalVisible] = useState(false);
+  const [currentImageUrl, setCurrentImageUrl] = useState('');
+  const [isRefreshing, setIsRefreshing] = useState(false); 
   const scrollViewRef = useRef();
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [sound, setSound] = useState(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+
+  useEffect(() => { fetchMessages() }, []);
 
   const toggleModal = () => {
     setIsModalVisible(!isModalVisible);
   };
 
-  // Mock admin responses
-  const mockAdminResponses = [
-    "Hello! How can I assist you with your coconut farming today?",
-    "Certainly! You can reach the PCA office at the following address...",
-    "Thank you for reaching out. If you have any more questions, feel free to ask!",
-    "We're here to support local coconut farmers. Let us know how we can help.",
-    "For more detailed information, please visit our website or contact us directly.",
-  ];
-
-  // Function to get a random admin response
-  const getAdminResponse = () => {
-    const randomIndex = Math.floor(Math.random() * mockAdminResponses.length);
-    return mockAdminResponses[randomIndex];
-  };
-
-  // Function to get current timestamp
-  const getCurrentTimestamp = () => {
-    const now = new Date();
-    const hours = now.getHours();
-    const minutes = now.getMinutes();
-    const ampm = hours >= 12 ? 'PM' : 'AM';
-    const formattedHours = hours % 12 || 12;
-    const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
-    return `${formattedHours}:${formattedMinutes} ${ampm}`;
-  };
-
-  // Function to handle sending user message and receiving admin response
   const handleSendMessage = () => {
-    if (inputMessage.trim()) {
-      const timestamp = getCurrentTimestamp();
-
-      // Add user's message
-      setMessages((prevMessages) => [
-        ...prevMessages,
-        { role: 'user', content: inputMessage, timestamp },
-      ]);
-
-      setInputMessage('');
-      Keyboard.dismiss();
-
-      // Simulate admin response after a short delay
-      setIsLoading(true);
-      setTimeout(() => {
-        const adminResponse = getAdminResponse();
-        const adminTimestamp = getCurrentTimestamp();
-
-        setMessages((prevMessages) => [
-          ...prevMessages,
-          { role: 'admin', content: adminResponse, timestamp: adminTimestamp },
-        ]);
-        setIsLoading(false);
-
-        // Scroll to bottom after receiving admin response
-        scrollViewRef.current?.scrollToEnd({ animated: true });
-      }, 1000); // 1-second delay to simulate response time
+    Keyboard.dismiss();
+    if (inputMessage.trim() || selectedAttachment) {
+      setIsSendingMessage(true);
+      sendMessage(inputMessage, selectedAttachment)
+        .then(() => {
+          setInputMessage('');
+          setSelectedAttachment(null);
+          setAttachmentSuccessMessage('');
+          setIsSendingMessage(false);
+        })
+        .catch((error) => {
+          console.error('Error sending message:', error);
+          setIsSendingMessage(false);
+        });
     }
   };
 
+  const handleSelectAttachment = async () => {
+    try {
+      const res = await DocumentPicker.getDocumentAsync({
+        type: '*/*',
+      });
+
+      if (res.type === 'cancel') {
+        console.log('File selection was canceled');
+        return;
+      }
+
+      setSelectedAttachment(res);
+      setAttachmentSuccessMessage('File attached successfully!');
+      console.log('File selected:', res);
+    } catch (error) {
+      console.error('Error selecting file:', error);
+    }
+  };
+
+  const handleImageClick = (imageUrl) => {
+    setCurrentImageUrl(imageUrl);
+    setIsImageModalVisible(true);
+  };
+
+  const handleAudioPlayback = async (fileUrl) => {
+    try {
+      if (sound) {
+        await sound.unloadAsync();
+        setSound(null);
+        setIsPlaying(false);
+        return;
+      }
+
+      const { sound: newSound } = await Audio.Sound.createAsync(
+        { uri: fileUrl },
+        { shouldPlay: true }
+      );
+
+      setSound(newSound);
+      setIsPlaying(true);
+
+      newSound.setOnPlaybackStatusUpdate((status) => {
+        if (status.didJustFinish) {
+          newSound.unloadAsync();
+          setIsPlaying(false);
+        }
+      });
+    } catch (error) {
+      console.error('Error playing audio:', error);
+    }
+  };
+
+  const renderAttachment = (attachment) => {
+    const fileUrl = `https://niyoghub-server.onrender.com/uploads/chat/${attachment}`;
+    const fileExtension = attachment.split('.').pop().toLowerCase();
+    const fileName = attachment.split('/').pop();
+
+    if (['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp'].includes(fileExtension)) {
+      return (
+        <TouchableOpacity onPress={() => handleImageClick(fileUrl)}>
+          <Image source={{ uri: fileUrl }} style={styles.attachmentImage} />
+        </TouchableOpacity>
+      );
+    } else if (['mp4', 'mov', 'avi', 'mkv', 'webm'].includes(fileExtension)) {
+      return (
+        <View style={styles.videoContainer}>
+          <Video
+            source={{ uri: fileUrl }}
+            style={styles.attachmentVideo}
+            useNativeControls
+            resizeMode="contain"
+          />
+        </View>
+      );
+    } else {
+      return (
+        <Text
+          selectable
+          style={styles.fileLinkText}
+          onPress={() => Linking.openURL(fileUrl)}
+        >
+          {fileName}
+        </Text>
+      );
+    }
+  };
+
+  const renderMessageBubble = (message) => {
+    const hasMessageText = !!message.message;
+    const hasAttachment = !!message.attachment;
+
+    const bubbleStyle = [
+      styles.messageBubble,
+      message.senderId === adminId ? styles.adminMessage : styles.userMessage,
+      !hasMessageText && hasAttachment ? { paddingVertical: 5 } : {},
+    ];
+
+    return (
+      <View style={bubbleStyle}>
+        {hasMessageText && (
+          <Text
+            selectable
+            style={[styles.messageText, message.senderId === adminId ? styles.adminText : styles.userText]}
+          >
+            {message.message}
+          </Text>
+        )}
+        {hasAttachment && renderAttachment(message.attachment)}
+        <Text style={styles.timestamp}>
+          {new Date(message.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true })}
+        </Text>
+      </View>
+    );
+  };
+
+  const onRefresh = () => {
+    setIsRefreshing(true);
+    fetchMessages().then(() => {
+      setIsRefreshing(false);
+    });
+  };
+
+  useEffect(() => {
+    if (scrollViewRef.current) {
+      scrollViewRef.current.scrollToEnd({ animated: true });
+    }
+  }, [messages]);
+
+  useEffect(() => {
+    scrollViewRef.current.scrollToEnd({ animated: true });
+  }, []);
+
   return (
     <KeyboardAvoidingView style={styles.mainContainer} behavior="padding">
-      {/* Header */}
       <View style={styles.header}>
         <Text style={styles.headerText}>Chat with PCA</Text>
         <View style={styles.headerIcons}>
-          {/* AI Assistant Button in the header */}
           <TouchableOpacity
             style={styles.voiceAssistantButton}
             onPress={() => navigation.navigate("Voice Assistant")}
@@ -108,8 +218,13 @@ export default function ChatScreen({ navigation }) {
 
       <View style={styles.divider} />
 
-      {/* Chat Section */}
-      <ScrollView style={styles.chatContainer} ref={scrollViewRef}>
+      <ScrollView
+        style={styles.chatContainer}
+        ref={scrollViewRef}
+        refreshControl={
+          <RefreshControl refreshing={isRefreshing} onRefresh={onRefresh} />
+        }
+      >
         {messages.length === 0 ? (
           <View style={styles.emptyStateContainer}>
             <Image
@@ -124,46 +239,33 @@ export default function ChatScreen({ navigation }) {
           messages.map((message, index) => (
             <View
               key={index}
-              style={[styles.messageContainer, message.role === 'user' ? styles.userContainer : styles.adminContainer]}
+              style={[styles.messageContainer, message.senderId === adminId ? styles.adminContainer : styles.userContainer]}
             >
-              {message.role === 'admin' && (
+              {message.senderId === adminId && (
                 <Image
                   source={require('../../../assets/niyoghub_logo_2.png')}
                   style={styles.chatImage}
                 />
               )}
-              <View
-                style={[styles.messageBubble, message.role === 'user' ? styles.userMessage : styles.adminMessage]}
-              >
-                <Text
-                  style={[styles.messageText, message.role === 'user' ? styles.userText : styles.adminText]}
-                >
-                  {message.content}
-                </Text>
-                <Text style={styles.timestamp}>{message.timestamp}</Text>
-              </View>
+              {renderMessageBubble(message)}
             </View>
           ))
         )}
         {isLoading && (
-          <View style={styles.adminContainer}>
-            <Image
-              source={require('../../../assets/niyoghub_logo_2.png')}
-              style={styles.chatImage}
-            />
-            <View style={styles.messageBubble}>
-              <ActivityIndicator size="small" color="#000" />
-            </View>
+          <View style={styles.loadingContainer}>
+            <ActivityIndicator size="small" color="#000" />
+          </View>
+        )}
+        {isSendingMessage && (
+          <View style={styles.loadingContainer}>
+            <ActivityIndicator size="small" color="#000" />
           </View>
         )}
       </ScrollView>
 
       <View style={styles.divider} />
 
-      {/* Input Section */}
       <View style={styles.inputContainer}>
-
-
         <TextInput
           style={styles.textInput}
           value={inputMessage}
@@ -172,21 +274,44 @@ export default function ChatScreen({ navigation }) {
           placeholderTextColor="#999"
         />
 
-        {/* Attachment Button */}
-        <TouchableOpacity style={styles.attachmentButton}>
+        <TouchableOpacity style={styles.attachmentButton} onPress={handleSelectAttachment}>
           <MaterialCommunityIcons name="attachment" size={24} color="black" />
         </TouchableOpacity>
 
-        {/* Send Button */}
-        <TouchableOpacity style={styles.sendButton} onPress={handleSendMessage}>
-          <MaterialCommunityIcons name="send" size={24} color="#000" />
-        </TouchableOpacity>
+        {selectedAttachment && (
+          <View style={styles.attachmentStatus}>
+            <Text style={styles.attachmentText}>{selectedAttachment.name}</Text>
+            {attachmentSuccessMessage && (
+              <Text style={styles.successMessage}>{attachmentSuccessMessage}</Text>
+            )}
+          </View>
+        )}
+
+        {isSendingMessage ? (
+          <ActivityIndicator style={styles.sendButton} size="small" color="#000" />
+        ) : (
+          <TouchableOpacity style={styles.sendButton} onPress={handleSendMessage}>
+            <MaterialCommunityIcons name="send" size={24} color="#000" />
+          </TouchableOpacity>
+        )}
       </View>
 
-      <ChatModal
-        visible={isModalVisible}
-        onClose={toggleModal}
-      />
+      <Modal visible={isImageModalVisible} transparent={true}>
+        <ImageViewer
+          imageUrls={[{ url: currentImageUrl }]}
+          onCancel={() => setIsImageModalVisible(false)}
+          enableSwipeDown
+          renderIndicator={() => null}
+        />
+        <TouchableOpacity
+          style={styles.closeButton}
+          onPress={() => setIsImageModalVisible(false)}
+        >
+          <Ionicons name="close" size={30} color="#fff" />
+        </TouchableOpacity>
+      </Modal>
+
+      <ChatModal visible={isModalVisible} onClose={toggleModal} />
     </KeyboardAvoidingView>
   );
 }
@@ -212,6 +337,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
+  loadingContainer: {
+    alignItems: 'center',
+    marginVertical: 10,
+  },
   voiceAssistantButton: {
     backgroundColor: 'rgba(83, 127, 25, 0.8)',
     borderRadius: 20,
@@ -219,7 +348,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     flexDirection: 'row',
     alignItems: 'center',
-    marginRight: 10,   
+    marginRight: 10,
   },
   aiButtonContent: {
     flexDirection: 'row',
@@ -229,7 +358,7 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontWeight: 'bold',
     fontSize: 14,
-    marginLeft: 8,   
+    marginLeft: 8,
   },
   aiImage: {
     width: 22,
@@ -287,6 +416,7 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 10,
     maxWidth: '75%',
+    marginBottom: 5
   },
   userMessage: {
     backgroundColor: '#DCF8C6',
@@ -313,7 +443,8 @@ const styles = StyleSheet.create({
   inputContainer: {
     flexDirection: 'row',
     paddingHorizontal: 20,
-    paddingVertical: 20,
+    paddingTop: 10,
+    paddingBottom: 20,
     backgroundColor: '#fff',
     alignItems: 'center',
   },
@@ -334,7 +465,48 @@ const styles = StyleSheet.create({
   sendButton: {
     padding: 5,
   },
+  attachmentStatus: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginLeft: 10,
+  },
+  attachmentText: {
+    color: 'gray',
+    fontSize: 12,
+  },
+  successMessage: {
+    color: 'green',
+    fontSize: 12,
+    marginLeft: 5,
+  },
+  attachmentImage: {
+    width: 200,
+    height: 200,
+    resizeMode: 'contain',
+    marginTop: 10,
+  },
+  fileLinkText: {
+    color: '#537F19',
+    textDecorationLine: 'underline',
+    marginTop: 5,
+  },
   aiButton: {
     marginRight: 10,
+  },
+  closeButton: {
+    position: 'absolute',
+    top: 30,
+    right: 20,
+    zIndex: 1,
+  },
+  videoContainer: {
+    width: 200,
+    height: 200,
+    backgroundColor: '#000',
+    marginTop: 10,
+  },
+  attachmentVideo: {
+    width: '100%',
+    height: '100%',
   },
 });

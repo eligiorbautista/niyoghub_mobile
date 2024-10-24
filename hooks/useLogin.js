@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { AuthContext } from "../contexts/AuthContext";
@@ -25,12 +25,12 @@ const useLogin = () => {
         if (message === "OTP sent to your email.") {
           // Handle 2FA case
           setUser({ email: email, isTwoFactorEnabled: true });
-          return { status: '2fa' };
+          return { status: "2fa" };
         } else {
           // Save token and user data
           await AsyncStorage.setItem("userToken", token);
           setUser(userDetails);
-          return { status: 'ok' };
+          return { status: "ok" };
         }
       } else {
         setError("Invalid credentials or user not found.");
