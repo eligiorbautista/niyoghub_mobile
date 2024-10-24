@@ -4,9 +4,7 @@ import { AuthContext } from "../contexts/AuthContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { io } from "socket.io-client";
 
-const useChat = (admin) => {
-  console.log(`ADMIN ID: ${admin}`);
-  const { user } = useContext(AuthContext);
+const useChat = (admin) => { 
   const [messages, setMessages] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const socket = io("https://niyoghub-server.onrender.com");
